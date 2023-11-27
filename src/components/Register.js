@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { register } from '../service/API'; // Import hàm gửi yêu cầu đăng ký từ api/index.js
-import app from '../service/Firebase'
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import{ ImageUpload } from '../service/Firebase'
 
 
 const Register = () => {
@@ -23,38 +22,18 @@ const Register = () => {
 
 
 
-
-    const storage = getStorage(app);
-
-    const handleChange = (e) => {
+    const handleInputChange = (e) => {
         const { name, value, type, files } = e.target;
 
         if (type === 'file') {
             const file = files[0];
-            handleImageUpload(file);
+            ImageUpload(file);
         } else {
             setFormData((prevData) => ({
                 ...prevData,
                 [name]: value,
             }));
         }
-    };
-
-    const handleImageUpload = async (file) => {
-        // Tạo reference đến thư mục trên Firebase Storage
-        const storageRef = ref(storage, `images/${file.name}`);
-
-        // Tải lên file lên Firebase Storage
-        await uploadBytes(storageRef, file);
-
-        // Lấy URL của hình ảnh sau khi tải lên
-        const downloadURL = await getDownloadURL(storageRef);
-        console.log('Image URL:', downloadURL);
-
-        setFormData((prevData) => ({
-            ...prevData,
-            image: downloadURL,
-        }));
     };
 
     const handleSignUp = async (e) => {
@@ -64,14 +43,12 @@ const Register = () => {
             await register(formData);
             setSuccessMessage('Registration successful!');
             setErrorMessage('');
-            // Điều hướng đến trang chủ
-            setTimeout(() => {
-                navigate('/');
-            }, 5000); // Điều hướng sau 5 giây
+            // Chuyển người dùng đến trang chủ sau khi đăng ký thành công
+            navigate('/');
         } catch (error) {
             setErrorMessage('Registration failed. Please try again.');
             setSuccessMessage('');
-            console.log('rer: ', error)
+            console.error('Error registering:', error);
         }
     };
 
@@ -93,7 +70,7 @@ const Register = () => {
                                     placeholder="Phone number"
                                     name="numberPhone"
                                     value={formData.numberPhone}
-                                    onChange={handleChange}
+                                    onChange={handleInputChange}
                                 />
                             </div>
                             <div className="input-group mb-3">
@@ -103,7 +80,7 @@ const Register = () => {
                                     placeholder="Password"
                                     name="password"
                                     value={formData.password}
-                                    onChange={handleChange}
+                                    onChange={handleInputChange}
                                 />
                             </div>
                             {/* Role selection */}
@@ -116,7 +93,7 @@ const Register = () => {
                                         id="user"
                                         name="role"
                                         checked={formData.role === 'user'}
-                                        onChange={handleChange}
+                                        onChange={handleInputChange}
                                     />
                                     <label htmlFor="user" className="form-check-label">
                                         User
@@ -134,7 +111,7 @@ const Register = () => {
                                     placeholder="Last Name"
                                     name="lastName"
                                     value={formData.lastName}
-                                    onChange={handleChange}
+                                    onChange={handleInputChange}
                                 />
                             </div>
 
@@ -146,7 +123,7 @@ const Register = () => {
                                     placeholder="First Name"
                                     name="firstName"
                                     value={formData.firstName}
-                                    onChange={handleChange}
+                                    onChange={handleInputChange}
                                 />
                             </div>
 
@@ -158,7 +135,7 @@ const Register = () => {
                                     placeholder="Email"
                                     name="email"
                                     value={formData.email}
-                                    onChange={handleChange}
+                                    onChange={handleInputChange}
                                 />
                             </div>
 
@@ -174,7 +151,7 @@ const Register = () => {
                                     className="form-control form-control-lg bg-light fs-6"
                                     name="dateOfBirth"
                                     value={formData.dateOfBirth}
-                                    onChange={handleChange}
+                                    onChange={handleInputChange}
                                     min="1900-01-01" // Đặt ngày tối thiểu cho ngày sinh (có thể điều chỉnh)
                                     max={new Date().toISOString().split('T')[0]} // Đặt ngày tối đa là ngày hiện tại
                                     required // Bắt buộc nhập
@@ -188,7 +165,7 @@ const Register = () => {
                                     className="form-control form-control-lg bg-light fs-6"
                                     accept="image/*"
                                     name="image"
-                                    onChange={handleImageUpload}
+                                    onChange={handleInputChange}
                                 />
                             </div>
 
@@ -203,8 +180,10 @@ const Register = () => {
                                 </small>
                             </div>
                         </form>
-                        {successMessage && <div className="alert alert-success">{successMessage}</div>}
-                        {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+                        <div className="d-flex justify-content-center align-items-center mt-2">
+                            {successMessage && <div className="alert alert-success ">{successMessage}</div>}
+                            {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+                        </div>
                     </div>
                 </div>
 

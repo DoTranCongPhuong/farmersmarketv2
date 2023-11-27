@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 const sample = {
     firstName: 'Please enter your first name',
     lastName: 'Please enter your last name',
@@ -18,13 +18,25 @@ const bill = {
     //... Other data
 };
 
-const Checkout = () => {
 
+const Checkout = () => {
     const [selectedPayment, setSelectedPayment] = useState('');
+    // Khai báo state hoặc các biến khác cần thiết
 
     const handlePaymentSelection = (method) => {
         setSelectedPayment(method);
+        // Xử lý việc chọn hình thức thanh toán
     };
+
+    const initialOptions = {
+        clientId: "AYTOAJ31AZcksdFZBKXP4B0F_dMtF9VZDyEj8i8E0L22UDQSHaCXqU0JXjTUNR8I71mkpa8m6q1Gd0nK",
+        currency: "USD",
+        intent: "capture",
+
+    };
+
+
+
 
     return (
         <section className="checkout spad">
@@ -52,7 +64,7 @@ const Checkout = () => {
                     <div className="col-lg-4 col-md-6">
                         <div className="checkout__order">
                             <h4>Your Order</h4>
-                            
+
                             <div className="checkout__order__total">Total <span>{bill.total}</span></div>
                             <div className="checkout__input__checkbox">
                                 <input
@@ -87,11 +99,23 @@ const Checkout = () => {
                                 />
                                 <label htmlFor="cod">Payment on delivery (COD)</label>
                             </div>
+                            <div>
+                                <div>
+                                    <PayPalScriptProvider options={{ clientId: "test" }}>
+                                        <PayPalButtons style={{ layout: "horizontal" }} />
+                                    </PayPalScriptProvider>
+                                </div>
+                            </div>
+
                             <button type="submit" className="site-btn">PLACE ORDER</button>
                         </div>
                     </div>
                 </div>
             </div>
+
+
+
+
         </section>
     );
 };

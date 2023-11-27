@@ -1,11 +1,11 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import { v4 as uuidv4 } from 'uuid';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyDcONuLDx4v-41YrKTJRx1lu0NZcmW5GRo",
   authDomain: "farmersmarket-403814.firebaseapp.com",
@@ -21,4 +21,22 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-export default app;
+const storage = getStorage(app);
+
+const ImageUpload = async (file) => {
+  try {
+    const uniqueId = uuidv4(); // Tạo UUID duy nhất
+    const newFileName = `${uniqueId}_${file.name}`; // Thêm UUID vào tên file
+
+    const storageRef = ref(storage, `images/${newFileName}`);
+    await uploadBytes(storageRef, file);
+
+    console.log('Image uploaded successfully!');
+    return storageRef;
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    throw error;
+  }
+};
+
+export { ImageUpload };

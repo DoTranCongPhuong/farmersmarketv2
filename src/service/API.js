@@ -70,6 +70,31 @@ const login = async (userData) => {
   }
 };
 
+const getUserInfo = async (userId, accessToken) => {
+  try {
+    const response = await axiosInstance.get(`/get-user-info/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      console.error('Server Response Error:', error.response.data);
+      console.error('Server Response Status:', error.response.status);
+      console.error('Server Response Headers:', error.response.headers);
+      throw new Error('Server Response Error');
+    } else if (error.request) {
+      console.error('No response received from server:', error.request);
+      throw new Error('No response received from server');
+    } else {
+      console.error('Error during request setup:', error.message);
+      throw new Error('Error during request setup');
+    }
+  }
+};
 
-export { register, login };
+
+
+export { register, login , getUserInfo};
 

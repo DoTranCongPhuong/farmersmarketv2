@@ -1,45 +1,56 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../service/API';
 
 const Login = () => {
-    const [email, setEmail] = useState('');
+    const [numberPhone, setNumberPhone] = useState('');
     const [password, setPassword] = useState('');
-    const [selectedRole, setSelectedRole] = useState(''); // Lưu trữ vai trò được chọn
-    const [successMessage, setSuccessMessage] = useState(''); // Define successMessage state
+    const [selectedRole, setSelectedRole] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+
     const handleRoleChange = (event) => {
         setSelectedRole(event.target.value);
     };
+    useEffect(() => {
+        const existingToken = localStorage.getItem('token');
+        if (existingToken) {
+            navigate('/user-page');
+        }
+    }, []);
 
     const handleLogin = async () => {
         try {
-            // Chuẩn bị dữ liệu người dùng để gửi đi
             const userData = {
-                numberPhone: email,
+                numberPhone: numberPhone,
                 password: password,
                 role: selectedRole,
             };
 
-            // Gọi hàm loginUser để thực hiện yêu cầu đăng nhập
             const loggedInUser = await login(userData);
-            console.log('Logged in user:', loggedInUser);
-            // Xử lý sau khi đăng nhập thành công (ví dụ: lưu thông tin user vào local storage, điều hướng trang, vv.)
+            const token = loggedInUser.token; // Giả sử token được trả về từ API là loggedInUser.token
+
+            localStorage.setItem('token', token);
             setSuccessMessage('Login successful!');
             setErrorMessage('');
-            // Điều hướng đến trang chủ
+
             setTimeout(() => {
                 navigate('/');
-            }, 2000); // Điều hướng sau 2 giây
+            }, 2000);
         } catch (error) {
-            // Xử lý lỗi khi đăng nhập không thành công
             console.error('Login error:', error);
-            // Hiển thị thông báo hoặc xử lý lỗi tùy ý ở đây
-            setErrorMessage('Login failed. Please try again.');
+            let errorMessage = 'Login failed. Please try again.';
+
+            if (error.response && error.response.data) {
+                errorMessage = error.response.data.message; // Lấy thông tin lỗi từ phản hồi của API
+            }
+
+            setErrorMessage(errorMessage);
             setSuccessMessage('');
         }
     };
+
     return (
         <div className="container d-flex justify-content-center align-items-center min-vh-75">
             <div className="d-flex justify-content-center border rounded-5 p-3 bg-white shadow box-area align-items-center">
@@ -54,8 +65,8 @@ const Login = () => {
                                 type="text"
                                 className="form-control form-control-lg bg-light fs-6"
                                 placeholder="Phone number"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                value={numberPhone}
+                                onChange={(e) => setNumberPhone(e.target.value)}
                             />
                         </div>
                         <div className="input-group mb-1">
@@ -121,8 +132,11 @@ const Login = () => {
                         <div className="row">
                             <small>Don't have an account? <Link className='nomal__a' to="/register">Sign Up</Link></small>
                         </div>
-                        {successMessage && <div className="alert alert-success">{successMessage}</div>}
-                        {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+                        <div className="d-flex justify-content-center align-items-center mt-2">
+                            {successMessage && <div className="alert alert-success ">{successMessage}</div>}
+                            {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+                        </div>
+
                     </div>
                 </div>
             </div>

@@ -1,23 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { getUserInfo } from '../service/API';
 
-const sample = {
-    firstName: 'Phuong',
-    lastName: 'Do',
-    country: 'Viet Nam',
-    address: '130/12/4, Street 2',
-    townCity: 'Truong Tho',
-    countryState: 'Thu Duc',
-    postcodeZIP: '051',
-    phone: '0898537761',
-    email: 'dotrancongphuong@gmail.com',
-    img:
-        'https://cdn.pixabay.com/photo/2016/11/08/15/21/user-1808597_1280.png', // Updated image URL
-};
+const UserInfor = () => {
+    const [user, setUser] = useState(null);
+    const [avatar, setAvatar] = useState('');
+    const navigate = useNavigate();
 
-const UserInFor = () => {
-    const [avatar, setAvatar] = useState(sample.img); // Set the initial avatar to the provided URL
-    const [selectedPayment, setSelectedPayment] = useState('');
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const userID = '653e702c9511e1931a53f074';
+                const token = localStorage.getItem('token');
+                const userInfo = await getUserInfo(userID, token);
+                setUser(userInfo.user);
+                setAvatar(userInfo.user.img);
+            } catch (error) {
+                // Xử lý lỗi khi không thể lấy thông tin người dùng từ API
+                console.error('Error fetching user information:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -29,11 +35,13 @@ const UserInFor = () => {
             reader.readAsDataURL(file);
         }
     };
+    const handleUpdateInfor = (method) => {
+        // Code xử lý cập nhật thông tin người dùng
+    };
 
-
-
-    const handlePaymentSelection = (method) => {
-        setSelectedPayment(method);
+    const handleSignOut = () => {
+        localStorage.removeItem('token');
+        navigate('/login');
     };
 
     return (
@@ -42,8 +50,8 @@ const UserInFor = () => {
                 <div className="row">
                     <div className="col-lg-4 col-md-6">
                         <div className="checkout__form">
-                            <h4>Hi {sample.firstName + '!'}</h4>
-                            <div className="container mt-4">
+                            <h4>Hi {user?.firstName + '!'}</h4>
+                            <div className="container mt-4 row">
                                 {avatar && (
                                     <div className="text-center mb-4">
                                         <img
@@ -64,38 +72,43 @@ const UserInFor = () => {
                                     </Form.Group>
                                 </Form>
 
-                                <button
+                                <div
                                     type="button"
-                                    className="site-btn "
-                                    onClick={() => handlePaymentSelection('method')}
+                                    className="btn btn-primary "
+                                    onClick={() => handleUpdateInfor('method')}
                                 >
                                     Save my information
-                                </button>
+                                </div>
+
+                                <div
+                                    type="button"
+                                    className="btn btn-danger mt-2"
+                                    onClick={() => handleSignOut('method')}
+                                >
+                                    Sign Out
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div className="col-lg-8 col-md-6">
                         <div className="checkout__form">
-                            <h4>Billing Details</h4>
+                            <h4>User Information</h4>
                             <form action="#">
                                 <div className="row">
-                                    {Object.keys(sample).map((key) =>
-                                        key === 'img' ? (
-                                            <div className="col-lg-6" key={key}>
-                                            </div>
-                                        ) : (
-                                            <div className="col-lg-6" key={key}>
-                                                <div className="checkout__input">
-                                                    <p>
-                                                        {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
-                                                        <span>*</span>
-                                                    </p>
-                                                    <input type="text" placeholder={sample[key]} />
+                                    {user &&
+                                        Object.keys(user).map((key) =>
+                                            key === 'image' || key === '__v' || key === 'role' ? null : (
+                                                <div className="col-lg-6" key={key}>
+                                                    <div className="checkout__input">
+                                                        <p>
+                                                            {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
+                                                            <span>*</span>
+                                                        </p>
+                                                        <input type="text" value={user[key]} />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        )
-                                    )}
-
+                                            )
+                                        )}
                                 </div>
                             </form>
                         </div>
@@ -106,4 +119,4 @@ const UserInFor = () => {
     );
 };
 
-export default UserInFor;
+export default UserInfor;
