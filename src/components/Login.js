@@ -18,7 +18,7 @@ const Login = () => {
         if (existingToken) {
             navigate('/user-page');
         }
-    }, []);
+    }, [navigate]);
 
     const handleLogin = async () => {
         try {
@@ -60,6 +60,11 @@ const Login = () => {
                             <h2>Hello, Again</h2>
                             <p>We are happy to have you back.</p>
                         </div>
+                        <div className="d-flex justify-content-center align-items-center mt-2">
+                            {successMessage && <div className="alert alert-success ">{successMessage}</div>}
+                            {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+                        </div>
+
                         <div className="input-group mb-3">
                             <input
                                 type="text"
@@ -132,11 +137,7 @@ const Login = () => {
                         <div className="row">
                             <small>Don't have an account? <Link className='nomal__a' to="/register">Sign Up</Link></small>
                         </div>
-                        <div className="d-flex justify-content-center align-items-center mt-2">
-                            {successMessage && <div className="alert alert-success ">{successMessage}</div>}
-                            {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
-                        </div>
-
+                        
                     </div>
                 </div>
             </div>

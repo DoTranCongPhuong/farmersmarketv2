@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { register } from '../service/API'; // Import hàm gửi yêu cầu đăng ký từ api/index.js
-import{ ImageUpload } from '../service/Firebase'
+import{ upLoadImgFirebase } from '../service/Firebase'
 
 
 const Register = () => {
@@ -27,7 +27,7 @@ const Register = () => {
 
         if (type === 'file') {
             const file = files[0];
-            ImageUpload(file);
+            upLoadImgFirebase(file);
         } else {
             setFormData((prevData) => ({
                 ...prevData,

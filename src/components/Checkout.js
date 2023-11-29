@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import React, { useState, useEffect } from 'react';
+import PayPalCheckout from '../service/PayPalCheckout';
+
+// This value is from the props in the UI
+
 const sample = {
     firstName: 'Please enter your first name',
     lastName: 'Please enter your last name',
@@ -18,28 +21,36 @@ const bill = {
     //... Other data
 };
 
-
 const Checkout = () => {
+
     const [selectedPayment, setSelectedPayment] = useState('');
-    // Khai báo state hoặc các biến khác cần thiết
+
+    const paypalOptions = {
+        'clientId': 'AYTOAJ31AZcksdFZBKXP4B0F_dMtF9VZDyEj8i8E0L22UDQSHaCXqU0JXjTUNR8I71mkpa8m6q1Gd0nK',
+        currency: 'USD',
+        components: 'buttons',
+    };
+
+    const handleSuccess = (data, actions) => {
+        // Xử lý khi thanh toán thành công
+        console.log('Payment successful:', data);
+        // Redirect hoặc thực hiện các hành động sau khi thanh toán thành công
+    };
+
+    // Hàm xử lý khi có lỗi trong quá trình thanh toán
+    const handleError = (err) => {
+        // Xử lý khi có lỗi trong quá trình thanh toán
+        console.error('Payment error:', err);
+        // Hiển thị thông báo lỗi hoặc thực hiện các hành động khác khi có lỗi
+    };
 
     const handlePaymentSelection = (method) => {
         setSelectedPayment(method);
         // Xử lý việc chọn hình thức thanh toán
     };
 
-    const initialOptions = {
-        clientId: "AYTOAJ31AZcksdFZBKXP4B0F_dMtF9VZDyEj8i8E0L22UDQSHaCXqU0JXjTUNR8I71mkpa8m6q1Gd0nK",
-        currency: "USD",
-        intent: "capture",
-
-    };
-
-
-
-
     return (
-        <section className="checkout spad">
+        <section>
             <div className="container">
                 <div className="row">
                     <div className="col-lg-8 col-md-6">
@@ -67,15 +78,7 @@ const Checkout = () => {
 
                             <div className="checkout__order__total">Total <span>{bill.total}</span></div>
                             <div className="checkout__input__checkbox">
-                                <input
-                                    type="radio"
-                                    id="paypal"
-                                    name="paymentMethod"
-                                    value="paypal"
-                                    checked={selectedPayment === 'paypal'}
-                                    onChange={() => handlePaymentSelection('paypal')}
-                                />
-                                <label htmlFor="paypal">Paypal</label>
+
                             </div>
                             <div className="checkout__input__checkbox">
                                 <input
@@ -100,23 +103,20 @@ const Checkout = () => {
                                 <label htmlFor="cod">Payment on delivery (COD)</label>
                             </div>
                             <div>
-                                <div>
-                                    <PayPalScriptProvider options={{ clientId: "test" }}>
-                                        <PayPalButtons style={{ layout: "horizontal" }} />
-                                    </PayPalScriptProvider>
-                                </div>
+                                <PayPalCheckout
+                                    amount="100.00" // Thay đổi giá trị theo đơn hàng thực tế
+                                    currency="USD"
+                                    onSuccess={handleSuccess}
+                                    onError={handleError}
+                                />
                             </div>
-
+                            <label htmlFor="cod">Payment on delivery (COD)</label>
                             <button type="submit" className="site-btn">PLACE ORDER</button>
                         </div>
                     </div>
                 </div>
             </div>
-
-
-
-
-        </section>
+        </section >
     );
 };
 

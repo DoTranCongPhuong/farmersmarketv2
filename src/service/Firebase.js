@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import { getStorage, ref, uploadBytes , getDownloadURL} from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -23,7 +23,7 @@ const analytics = getAnalytics(app);
 
 const storage = getStorage(app);
 
-const ImageUpload = async (file) => {
+const upLoadImgFirebase = async (file) => {
   try {
     const uniqueId = uuidv4(); // Tạo UUID duy nhất
     const newFileName = `${uniqueId}_${file.name}`; // Thêm UUID vào tên file
@@ -31,12 +31,14 @@ const ImageUpload = async (file) => {
     const storageRef = ref(storage, `images/${newFileName}`);
     await uploadBytes(storageRef, file);
 
-    console.log('Image uploaded successfully!');
-    return storageRef;
+    // Lấy đường dẫn URL của tệp tin từ Firebase Storage
+    const downloadURL = await getDownloadURL(storageRef);
+    return downloadURL;
   } catch (error) {
     console.error('Error uploading image:', error);
     throw error;
   }
 };
 
-export { ImageUpload };
+
+export { upLoadImgFirebase };
