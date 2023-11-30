@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { getUserInfo, updateUser } from '../service/API';
+import { getUserInfo, updateUser, changeUserPassword } from '../service/API';
 import { upLoadImgFirebase } from '../service/Firebase';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,11 +12,15 @@ const UserInfor = () => {
     const [user, setUser] = useState({});
     const [avatar, setAvatar] = useState('/loading.gif');
     const navigate = useNavigate();
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-
                 const token = localStorage.getItem('token');
                 const userInfo = await getUserInfo(token);
                 setUser(userInfo.user);
@@ -24,6 +28,7 @@ const UserInfor = () => {
             } catch (error) {
                 // Xử lý lỗi khi không thể lấy thông tin người dùng từ API
                 console.error('Error fetching user information:', error);
+                toast.error('Failed to load data, login again');
             }
         };
 
@@ -52,7 +57,42 @@ const UserInfor = () => {
         }
     };
 
+    const handleChangePassword = (e) => {
+        const { name, value } = e.target;
+        if (name === 'oldPassword') setOldPassword(value);
+        else if (name === 'newPassword') setNewPassword(value);
+        else if (name === 'confirmPassword') setConfirmPassword(value);
+    };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Kiểm tra xem mật khẩu mới và xác nhận mật khẩu có khớp không
+        if (newPassword !== confirmPassword) {
+            setErrorMessage("New password and confirm password don't match");
+            return;
+        }
+
+        // Kiểm tra mật khẩu có đủ mạnh không
+        const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+\\[\]{}|;:'",.<>/?]).{5,}$/;
+        if (!strongPasswordRegex.test(newPassword)) {
+            setErrorMessage("Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 5 characters long");
+            return;
+        }
+
+        try {
+            await changeUserPassword(oldPassword, newPassword);
+            setSuccessMessage('Password changed successfully');
+            setErrorMessage('');
+            setOldPassword('');
+            setNewPassword('');
+            setConfirmPassword('');
+        } catch (error) {
+            // Xử lý lỗi nếu request thất bại
+            setErrorMessage(error.message || 'Failed to change password');
+            setSuccessMessage('');
+        }
+    };
 
     // Hàm xử lý khi người dùng thay đổi thông tin
     const handleInputChange = (event) => {
@@ -120,7 +160,6 @@ const UserInfor = () => {
                                         />
                                     </Form.Group>
                                 </Form>
-
                                 <button
                                     type="button"
                                     className="btn btn-primary "
@@ -135,6 +174,51 @@ const UserInfor = () => {
                                 >
                                     Sign Out
                                 </button>
+                                <div className='mt-4'>
+                                    <h4 className='mb-1'>Change Password</h4>
+                                    <div className="d-flex justify-content-center align-items-center">
+                                        {successMessage && <div className="alert alert-success ">{successMessage}</div>}
+                                        {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+                                    </div>
+                                    <form onSubmit={handleSubmit} className='row'>
+                                        <div className="form-group">
+                                            <label htmlFor="oldPassword">Current Password</label>
+                                            <input
+                                                type="password"
+                                                name="oldPassword"
+                                                value={oldPassword}
+                                                onChange={handleChangePassword}
+                                                className="form-control"
+                                                placeholder="Enter your current password"
+                                            />
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label htmlFor="newPassword">New Password</label>
+                                            <input
+                                                type="password"
+                                                name="newPassword"
+                                                value={newPassword}
+                                                onChange={handleChangePassword}
+                                                className="form-control"
+                                                placeholder="Enter your new password"
+                                            />
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label htmlFor="confirmPassword">Confirm Password</label>
+                                            <input
+                                                type="password"
+                                                name="confirmPassword"
+                                                value={confirmPassword}
+                                                onChange={handleChangePassword}
+                                                className="form-control"
+                                                placeholder="Confirm your new password"
+                                            />
+                                        </div>
+                                        <button className='btn btn-warning' type="submit">Change Password</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

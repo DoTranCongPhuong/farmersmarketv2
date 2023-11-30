@@ -93,7 +93,19 @@ const updateUser = async (userData) => {
   }
 };
 
+const changeUserPassword = async (currentPassword, newPassword) => {
+  try {
+    const response = await axiosInstance.post('/change-password', {
+      currentPassword: currentPassword,
+      newPassword: newPassword
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || error.message);
+  }
+};
 
 
-export { register, login , getUserInfo, updateUser, };
+
+export { register, login, getUserInfo, updateUser, changeUserPassword };
 

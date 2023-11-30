@@ -52,15 +52,17 @@ const HeroSection = () => {
                   <button type="submit" className="site-btn">SEARCH</button>
                 </form>
               </div>
-              <div className="hero__search__phone">
-                <div className="hero__search__phone__icon">
-                  <i className="fa fa-phone"></i>
+              <a href="https://zalo.me/+84898537761">
+                <div className="hero__search__phone">
+                  <div className="hero__search__phone__icon">
+                    <i className="fa fa-phone"></i>
+                  </div>
+                  <div className="hero__search__phone__text">
+                    <h5>+84 898.537.761</h5>
+                    <span>support 24/7 time</span>
+                  </div>
                 </div>
-                <div className="hero__search__phone__text">
-                  <h5>+65 11.188.888</h5>
-                  <span>support 24/7 time</span>
-                </div>
-              </div>
+              </a>
             </div>
             <div className="hero__item set-bg" style={{ backgroundImage: 'url("img/hero/banner.jpg")' }}>
               <div className="hero__text">

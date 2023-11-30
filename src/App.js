@@ -9,12 +9,16 @@ import './css/nice-select.css';
 import './css/slicknav.min.css';
 import './css/style.css';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { HomePage, ProductsPage, ProductDetailPage, CartPage,
-        LoginPage, ContactPage, CheckoutPage, RegisterPage, UserPage } from './routes/Routes';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  HomePage, ProductsPage, ProductDetailPage, CartPage,
+  LoginPage, ContactPage, CheckoutPage, RegisterPage, UserPage
+} from './routes/Routes';
 
 
 const App = () => {
+
+
   return (
     <Router>
       <Routes>
@@ -26,7 +30,7 @@ const App = () => {
         <Route path="/cart-page" element={<CartPage />} />
         <Route path="/contact-page" element={<ContactPage />} />
         <Route path="/checkout-page" element={<CheckoutPage />} />
-        <Route path="/user-page" element={<UserPage />} />
+        <Route path="/user-page" element={localStorage.getItem('token') ? (<UserPage />) : (<Navigate to="/login" />)} />
       </Routes>
     </Router>
   );
