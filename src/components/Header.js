@@ -39,9 +39,11 @@ const Header = () => {
                   </ul>
                 </div>
                 <div className="header__top__right__auth">
-                  {localStorage.getItem('token') ?
-                    <Link to="/login"><i className="fa fa-user"></i> <i className="fa fa-user"></i> My Account </Link> :
-                    <Link to="/user-page"><i className="fa fa-user"></i> My Account </Link>}
+                  {
+                    localStorage.getItem('token') ?
+                      <Link to="/login"> <i className="fa fa-user"></i> My account </Link> :
+                      <Link to="/user-page"><i className="fa fa-user"></i> Login </Link>
+                  }
                 </div>
               </div>
             </div>

@@ -15,6 +15,10 @@ import {
   LoginPage, ContactPage, CheckoutPage, RegisterPage, UserPage
 } from './routes/Routes';
 
+const isAuthenticated = () => {
+  const token = localStorage.getItem('token');
+  return !!token; // Trả về true nếu tồn tại token, ngược lại trả về false
+};
 
 const App = () => {
 
@@ -30,7 +34,7 @@ const App = () => {
         <Route path="/cart-page" element={<CartPage />} />
         <Route path="/contact-page" element={<ContactPage />} />
         <Route path="/checkout-page" element={<CheckoutPage />} />
-        <Route path="/user-page" element={localStorage.getItem('token') ? (<UserPage />) : (<Navigate to="/login" />)} />
+        <Route path="/user-page" element={isAuthenticated() ? <UserPage /> : <Navigate to="/login" />} />
       </Routes>
     </Router>
   );
