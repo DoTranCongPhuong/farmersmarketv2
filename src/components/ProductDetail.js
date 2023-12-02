@@ -1,22 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
-
+import { axiosInstance } from '../service/API';
+import Comment from './Comment';
 
 const ProductDetails = () => {
-  // Dữ liệu sản phẩm từ đối tượng
-  const { id } = useParams();
-  const product = {
+  const { id } = useParams(); // Lấy id từ URL bằng useParams()
+  console.log(id)
+  let obj1 = {
     name: "Vetgetable’s Package",
     rating: 4.5,
     reviews: 18,
     price: "$50.00",
     description: "Mauris blandit aliquet elit, eget tincidunt nibh pulvinar Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Sed porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Proin eget tortor risus.",
     quantity: 1,
-    availability: "In Stock",
-    shipping: "01 day shipping",
     weight: "0.5 kg",
-    imgSlider: [
+    image: [
       "/img/product/details/product-details-1.jpg",
       "/img/product/details/product-details-2.jpg",
       "/img/product/details/product-details-3.jpg",
@@ -37,13 +35,52 @@ const ProductDetails = () => {
       {
         id: 'tabs-3',
         title: 'Reviews',
-        content: 'Vestibu ac diam sit amet quam vehicula elementum sed sit amet dui. Donec rutrum congue leo eget malesuada. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Proin eget tortor risus.lum ac dor sit amet aliquam vel, ullamcorper sit amet ligula. Proin eget tortor risus.'
-      }
+        content: {
+          "id": 1,
+          "userId": 123,
+          "userName": "JohnDoe",
+          "content": "This product is amazing!",
+          "timestamp": "2023-12-01T08:00:00Z",
+          "replies": [
+            {
+              "id": 101,
+              "userId": 456,
+              "userName": "JaneSmith",
+              "content": "I agree, I love it too!",
+              "timestamp": "2023-12-01T09:00:00Z"
+            },
+            {
+              "id": 102,
+              "userId": 789,
+              "userName": "SamWilson",
+              "content": "Not bad, but could be better.",
+              "timestamp": "2023-12-01T10:00:00Z"
+            }
+          ],
+          "rating": 4
+        }}
     ]
-    // Các thông tin khác của sản phẩm
-  };
 
-  const [imgLarge, setImgLarge] = useState(product.imgSlider[0]);
+  }
+  const [product, setProduct] = useState(obj1);
+
+  // useEffect(() => {
+  //   const fetchProduct = async () => {
+  //     try {
+  //       const response = await axiosInstance.get(`/product/${id}`); // Sử dụng id từ URL
+  //       setProduct({ ...obj1, ...response.data }); // Lưu thông tin sản phẩm vào state
+  //       console.log('response.data ',response.data )
+  //     } catch (error) {
+  //       console.error('Error fetching product:', error);
+  //       // Xử lý lỗi nếu có
+  //     }
+  //   };
+
+  //   fetchProduct();
+  // }, [id]);
+
+  console.log('>>>', product)
+  const [imgLarge, setImgLarge] = useState(product.image[0]);
 
   const handleImgClick = (img) => {
     setImgLarge(img);
@@ -97,7 +134,7 @@ const ProductDetails = () => {
                 <img className="product__details__pic__item--large" src={imgLarge} alt="" />
               </div>
               <div className="product__details__pic__slider owl-carousel detail-mini-pic">
-                {product.imgSlider.map((img, index) => (
+                {product.image.map((img, index) => (
                   <img
                     key={index}
                     src={img}
@@ -147,30 +184,62 @@ const ProductDetails = () => {
           <div className="col-lg-12">
             <div className="product__details__tab">
               <ul className="nav nav-tabs" role="tablist">
-                {product.tabs.map((tab) => (
-                  <li className="nav-item" key={tab.id}>
-                    <a
-                      className={`nav-link ${activeTab === tab.id ? 'active' : ''}`}
-                      onClick={() => handleTabClick(tab.id)}
-                      data-toggle="tab"
-                      href={`#${tab.id}`}
-                      role="tab"
-                      aria-selected={activeTab === tab.id ? 'true' : 'false'}
-                    >
-                      {tab.title} {activeTab === tab.id && <span>(1)</span>}
-                    </a>
-                  </li>
-                ))}
+                <li className="nav-item">
+                  <a
+                    className={`nav-link ${activeTab === 1 ? 'active' : ''}`}
+                    onClick={() => handleTabClick(1)}
+                    data-toggle="tab"
+                    href="#tab1"
+                    role="tab"
+                    aria-selected={activeTab === 1 ? 'true' : 'false'}
+                  >
+                    {product.tabs[0].title} {activeTab === 1 && <span>(1)</span>}
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className={`nav-link ${activeTab === 2 ? 'active' : ''}`}
+                    onClick={() => handleTabClick(2)}
+                    data-toggle="tab"
+                    href="#tab2"
+                    role="tab"
+                    aria-selected={activeTab === 2 ? 'true' : 'false'}
+                  >
+                    {product.tabs[1].title} {activeTab === 2 && <span>(1)</span>}
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className={`nav-link ${activeTab === 3 ? 'active' : ''}`}
+                    onClick={() => handleTabClick(3)}
+                    data-toggle="tab"
+                    href="#tab3"
+                    role="tab"
+                    aria-selected={activeTab === 3 ? 'true' : 'false'}
+                  >
+                    {product.tabs[2].title} {activeTab === 3 && <span>(1)</span>}
+                  </a>
+                </li>
               </ul>
               <div className="tab-content">
-                {product.tabs.map((tab) => (
-                  <div className={`tab-pane ${activeTab === tab.id ? 'active' : ''}`} id={tab.id} role="tabpanel" key={tab.id}>
-                    <div className="product__details__tab__desc">
-                      <h6>{tab.title}</h6>
-                      <p>{tab.content}</p>
-                    </div>
+                <div className={`tab-pane ${activeTab === 1 ? 'active' : ''}`} id="tab1" role="tabpanel">
+                  <div className="product__details__tab__desc">
+                    <h6>{product.tabs[0].title}</h6>
+                    <p>{product.tabs[0].content}</p>
                   </div>
-                ))}
+                </div>
+                <div className={`tab-pane ${activeTab === 2 ? 'active' : ''}`} id="tab2" role="tabpanel">
+                  <div className="product__details__tab__desc">
+                    <h6>{product.tabs[1].title}</h6>
+                    <p>{product.tabs[1].content}</p>
+                  </div>
+                </div>
+                <div className={`tab-pane ${activeTab === 3 ? 'active' : ''}`} id="tab3" role="tabpanel">
+                  <div className="product__details__tab__desc">
+                    <h6>{product.tabs[2].title}</h6>
+                    <Comment comment = {product.tabs[2].content}/>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

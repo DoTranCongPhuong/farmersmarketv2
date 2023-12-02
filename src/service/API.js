@@ -107,5 +107,5 @@ const changeUserPassword = async (currentPassword, newPassword) => {
 
 
 
-export { register, login, getUserInfo, updateUser, changeUserPassword };
+export { register, login, getUserInfo, updateUser, changeUserPassword, axiosInstance };
 

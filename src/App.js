@@ -9,19 +9,15 @@ import './css/nice-select.css';
 import './css/slicknav.min.css';
 import './css/style.css';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import {
   HomePage, ProductsPage, ProductDetailPage, CartPage,
   LoginPage, ContactPage, CheckoutPage, RegisterPage, UserPage
 } from './routes/Routes';
+import PrivateRoute from './routes/PrivateRoute';
 
-const isAuthenticated = () => {
-  const token = localStorage.getItem('token');
-  return !!token; // Trả về true nếu tồn tại token, ngược lại trả về false
-};
 
 const App = () => {
-
 
   return (
     <Router>
@@ -34,7 +30,7 @@ const App = () => {
         <Route path="/cart-page" element={<CartPage />} />
         <Route path="/contact-page" element={<ContactPage />} />
         <Route path="/checkout-page" element={<CheckoutPage />} />
-        <Route path="/user-page" element={isAuthenticated() ? <UserPage /> : <Navigate to="/login" />} />
+        <Route path="/user-page" element={<PrivateRoute component={UserPage} />} />
       </Routes>
     </Router>
   );

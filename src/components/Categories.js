@@ -8,49 +8,30 @@ class CategoriesData extends Component {
     const categoriesData = [
       {
         image: 'img/categories/cat-1.jpg',
+        title: 'Fruit',
+        link: '#'
+      },
+      {
+        image: 'img/categories/cat-1.jpg',
         title: 'Fresh Fruit',
         link: '#'
       },
       {
-        image: 'img/categories/cat-2.jpg',
-        title: 'Dried Fruit',
+        image: 'img/categories/cat-1.jpg',
+        title: 'Fresh Fruit',
         link: '#'
       },
       {
-        image: 'img/categories/cat-3.jpg',
-        title: 'Vegetables',
+        image: 'img/categories/cat-1.jpg',
+        title: 'Fresh Fruit',
         link: '#'
       },
       {
-        image: 'img/categories/cat-4.jpg',
-        title: 'Drink Fruits',
+        image: 'img/categories/cat-1.jpg',
+        title: 'Fresh Fruit',
         link: '#'
       },
-      {
-        image: 'img/categories/cat-5.jpg',
-        title: 'Drink Fruits',
-        link: '#'
-      },
-      {
-        image: 'img/categories/cat-4.jpg',
-        title: 'Drink Fruits',
-        link: '#'
-      },
-      {
-        image: 'img/categories/cat-5.jpg',
-        title: 'Drink Fruits',
-        link: '#'
-      },
-      {
-        image: 'img/categories/cat-4.jpg',
-        title: 'Drink Fruits',
-        link: '#'
-      },
-      {
-        image: 'img/categories/cat-5.jpg',
-        title: 'Drink Fruits',
-        link: '#'
-      }
+      
     ];
 
     const settings = {

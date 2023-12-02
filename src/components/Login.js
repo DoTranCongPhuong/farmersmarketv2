@@ -37,13 +37,13 @@ const Login = () => {
 
             setTimeout(() => {
                 navigate('/');
-            }, 2000);
+            }, 1500);
         } catch (error) {
             console.error('Login error:', error);
             let errorMessage = 'Login failed. Please try again.';
 
-            if (error.response && error.response.data) {
-                errorMessage = error.response.data.message; // Lấy thông tin lỗi từ phản hồi của API
+            if (error.response?.data) {
+                errorMessage = error.response.data.message; // Sử dụng optional chaining để truy cập thông tin lỗi từ phản hồi của API
             }
 
             setErrorMessage(errorMessage);

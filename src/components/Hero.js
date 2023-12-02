@@ -1,25 +1,35 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+
 
 const departmentsData = [
-  'Fresh Meat',
+  'Fruits',
   'Vegetables',
-  'Fruit & Nut Gifts',
-  'Fresh Berries',
-  'Ocean Foods',
-  'Butter & Eggs',
-  'Fastfood',
-  'Fresh Onion',
-  'Papayaya & Crisps',
-  'Oatmeal',
-  'Fresh Bananas'
+  'Local specialty foods',
+  'Organic food',
+  'Pices and seeds',
 ];
 
 const HeroSection = () => {
-  const [showCategories, setShowCategories] = useState(true);
-
+  const [activeLink, setActiveLink] = useState('/');
+  const [showCategories, setShowCategories] = useState(true); // Ban đầu set là true vì đang ở trang home
+  
+  const location = useLocation();
+  
+  // Kiểm tra đường dẫn hiện tại và cập nhật activeLink
+  React.useEffect(() => {
+    setActiveLink(location.pathname);
+  }, [location]);
+  
+  // Theo dõi thay đổi của activeLink và cập nhật showCategories tương ứng
+  React.useEffect(() => {
+    setShowCategories(activeLink === '/');
+  }, [activeLink]);
+  
   const toggleCategories = () => {
     setShowCategories(!showCategories);
   };
+  
 
   return (
     <section className="hero">
@@ -29,7 +39,7 @@ const HeroSection = () => {
             <div className="hero__categories">
               <div className="hero__categories__all" onClick={toggleCategories}>
                 <i className="fa fa-bars"></i>
-                <span>All departments</span>
+                <span>All Categories</span>
               </div>
               <ul style={{ display: showCategories ? 'block' : 'none' }}>
                 {departmentsData.map((department, index) => (
@@ -44,10 +54,6 @@ const HeroSection = () => {
             <div className="hero__search">
               <div className="hero__search__form">
                 <form action="#">
-                  {/* <div className="hero__search__categories">
-                    All Categories
-                    <span className="arrow_carrot-down"></span>
-                  </div> */}
                   <input type="text" placeholder="What do you need?" />
                   <button type="submit" className="site-btn">SEARCH</button>
                 </form>
@@ -64,7 +70,10 @@ const HeroSection = () => {
                 </div>
               </a>
             </div>
-            <div className="hero__item set-bg" style={{ backgroundImage: 'url("img/hero/banner.jpg")' }}>
+            <div className="hero__item set-bg" style={{
+              display: activeLink === '/' ? 'block' : 'none',
+              backgroundImage: 'url("img/hero/banner.jpg")'
+            }}>
               <div className="hero__text">
                 <span>FRUIT FRESH</span>
                 <h2>Vegetable <br />100% Organic</h2>

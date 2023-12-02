@@ -1,5 +1,5 @@
 import Header from '../components/Header';
-import HeroNomal from '../components/HeroNomal';
+import Hero from '../components/Hero';
 import ListProduct from '../components/ListProduct';
 import Footer from '../components/Footer'
 import LeftBar from '../components/LeftBar';
@@ -10,7 +10,7 @@ const ProductsPage = () => {
     return (
         <>
             <Header />
-            <HeroNomal />
+            <Hero />
             <div className='container'>
                 <div className='container'>
                     <div className='row'>

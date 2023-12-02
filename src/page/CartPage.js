@@ -1,5 +1,5 @@
 import Header from '../components/Header';
-import Hero from '../components/HeroNomal';
+import Hero from '../components/Hero';
 import Cart from '../components/Cart';
 import Footer from '../components/Footer'
 
