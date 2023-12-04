@@ -11,7 +11,7 @@ const Header = () => {
   }, [location]);
   const [showMenu, setShowMenu] = useState(false);
 
-  const handleShowMenu= () => {
+  const handleShowMenu = () => {
     setShowMenu(!showMenu);
   };
 
@@ -41,31 +41,26 @@ const Header = () => {
             </ul>
           </div>
           <div className="header__top__right__auth">
-            <a href="#"><i className="fa fa-user"></i> Login</a>
+            {
+              localStorage.getItem('token') ?
+                <Link to="/login"> <i className="fa fa-user"></i> My account </Link> :
+                <Link to="/user-page"><i className="fa fa-user"></i> Login </Link>
+            }
           </div>
         </div>
-        <nav className="slicknav_nav slicknav_hidden">
-            <ul>
-                <li className="active"><a href="./index.html">Home</a></li>
-                <li><a href="./shop-grid.html">Shop</a></li>
-                <li><a href="#" className='slicknav_item slicknav_row'>Pages</a>
-                    <ul className="header__menu__dropdown">
-                        <li><a href="./shop-details.html">Shop Details</a></li>
-                        <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                        <li><a href="./checkout.html">Check Out</a></li>
-                        <li><a href="./blog-details.html">Blog Details</a></li>
-                    </ul>
-                </li>
-                <li><a href="./blog.html">Blog</a></li>
-                <li><a href="./contact.html">Contact</a></li>
-            </ul>
+        <nav className="slicknav_nav ">
+          <ul>
+          <li className={activeLink === '/' ? 'active' : ''}><Link to="/">Home</Link></li>
+                  <li className={activeLink === '/products-page' ? 'active' : ''}><Link to="/products-page">Shop</Link></li>
+                  <li>
+                    <Link to="#">Pages</Link>
+                  </li>
+                  {/* <li><Link to="/blog">Blog</Link></li> */}
+                  <li className={activeLink === '/contact-page' ? 'active' : ''}><Link to="/contact-page">Contact</Link></li>
+          </ul>
         </nav>
         <div id="mobile-menu-wrap"></div>
         <div className="header__top__right__social">
-          <a href="#"><i className="fa fa-facebook"></i></a>
-          <a href="#"><i className="fa fa-twitter"></i></a>
-          <a href="#"><i className="fa fa-linkedin"></i></a>
-          <a href="#"><i className="fa fa-pinterest-p"></i></a>
         </div>
         <div className="humberger__menu__contact">
           <ul>

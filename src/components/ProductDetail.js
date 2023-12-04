@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { axiosInstance } from '../service/API';
-import Comment from './Comment';
+import CommentComponent from "./Comments";
+
 
 const ProductDetails = () => {
   const { id } = useParams(); // Lấy id từ URL bằng useParams()
@@ -62,6 +63,45 @@ const ProductDetails = () => {
     ]
 
   }
+
+  const Comments = [
+    {
+      id: 1,
+      userId: 1,
+      avatar: 'https://react.semantic-ui.com/images/avatar/small/matt.jpg',
+      author: 'Matt',
+      time: 'Today at 5:42PM',
+      text: 'How artistic!',
+      rating: 2,
+    },
+    {
+      id: 2,
+      userId: 2,
+      avatar: 'https://react.semantic-ui.com/images/avatar/small/elliot.jpg',
+      author: 'Elliot Fu',
+      time: 'Yesterday at 12:30AM',
+      text: 'This has been very useful for my research. Thanks as well!',
+      rating: 3,
+    },
+    {
+      id: 3,
+      userId: 3,
+      avatar: 'https://react.semantic-ui.com/images/avatar/small/jenny.jpg',
+      author: 'Jenny Hess',
+      time: 'Just now',
+      text: 'Elliot you are always so right :)',
+      rating: 4,
+    },
+    {
+      id: 4,
+      userId: 4,
+      avatar: 'https://react.semantic-ui.com/images/avatar/small/joe.jpg',
+      author: 'Joe Henderson',
+      time: '5 days ago',
+      text: 'Dude, this is awesome. Thanks so much',
+      rating: 5,
+    },
+  ];
   const [product, setProduct] = useState(obj1);
 
   // useEffect(() => {
@@ -237,7 +277,7 @@ const ProductDetails = () => {
                 <div className={`tab-pane ${activeTab === 3 ? 'active' : ''}`} id="tab3" role="tabpanel">
                   <div className="product__details__tab__desc">
                     <h6>{product.tabs[2].title}</h6>
-                    <Comment comment = {product.tabs[2].content}/>
+                    <CommentComponent comments={Comments} currentUserId={'1'} />
                   </div>
                 </div>
               </div>
