@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 
 const departmentsData = [
@@ -12,6 +13,8 @@ const departmentsData = [
 ];
 
 const HeroSection = () => {
+  const { t } = useTranslation();
+
   const [activeLink, setActiveLink] = useState('/');
   const [showCategories, setShowCategories] = useState(true); // Ban đầu set là true vì đang ở trang home
 
@@ -40,7 +43,7 @@ const HeroSection = () => {
             <div className="hero__categories">
               <div className="hero__categories__all" onClick={toggleCategories}>
                 <i className="fa fa-bars"></i>
-                <span>All Categories</span>
+                <span>{t('All Categories')}</span>
               </div>
               <ul style={{ display: showCategories ? 'block' : 'none' }}>
                 {departmentsData.map((department, index) => (
@@ -55,8 +58,8 @@ const HeroSection = () => {
             <div className="hero__search">
               <div className="hero__search__form">
                 <form action="#">
-                  <input type="text" placeholder="What do you need?" />
-                  <button type="submit" className="site-btn">SEARCH</button>
+                  <input type="text" placeholder={t('What do you need?')} />
+                  <button type="submit" className="site-btn">{t('SEARCH')}</button>
                 </form>
               </div>
               <a href="https://zalo.me/+84898537761">
@@ -66,7 +69,7 @@ const HeroSection = () => {
                   </div>
                   <div className="hero__search__phone__text">
                     <h5>+84 898.537.761</h5>
-                    <span>support 24/7 time</span>
+                    <span>{t('support 24/7 time')}</span>
                   </div>
                 </div>
               </a>
@@ -76,10 +79,10 @@ const HeroSection = () => {
               backgroundImage: 'url("img/hero/banner.jpg")'
             }}>
               <div className="hero__text ">
-                <span>FRUIT FRESH</span>
-                <h2>Vegetable <br />100% Organic</h2>
-                <p>Free Pickup and Delivery Available</p>
-                <Link to='/products-page'><button className="site-btn">SHOP NOW</button></Link>
+                <span>{t('FRUIT FRESH')}</span>
+                <h2> {t('Vegetable')}<br />100% {t('Organic')}</h2>
+                <p>{t('Free Pickup and Delivery Available')}</p>
+                <Link to='/products-page'><button className="site-btn">{t('SHOP NOW')}</button></Link>
               </div>
             </div>
 

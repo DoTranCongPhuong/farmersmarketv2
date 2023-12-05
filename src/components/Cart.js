@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const ShoppingCart = () => {
+    const { t } = useTranslation();
     // Cart data initialization
     const [cartItems, setCartItems] = useState([
         {
@@ -63,10 +65,10 @@ const ShoppingCart = () => {
                             <table>
                                 <thead>
                                     <tr>
-                                        <th className="shoping__product">Products</th>
-                                        <th>Price</th>
-                                        <th>Quantity</th>
-                                        <th>Total</th>
+                                        <th className="shoping__product">{t('Products')}</th>
+                                        <th>{t('Price')}</th>
+                                        <th>{t('Quantity')}</th>
+                                        <th>{t('Total')}</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -123,31 +125,31 @@ const ShoppingCart = () => {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="shoping__cart__btns">
-                            <a href="#" className="primary-btn cart-btn">CONTINUE SHOPPING</a>
+                            <a href="#" className="primary-btn cart-btn">{t('CONTINUE SHOPPING')}</a>
                             <a href="#" className="primary-btn cart-btn cart-btn-right">
-                                <span className="icon_loading"></span>Update Cart
+                                <span className="icon_loading"></span>{t('UPDATE CART')}
                             </a>
                         </div>
                     </div>
                     <div className="col-lg-6">
                         <div className="shoping__continue">
-                            <div className="shoping__discount">
-                                <h5>Discount Codes</h5>
+                            <div className="shoping__discount row">
+                                <h5>{t('Discount Codes')}</h5>
                                 <form action="#">
-                                    <input type="text" placeholder="Enter your coupon code" />
-                                    <button type="submit" className="site-btn">APPLY COUPON</button>
+                                    <input type="text" className='form-group' placeholder={t('Enter your coupon code')} />
+                                    <button type="submit" className="site-btn form-group">{t('APPLY COUPON')}</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                     <div className="col-lg-6">
                         <div className="shoping__checkout">
-                            <h5>Cart Total</h5>
+                            <h5>{t('Cart Total')}</h5>
                             <ul>
-                                <li>Subtotal <span>${calculateTotal()}</span></li>
-                                <li>Total <span>${calculateTotal()}</span></li>
+                                <li> {t('Subtotal')}<span>${calculateTotal()}</span></li>
+                                <li>{t('Total')} <span>${calculateTotal()}</span></li>
                             </ul>
-                            <Link to ="/checkout-page" className="primary-btn">PROCEED TO CHECKOUT</Link>
+                            <Link to="/checkout-page" className="primary-btn">{t('PROCEED TO CHECKOUT')}</Link>
                         </div>
                     </div>
                 </div>
