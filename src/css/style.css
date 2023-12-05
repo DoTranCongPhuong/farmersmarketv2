@@ -163,6 +163,10 @@ ol {
 	font-weight: 700;
 	background: #7fad39;
 	letter-spacing: 2px;
+	border: none;
+}
+.primary-btn:hover{
+background: #88b348;
 }
 
 .site-btn {
@@ -2783,7 +2787,7 @@ ol {
 .map .map-inside {
 	position: absolute;
 	left: 50%;
-	top: 160px;
+	top: 60px;
 	-webkit-transform: translateX(-175px);
 	-ms-transform: translateX(-175px);
 	transform: translateX(-175px);

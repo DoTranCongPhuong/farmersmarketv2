@@ -5,54 +5,55 @@ const FeaturedItems = () => {
     // Sample data object (you can replace this with your actual data)
     const featuredItems = [
         {
-            category: 'oranges fresh-meat',
+            category: 'Fruits',
             image: 'img/featured/feature-1.jpg',
             name: 'Crab Pool Security',
             price: '$30.00'
         },
         {
-            category: 'vegetables fastfood',
+            category: 'Local specialty foods',
             image: 'img/featured/feature-2.jpg',
             name: 'Another Product Name',
             price: '$25.00'
         },
         {
-            category: 'vegetables fresh-meat',
+            category: 'Vegetables',
             image: 'img/featured/feature-3.jpg',
             name: 'Featured Veggie Item',
             price: '$20.00'
         },
         {
-            category: 'fastfood oranges',
+            category: 'Fruits',
             image: 'img/featured/feature-4.jpg',
             name: 'Orange Delight',
             price: '$22.00'
         },
         {
-            category: 'fresh-meat vegetables',
+            category: 'Organic food',
             image: 'img/featured/feature-5.jpg',
             name: 'Meaty Delicacy',
             price: '$28.00'
         },
         {
-            category: 'oranges fastfood',
+            category: 'Pices and seeds',
             image: 'img/featured/feature-6.jpg',
             name: 'Fastfood Frenzy',
             price: '$18.00'
         },
         {
-            category: 'fresh-meat vegetables',
+            category: 'Others',
             image: 'img/featured/feature-7.jpg',
             name: 'Veggie Delight',
             price: '$24.00'
         },
         {
-            category: 'fastfood vegetables',
+            category: 'Fruits',
             image: 'img/featured/feature-8.jpg',
             name: 'Tasty Treat',
             price: '$26.00'
         }
     ];
+
     const [filter, setFilter] = useState('*'); // Initial filter state, '*' means showing all items
 
     const handleFilter = (filterType) => {
@@ -71,11 +72,13 @@ const FeaturedItems = () => {
                         <div className="featured__controls">
                             <ul>
                                 <li className={filter === '*' ? 'active' : ''} onClick={() => handleFilter('*')} data-filter="*">All</li>
-                                <li className={filter === 'oranges' ? 'active' : ''} onClick={() => handleFilter('oranges')} data-filter=".oranges">Oranges</li>
-                                <li className={filter === 'fresh-meat' ? 'active' : ''} onClick={() => handleFilter('fresh-meat')} data-filter=".fresh-meat">Fresh Meat</li>
-                                <li className={filter === 'vegetables' ? 'active' : ''} onClick={() => handleFilter('vegetables')} data-filter=".vegetables">Vegetables</li>
-                                <li className={filter === 'fastfood' ? 'active' : ''} onClick={() => handleFilter('fastfood')} data-filter=".fastfood">Fastfood</li>
+                                <li className={filter === 'Fruits' ? 'active' : ''} onClick={() => handleFilter('Fruits')} data-filter=".Fruits">Fruits</li>
+                                <li className={filter === 'Vegetables' ? 'active' : ''} onClick={() => handleFilter('Vegetables')} data-filter=".Vegetables">Vegetables</li>
+                                <li className={filter === 'Local specialty foods' ? 'active' : ''} onClick={() => handleFilter('Local specialty foods')} data-filter=".Local-specialty-foods">Local specialty foods</li>
+                                <li className={filter === 'Organic food' ? 'active' : ''} onClick={() => handleFilter('Organic food')} data-filter=".Organic-food">Organic food</li>
+                                <li className={filter === 'Pices and seeds' ? 'active' : ''} onClick={() => handleFilter('Pices and seeds')} data-filter=".Pices-and-seeds">Pices and seeds</li>
                             </ul>
+
                         </div>
                     </div>
                     <div className="row featured__filter">
@@ -84,8 +87,6 @@ const FeaturedItems = () => {
                                 <div className="featured__item">
                                     <div className="featured__item__pic set-bg" style={{ backgroundImage: `url(${item.image})` }}>
                                         <ul className="featured__item__pic__hover">
-                                            <li><a href="#"><i className="fa fa-heart"></i></a></li>
-                                            {/* <li><a href="#"><i className="fa fa-retweet"></i></a></li> */}
                                             <li><a href="#"><i className="fa fa-shopping-cart"></i></a></li>
                                         </ul>
                                     </div>

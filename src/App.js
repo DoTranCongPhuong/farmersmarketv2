@@ -12,7 +12,8 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import {
   HomePage, ProductsPage, ProductDetailPage, CartPage,
-  LoginPage, ContactPage, CheckoutPage, RegisterPage, UserPage
+  LoginPage, ContactPage, CheckoutPage, RegisterPage, UserPage,
+  SellerPage
 } from './routes/Routes';
 import PrivateRoute from './routes/PrivateRoute';
 
@@ -26,11 +27,12 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/products-page" element={<ProductsPage />} />
-        <Route path="/product-detail/:id" element={<ProductDetailPage />} />
+        <Route path="/product-detail/:productId" element={<ProductDetailPage />} />
         <Route path="/cart-page" element={<CartPage />} />
         <Route path="/contact-page" element={<ContactPage />} />
         <Route path="/checkout-page" element={<CheckoutPage />} />
         <Route path="/user-page" element={<PrivateRoute component={UserPage} />} />
+        <Route path="/seller-page" element={<SellerPage />} />
       </Routes>
     </Router>
   );

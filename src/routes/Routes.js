@@ -7,6 +7,7 @@ import RegisterPage from "../page/RegisterPage";
 import ContactPage from "../page/ContactPage";
 import CheckoutPage from "../page/CheckoutPage";
 import UserPage from "../page/UserPage";
+import SellerPage from "../page/SellerPage";
 
 
 
@@ -20,4 +21,5 @@ export {
     CheckoutPage,
     RegisterPage,
     UserPage,
+    SellerPage,
 }

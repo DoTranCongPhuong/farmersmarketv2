@@ -47,7 +47,6 @@ const CommentItem = ({ comment, onDeleteComment, currentUserId, setComments }) =
               key={star}
               name={star <= comment.rating ? 'star' : 'star outline'}
               color={star <= comment.rating ? 'yellow' : 'black'}
-              onClick={() => handleRatingChange(star)}
             />
           ))}
         </div>
@@ -76,7 +75,7 @@ const CommentComponent = ({ comments: initialComments, currentUserId }) => {
     const newComment = {
       id: uuidv4(),
       userId: currentUserId,
-      avatar: 'URL_of_avatar',
+      avatar: 'https://scontent.fsgn5-9.fna.fbcdn.net/v/t39.30808-6/366632445_2001971396827411_5668540651226407535_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=PFIkmN1c-mQAX86BNUX&_nc_ht=scontent.fsgn5-9.fna&oh=00_AfDB5Y6IYqQ-hait4iW8a-7Y2d6WpUUPtaIXEXvlM4ciow&oe=6574AC81',
       author: 'New Author',
       time: getCurrentTime(),
       text: newCommentText,

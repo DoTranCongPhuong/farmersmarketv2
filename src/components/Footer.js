@@ -8,7 +8,7 @@ const Footer = () => {
                     <div className="col-lg-3 col-md-6 col-sm-6">
                         <div className="footer__about">
                             <div className="footer__about__logo">
-                                <a><Link to="/"><img src="img/logo.png" alt="" /></Link></a>
+                                <Link to="/"><img src="/img/logo.png" alt="" /></Link>
                             </div>
                             <ul>
                                 <li>Address: 01 Vo Van Ngan, Linh Chieu ward, Thu Duc city</li>
@@ -46,12 +46,7 @@ const Footer = () => {
                                 <input type="text" placeholder="Enter your mail" />
                                 <button type="submit" className="site-btn">Subscribe</button>
                             </form>
-                            <div className="footer__widget__social">
-                                <a href="#"><i className="fa fa-facebook"></i></a>
-                                <a href="#"><i className="fa fa-instagram"></i></a>
-                                <a href="#"><i className="fa fa-twitter"></i></a>
-                                <a href="#"><i className="fa fa-pinterest"></i></a>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>

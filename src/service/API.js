@@ -34,6 +34,17 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+const getProductInfor = async (productId) => {
+  try {
+    const response = await axiosInstance.get(`/product/${productId}`);
+    return response.data; // Trả về dữ liệu của sản phẩm
+  } catch (error) {
+    // Xử lý lỗi ở đây nếu cần thiết
+    console.error('Error fetching product information:', error);
+    throw error;
+  }
+}
+
 const register = async (userData) => {
   try {
     const response = await axiosInstance.post('/register', userData);
@@ -105,7 +116,21 @@ const changeUserPassword = async (currentPassword, newPassword) => {
   }
 };
 
+const sendContact = async (name, email, message) => {
+  try {
+    const response = await axiosInstance.post('/save-email', {
+      content: message,
+      title: name,
+      email: email,
+    });
+    return response.data; // Return the response data if needed
+  } catch (error) {
+    throw new Error(error.response.data || error.message);
+  }
+};
 
-
-export { register, login, getUserInfo, updateUser, changeUserPassword, axiosInstance };
+export {
+  register, login, getUserInfo, updateUser, changeUserPassword, axiosInstance, sendContact
+  , getProductInfor
+};
 

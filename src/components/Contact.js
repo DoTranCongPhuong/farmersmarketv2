@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import { sendContact } from '../service/API'; // Import the sendContact function from your api.js
+import { toast, ToastContainer } from 'react-toastify'; // Import toast and ToastContainer from react-toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for styling toast messages
+
 
 const ContactSection = () => {
     const contactData = [
-        { icon: 'icon_phone', title: 'Phone', detail: '+01-3-8888-6868' },
-        { icon: 'icon_pin_alt', title: 'Address', detail: '60-49 Road 11378 New York' },
+        { icon: 'icon_phone', title: 'Phone', detail: '+84 898.537.761' },
+        { icon: 'icon_pin_alt', title: 'Address', detail: '01 Vo Van Ngan, Linh Chieu ward, Thu Duc city' },
         { icon: 'icon_clock_alt', title: 'Open time', detail: '10:00 am to 23:00 pm' },
-        { icon: 'icon_mail_alt', title: 'Email', detail: 'hello@colorlib.com' },
+        { icon: 'icon_mail_alt', title: 'Email', detail: 'fammer@example.com' },
     ];
 
     const renderContactWidgets = () => {
@@ -25,22 +29,36 @@ const ContactSection = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-
-        // Xử lý dữ liệu khi người dùng nhấn nút gửi
-        console.log('Name:', name);
-        console.log('Email:', email);
-        console.log('Message:', message);
-
-        // Reset form fields sau khi gửi
-        setName('');
-        setEmail('');
-        setMessage('');
-    };
+    
+        try {
+          // Sending contact details via sendContact function
+          await sendContact(name, email, message);
+          // Display success toast upon successful submission
+          toast.success('Message sent successfully!', {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000, // Optional duration for the toast message
+          });
+    
+          // Reset form fields after successful submission
+          setName('');
+          setEmail('');
+          setMessage('');
+        } catch (error) {
+          // Display error toast if there's an issue sending the message
+          toast.error('Failed to send message. Please try again later.', {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 3000, // Optional duration for the toast message
+          });
+          console.error('Error sending contact:', error);
+        }
+      };
+    
 
     return (
         <section className="contact spad">
+            <ToastContainer />
             <div className="container">
                 <div className="row">
                     {renderContactWidgets()}
@@ -49,7 +67,7 @@ const ContactSection = () => {
              {/* Map Begin */}
              <div className="map">
             <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.1117831499594!2d106.66208061425362!3d10.777868992312983!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752fb5a1d27f6f%3A0x29d3e2cc2eb30179!2sHo%20Chi%20Minh%20City!5e0!3m2!1sen!2s!4v1636939294615!5m2!1sen!2s"
+                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5192.913499127456!2d106.76986322233289!3d10.851067825938964!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752763f23816ab%3A0x282f711441b6916f!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBTxrAgcGjhuqFtIEvhu7kgdGh14bqtdCBUaMOgbmggcGjhu5EgSOG7kyBDaMOtIE1pbmg!5e0!3m2!1svi!2s!4v1701745959898!5m2!1svi!2s"
                 height="500"
                 style={{ border: '0' }}
                 allowFullScreen=""
@@ -58,12 +76,12 @@ const ContactSection = () => {
                 title="Ho Chi Minh City Map"
             ></iframe>
             <div className="map-inside">
-                <i className="icon_pin"></i>
+                {/* <i className="icon_pin"></i> */}
                 <div className="inside-widget">
                     <h4>Ho Chi Minh City</h4>
                     <ul>
-                        <li>Phone: +84-123-456-789</li>
-                        <li>Add: District 1, Ho Chi Minh City, Vietnam</li>
+                        <li>Phone: +84-898-537-761</li>
+                        <li>Add: 01 Vo Van Ngan, Linh Chieu, Thu Duc city</li>
                     </ul>
                 </div>
             </div>

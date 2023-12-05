@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 
 
@@ -114,22 +114,38 @@ const products = [
 ];
 
 
+const productsPerPage = 10; // Số sản phẩm trên mỗi trang
+
 const ListProduct = () => {
+    const [currentPage, setCurrentPage] = useState(1);
+
+    // Tính chỉ số sản phẩm bắt đầu và kết thúc cho trang hiện tại
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(products.length / productsPerPage); i++) {
+        pageNumbers.push(i);
+    }
+
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
     return (
-        <div className="">
-            {/* <div className="col-lg-9 col-md-7"></div> */}
+        <div className="py-3">
             <div className="product__discount">
                 <div className="section-title product__discount__title">
                     <h2>List Products</h2>
                 </div>
                 <div className="row">
-                    {products.map(product => (
+                    {currentProducts.map(product => (
                         <div key={product.id} className="col-lg-4">
                             <div className="product__discount__item">
                                 <div className="product__discount__item__pic set-bg" style={{ backgroundImage: `url("${product.imageUrl}")` }}>
-                                    
                                     <ul className="product__item__pic__hover">
-                                        <li><a href="#"><i className="fa fa-shopping-cart"></i></a></li>
+                                        <li><Link to={`/product-detail/${product.id}`}><i className="fa fa-shopping-cart"></i></Link></li>
                                     </ul>
                                 </div>
                                 <div className="product__discount__item__text">
@@ -144,14 +160,16 @@ const ListProduct = () => {
                     ))}
                 </div>
             </div>
-            <div class="product__pagination">
-                <a href="#">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+            <div className="product__pagination">
+                {pageNumbers.map(number => (
+                    <a key={number}  onClick={() => paginate(number)}>
+                        {number}
+                    </a>
+                ))}
             </div>
         </div>
     );
 };
+
 
 export default ListProduct;

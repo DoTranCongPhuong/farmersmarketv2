@@ -8,28 +8,29 @@ const departmentsData = [
   'Local specialty foods',
   'Organic food',
   'Pices and seeds',
+  'Others',
 ];
 
 const HeroSection = () => {
   const [activeLink, setActiveLink] = useState('/');
   const [showCategories, setShowCategories] = useState(true); // Ban đầu set là true vì đang ở trang home
-  
+
   const location = useLocation();
-  
+
   // Kiểm tra đường dẫn hiện tại và cập nhật activeLink
   React.useEffect(() => {
     setActiveLink(location.pathname);
   }, [location]);
-  
+
   // Theo dõi thay đổi của activeLink và cập nhật showCategories tương ứng
   React.useEffect(() => {
     setShowCategories(activeLink === '/');
   }, [activeLink]);
-  
+
   const toggleCategories = () => {
     setShowCategories(!showCategories);
   };
-  
+
 
   return (
     <section className="hero">
@@ -70,17 +71,18 @@ const HeroSection = () => {
                 </div>
               </a>
             </div>
-            <div className="hero__item set-bg" style={{
-              display: activeLink === '/' ? 'block' : 'none',
+            <div className="hero__item set-bg align-items-center" style={{
+              display: activeLink === '/' ? 'flex' : 'none',
               backgroundImage: 'url("img/hero/banner.jpg")'
             }}>
-              <div className="hero__text">
+              <div className="hero__text ">
                 <span>FRUIT FRESH</span>
                 <h2>Vegetable <br />100% Organic</h2>
                 <p>Free Pickup and Delivery Available</p>
-                <a href="#" className="primary-btn">SHOP NOW</a>
+                <Link to='/products-page'><button className="site-btn">SHOP NOW</button></Link>
               </div>
             </div>
+
           </div>
         </div>
       </div>

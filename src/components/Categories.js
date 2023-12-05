@@ -7,31 +7,36 @@ class CategoriesData extends Component {
   render() {
     const categoriesData = [
       {
-        image: 'img/categories/cat-1.jpg',
-        title: 'Fruit',
-        link: '#'
-      },
-      {
-        image: 'img/categories/cat-1.jpg',
+        image: 'img/categories/freshfruit.png',
         title: 'Fresh Fruit',
         link: '#'
       },
       {
-        image: 'img/categories/cat-1.jpg',
-        title: 'Fresh Fruit',
+        image: 'img/categories/Vegetables.jpg',
+        title: 'Vegetables',
         link: '#'
       },
       {
-        image: 'img/categories/cat-1.jpg',
-        title: 'Fresh Fruit',
+        image: 'img/categories/localfood.png',
+        title: 'Local delicacies',
         link: '#'
       },
       {
-        image: 'img/categories/cat-1.jpg',
-        title: 'Fresh Fruit',
+        image: 'img/categories/oganic.png',
+        title: 'Organic food',
         link: '#'
       },
-      
+      {
+        image: 'img/categories/giavi.jpg',
+        title: 'Pices and seeds',
+        link: '#'
+      },
+      {
+        image: 'img/categories/others.jpg',
+        title: 'Others',
+        link: '#'
+      },
+
     ];
 
     const settings = {
@@ -41,7 +46,7 @@ class CategoriesData extends Component {
       slidesToShow: 4, // Số slide hiển thị cùng một lúc
       slidesToScroll: 1, // Số slide cuộn khi di chuyển
       autoplay: true, // Tự động chuyển slide
-      autoplaySpeed: 2000, // Thời gian chờ trước khi chuyển slide tiếp theo (miligiây)
+      autoplaySpeed: 1500, // Thời gian chờ trước khi chuyển slide tiếp theo (miligiây)
       arrows: true, // Hiển thị mũi tên điều hướng
       responsive: [
         {
@@ -66,13 +71,26 @@ class CategoriesData extends Component {
         <Slider {...settings}>
           {categoriesData.map((category, index) => (
             <div key={index}>
-              <div className="categories__item set-bg" style={{ backgroundImage: `url("${category.image}")` }}>
-                <h5 className="mt-5"><Link to="/product-detail">{category.title}</Link></h5>
+              <div className="categories__item set-bg  d-flex justify-content-center ">
+                <img
+                  src={category.image}
+                  alt={category.title}
+                  style={{
+                    width: '80%',
+                    height:'80%',
+                    objectFit: 'cover', // sử dụng objectFit thay cho cover
+                    borderRadius: '5px' // đặt bo góc 5px cho hình ảnh
+                  }}
+                />
+                <h5 className="mt-5">
+                  <Link to="/product-detail">{category.title}</Link>
+                </h5>
               </div>
             </div>
           ))}
         </Slider>
       </div>
+
     );
   }
 }

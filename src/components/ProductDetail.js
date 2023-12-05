@@ -1,70 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { axiosInstance } from '../service/API';
+import { getProductInfor } from '../service/API';
+import axios from 'axios';
 import CommentComponent from "./Comments";
 
-
-const ProductDetails = () => {
-  const { id } = useParams(); // Lấy id từ URL bằng useParams()
-  console.log(id)
-  let obj1 = {
-    name: "Vetgetable’s Package",
-    rating: 4.5,
-    reviews: 18,
-    price: "$50.00",
-    description: "Mauris blandit aliquet elit, eget tincidunt nibh pulvinar Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Sed porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Proin eget tortor risus.",
-    quantity: 1,
-    weight: "0.5 kg",
-    image: [
-      "/img/product/details/product-details-1.jpg",
-      "/img/product/details/product-details-2.jpg",
-      "/img/product/details/product-details-3.jpg",
-      "/img/product/details/product-details-5.jpg",
-      "/img/product/details/product-details-4.jpg"
-    ],
-    tabs: [
-      {
-        id: 'tabs-1',
-        title: 'Description',
-        content: 'Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus. Vivamus suscipit tortor eget felis porttitor volutpat. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Donec rutrum congue leo eget malesuada. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Proin eget tortor risus.lementum sed sit amet dui. Proin eget tortor risus.'
-      },
-      {
-        id: 'tabs-2',
-        title: 'Information',
-        content: 'Vestumsan id imperdiet et, porttitor at sem. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Proin eget tortor risusibulum ac diam sit amet quam vehicula elementum sed sit amet dui. ligula. Proin eget tortor risus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Lorem sed magna dictum porta. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus nibh. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.'
-      },
-      {
-        id: 'tabs-3',
-        title: 'Reviews',
-        content: {
-          "id": 1,
-          "userId": 123,
-          "userName": "JohnDoe",
-          "content": "This product is amazing!",
-          "timestamp": "2023-12-01T08:00:00Z",
-          "replies": [
-            {
-              "id": 101,
-              "userId": 456,
-              "userName": "JaneSmith",
-              "content": "I agree, I love it too!",
-              "timestamp": "2023-12-01T09:00:00Z"
-            },
-            {
-              "id": 102,
-              "userId": 789,
-              "userName": "SamWilson",
-              "content": "Not bad, but could be better.",
-              "timestamp": "2023-12-01T10:00:00Z"
-            }
-          ],
-          "rating": 4
-        }}
-    ]
-
-  }
-
-  const Comments = [
+let obj1 = {
+  name: "Vetgetable’s Package",
+  rating: 4.5,
+  price: "$50.00",
+  description: "Mauris blandit aliquet elit, eget tincidunt nibh pulvinar Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Sed porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Proin eget tortor risus.",
+  quantity: 1,
+  weight: "0.5 kg",
+  image: [
+    "/img/product/details/product-details-1.jpg",
+    "/img/product/details/product-details-2.jpg",
+    "/img/product/details/product-details-3.jpg",
+    "/img/product/details/product-details-5.jpg",
+    "/img/product/details/product-details-4.jpg"
+  ],
+  descriptionDetail: 'hello',
+  reviews: [
     {
       id: 1,
       userId: 1,
@@ -101,25 +56,48 @@ const ProductDetails = () => {
       text: 'Dude, this is awesome. Thanks so much',
       rating: 5,
     },
-  ];
+  ],
+  infoFarmer: {
+    "dateOfBirth": null,
+    "country": null,
+    "city": null,
+    "district": null,
+    "ward": null,
+    "street": null,
+    "addressDetail": null,
+    "_id": "6564d3f5316b9fe3ce685d62",
+    "lastName": "anhthien4",
+    "firstName": "anhthien4",
+    "email": "admin4@gmail.com",
+    "numberPhone": "anhthien4",
+    "role": "farmer",
+    "image": "https://png.pngtree.com/png-vector/20220709/ourmid/pngtree-businessman-user-avatar-wearing-suit-with-red-tie-png-image_5809521.png",
+    "__v": 0
+  },
+}
+
+const ProductDetails = () => {
+  const { productId } = useParams();
+  console.log('ưcefffffff', productId)
   const [product, setProduct] = useState(obj1);
 
-  // useEffect(() => {
-  //   const fetchProduct = async () => {
-  //     try {
-  //       const response = await axiosInstance.get(`/product/${id}`); // Sử dụng id từ URL
-  //       setProduct({ ...obj1, ...response.data }); // Lưu thông tin sản phẩm vào state
-  //       console.log('response.data ',response.data )
-  //     } catch (error) {
-  //       console.error('Error fetching product:', error);
-  //       // Xử lý lỗi nếu có
-  //     }
-  //   };
 
-  //   fetchProduct();
-  // }, [id]);
+  useEffect(() => {
+    const fetchProductInformation = async () => {
+      try {
+        const productData = await getProductInfor(productId);
+        console.log('Product Data:', productData); // Log dữ liệu sản phẩm trước khi cập nhật state
+        setProduct(... obj1,...productData);
+      } catch (error) {
+        console.error('Error fetching product information:', error);
+      }
+    };
 
-  console.log('>>>', product)
+    fetchProductInformation(); // Gọi hàm fetchProductInformation khi productId thay đổi
+  }, [productId]);
+
+
+
   const [imgLarge, setImgLarge] = useState(product.image[0]);
 
   const handleImgClick = (img) => {
@@ -142,10 +120,13 @@ const ProductDetails = () => {
     return (
       <div className="product__details__rating">
         {stars}
-        <span>({product.reviews} reviews)</span>
+        {product.reviews && Array.isArray(product.reviews) && (
+          <span>({product.reviews.length} reviews)</span>
+        )}
       </div>
     );
   };
+
 
   const [quantity, setQuantity] = useState(1);
 
@@ -159,9 +140,10 @@ const ProductDetails = () => {
     setQuantity(quantity + 1);
   };
 
-  const [activeTab, setActiveTab] = useState('tabs-1');
-  const handleTabClick = (tabId) => {
-    setActiveTab(tabId);
+  const [activeTab, setActiveTab] = useState(1);
+
+  const handleTabClick = (tabNumber) => {
+    setActiveTab(tabNumber);
   };
 
   return (
@@ -183,14 +165,11 @@ const ProductDetails = () => {
                   />
                 ))}
               </div>
-
-
-
             </div>
           </div>
           <div className="col-lg-6 col-md-6">
             <div className="product__details__text">
-              <h3>{product.name} {id}</h3>
+              <h3>{product.name}</h3>
               {renderStars()}
               <div className="product__details__price">{product.price}</div>
               <p>{product.description}</p>
@@ -203,21 +182,12 @@ const ProductDetails = () => {
                   </div>
                 </div>
               </div>
-              <a href="#" className="primary-btn">ADD TO CARD</a>
-              <a href="#" className="heart-icon"><span className="icon_heart_alt"></span></a>
+              <button className="primary-btn">ADD TO CARD</button>
               <ul>
                 <li><b>Availability</b> <span>{product.availability}</span></li>
                 <li><b>Shipping</b> <span>{product.shipping}</span></li>
                 <li><b>Weight</b> <span>{product.weight}</span></li>
-                <li>
-                  <b>Share on</b>
-                  <div className="share">
-                    <a href="#"><i className="fa fa-facebook"></i></a>
-                    <a href="#"><i className="fa fa-twitter"></i></a>
-                    <a href="#"><i className="fa fa-instagram"></i></a>
-                    <a href="#"><i className="fa fa-pinterest"></i></a>
-                  </div>
-                </li>
+                <li><b>Seller</b> <span>{product.infoFarmer.firstName + ' ' + product.infoFarmer.lastName}</span></li>
               </ul>
             </div>
           </div>
@@ -233,7 +203,7 @@ const ProductDetails = () => {
                     role="tab"
                     aria-selected={activeTab === 1 ? 'true' : 'false'}
                   >
-                    {product.tabs[0].title} {activeTab === 1 && <span>(1)</span>}
+                    Description {activeTab === 1}
                   </a>
                 </li>
                 <li className="nav-item">
@@ -245,39 +215,21 @@ const ProductDetails = () => {
                     role="tab"
                     aria-selected={activeTab === 2 ? 'true' : 'false'}
                   >
-                    {product.tabs[1].title} {activeTab === 2 && <span>(1)</span>}
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a
-                    className={`nav-link ${activeTab === 3 ? 'active' : ''}`}
-                    onClick={() => handleTabClick(3)}
-                    data-toggle="tab"
-                    href="#tab3"
-                    role="tab"
-                    aria-selected={activeTab === 3 ? 'true' : 'false'}
-                  >
-                    {product.tabs[2].title} {activeTab === 3 && <span>(1)</span>}
+                    {product.reviews && (
+                      <span>Reviews ({product.reviews.length})</span>
+                    )}
                   </a>
                 </li>
               </ul>
               <div className="tab-content">
                 <div className={`tab-pane ${activeTab === 1 ? 'active' : ''}`} id="tab1" role="tabpanel">
                   <div className="product__details__tab__desc">
-                    <h6>{product.tabs[0].title}</h6>
-                    <p>{product.tabs[0].content}</p>
+                    <p>{product.descriptionDetail}</p>
                   </div>
                 </div>
                 <div className={`tab-pane ${activeTab === 2 ? 'active' : ''}`} id="tab2" role="tabpanel">
                   <div className="product__details__tab__desc">
-                    <h6>{product.tabs[1].title}</h6>
-                    <p>{product.tabs[1].content}</p>
-                  </div>
-                </div>
-                <div className={`tab-pane ${activeTab === 3 ? 'active' : ''}`} id="tab3" role="tabpanel">
-                  <div className="product__details__tab__desc">
-                    <h6>{product.tabs[2].title}</h6>
-                    <CommentComponent comments={Comments} currentUserId={'1'} />
+                    <CommentComponent comments={product.reviews} currentUserId={'1'} />
                   </div>
                 </div>
               </div>
