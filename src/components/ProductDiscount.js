@@ -1,52 +1,79 @@
 import React from 'react';
 import Slider from "react-slick";
 import { Link } from 'react-router-dom';
+
+import { addToCart } from '../service/API';
+import { toast, ToastContainer } from 'react-toastify';
+
 const ProductDiscount = () => {
     const products = [
         {
-            imgSrc: 'img/product/discount/pd-3.jpg',
+
+            id: '6564eb2812062f864554ea1d',
+            image: 'img/product/discount/pd-3.jpg',
             category: 'Dried Fruit',
-            name: 'Raisin’n’nuts',
+            name: 'Raisinnnuts',
             price: '$30.00',
             discountedPrice: '$36.00'
         },
         {
-            imgSrc: 'img/product/discount/pd-2.jpg',
+            id: '6564eb2812062f864554ea1d',
+            image: 'img/product/discount/pd-2.jpg',
             category: 'Vegetables',
-            name: 'Vegetables’package',
+            name: 'Vegetablespackage',
             price: '$30.00',
             discountedPrice: '$36.00'
         },
         {
-            imgSrc: 'img/product/discount/pd-3.jpg',
+            id: '6564eb2812062f864554ea1d',
+            image: 'img/product/discount/pd-3.jpg',
             category: 'Dried Fruit',
             name: 'Mixed Fruitss',
             price: '$30.00',
             discountedPrice: '$36.00'
         },
         {
-            imgSrc: 'img/product/discount/pd-4.jpg',
+            id: '6564eb2812062f864554ea1d',
+            image: 'img/product/discount/pd-4.jpg',
             category: 'Dried Fruit',
-            name: 'Raisin’n’nuts',
+            name: 'Raisinnnuts',
             price: '$30.00',
             discountedPrice: '$36.00'
         },
         {
-            imgSrc: 'img/product/discount/pd-5.jpg',
+            id: '6564eb2812062f864554ea1d',
+            image: 'img/product/discount/pd-5.jpg',
             category: 'Dried Fruit',
-            name: 'Raisin’n’nuts',
+            name: 'Raisinnnuts',
             price: '$30.00',
             discountedPrice: '$36.00'
         },
         {
-            imgSrc: 'img/product/discount/pd-6.jpg',
+            id: '6564eb2812062f864554ea1d',
+            image: 'img/product/discount/pd-6.jpg',
             category: 'Dried Fruit',
-            name: 'Raisin’n’nuts',
+            name: 'Raisinnnuts',
             price: '$30.00',
             discountedPrice: '$36.00'
         },
         // Add other product data in a similar format
     ];
+
+    const handleAddToCart = async (itemId) => {
+        try {
+            // Gọi API add to cart khi click vào icon
+            await addToCart('6564eb2812062f864554ea1d', 1); // Thay đổi thông tin productId và quantity tùy theo cấu trúc dữ liệu của bạn
+
+            // Hiển thị thông báo thành công khi thêm vào giỏ hàng
+            toast.success('Sản phẩm đã được thêm vào giỏ hàng!');
+        } catch (error) {
+            // Xử lý lỗi nếu cần
+            console.error('Error adding to cart:', error);
+            // Hiển thị thông báo lỗi khi có lỗi xảy ra
+            toast.error('Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng!');
+        }
+    };
+
     const settings = {
         dots: true,
         infinite: true,
@@ -76,6 +103,18 @@ const ProductDiscount = () => {
 
     return (
         <div>
+            <ToastContainer
+                position="top-right"
+                autoClose={1500}
+                hideProgressBar={false}
+                newestOnTop={true}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
             {/* <div className="col-lg-9 col-md-7"></div> */}
             <div className="product__discount">
                 <div className="section-title product__discount__title">
@@ -87,11 +126,18 @@ const ProductDiscount = () => {
                             {products.map((product, index) => (
                                 <div key={index} className="col-lg-4">
                                     <div className="product__discount__item">
-                                        <div className="product__discount__item__pic set-bg" style={{ backgroundImage: `url("${product.imgSrc}  ")` }}>
+                                        <div
+                                            className="product__discount__item__pic set-bg"
+                                            style={{ backgroundImage: `url("${product.image}")` }}
+                                        >
                                             <div className="product__discount__percent">-20%</div>
                                             <ul className="product__item__pic__hover">
-                                                
-                                                <li><a href="#"><i className="fa fa-shopping-cart"></i></a></li>
+
+                                                <li>
+                                                    <a onClick={() => handleAddToCart(product.id)}>
+                                                        <i className="fa fa-shopping-cart"></i>
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                         <div className="product__discount__item__text">

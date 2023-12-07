@@ -31,63 +31,40 @@ const ContactSection = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-    
+
         try {
-          // Sending contact details via sendContact function
-          await sendContact(name, email, message);
-          // Display success toast upon successful submission
-          toast.success('Message sent successfully!', {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000, // Optional duration for the toast message
-          });
-    
-          // Reset form fields after successful submission
-          setName('');
-          setEmail('');
-          setMessage('');
+            // Sending contact details via sendContact function
+            await sendContact(name, email, message);
+            // Display success toast upon successful submission
+            toast.success('Message sent successfully!', {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 3000, // Optional duration for the toast message
+            });
+
+            // Reset form fields after successful submission
+            setName('');
+            setEmail('');
+            setMessage('');
         } catch (error) {
-          // Display error toast if there's an issue sending the message
-          toast.error('Failed to send message. Please try again later.', {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000, // Optional duration for the toast message
-          });
-          console.error('Error sending contact:', error);
+            // Display error toast if there's an issue sending the message
+            toast.error('Failed to send message. Please try again later.', {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 3000, // Optional duration for the toast message
+            });
+            console.error('Error sending contact:', error);
         }
-      };
-    
+    };
+
 
     return (
         <section className="contact spad">
             <ToastContainer />
+
             <div className="container">
                 <div className="row">
                     {renderContactWidgets()}
                 </div>
             </div>
-             {/* Map Begin */}
-             <div className="map">
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5192.913499127456!2d106.76986322233289!3d10.851067825938964!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752763f23816ab%3A0x282f711441b6916f!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBTxrAgcGjhuqFtIEvhu7kgdGh14bqtdCBUaMOgbmggcGjhu5EgSOG7kyBDaMOtIE1pbmg!5e0!3m2!1svi!2s!4v1701745959898!5m2!1svi!2s"
-                height="500"
-                style={{ border: '0' }}
-                allowFullScreen=""
-                aria-hidden="false"
-                tabIndex="0"
-                title="Ho Chi Minh City Map"
-            ></iframe>
-            <div className="map-inside">
-                {/* <i className="icon_pin"></i> */}
-                <div className="inside-widget">
-                    <h4>Ho Chi Minh City</h4>
-                    <ul>
-                        <li>Phone: +84-898-537-761</li>
-                        <li>Add: 01 Vo Van Ngan, Linh Chieu, Thu Duc city</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-            {/* Map End */}
-
             {/* Contact Form Begin */}
             <div className="contact-form spad">
                 <div className="container">
@@ -129,6 +106,31 @@ const ContactSection = () => {
                 </div>
             </div>
             {/* Contact Form End */}
+            {/* Map Begin */}
+            <div className="map">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5192.913499127456!2d106.76986322233289!3d10.851067825938964!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752763f23816ab%3A0x282f711441b6916f!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBTxrAgcGjhuqFtIEvhu7kgdGh14bqtdCBUaMOgbmggcGjhu5EgSOG7kyBDaMOtIE1pbmg!5e0!3m2!1svi!2s!4v1701745959898!5m2!1svi!2s"
+                    height="500"
+                    style={{ border: '0' }}
+                    allowFullScreen=""
+                    aria-hidden="false"
+                    tabIndex="0"
+                    title="Ho Chi Minh City Map"
+                ></iframe>
+                <div className="map-inside">
+                    {/* <i className="icon_pin"></i> */}
+                    <div className="inside-widget">
+                        <h4>Ho Chi Minh City</h4>
+                        <ul>
+                            <li>Phone: +84-898-537-761</li>
+                            <li>Add: 01 Vo Van Ngan, Linh Chieu, Thu Duc city</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {/* Map End */}
+
+
         </section>
     );
 };

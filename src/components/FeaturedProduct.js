@@ -1,68 +1,45 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import featuredItems from "../BaseData/FeaturedItems";
+import { addToCart } from '../service/API';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FeaturedItems = () => {
     // Sample data object (you can replace this with your actual data)
-    const featuredItems = [
-        {
-            category: 'Fruits',
-            image: 'img/featured/feature-1.jpg',
-            name: 'Crab Pool Security',
-            price: '$30.00'
-        },
-        {
-            category: 'Local specialty foods',
-            image: 'img/featured/feature-2.jpg',
-            name: 'Another Product Name',
-            price: '$25.00'
-        },
-        {
-            category: 'Vegetables',
-            image: 'img/featured/feature-3.jpg',
-            name: 'Featured Veggie Item',
-            price: '$20.00'
-        },
-        {
-            category: 'Fruits',
-            image: 'img/featured/feature-4.jpg',
-            name: 'Orange Delight',
-            price: '$22.00'
-        },
-        {
-            category: 'Organic food',
-            image: 'img/featured/feature-5.jpg',
-            name: 'Meaty Delicacy',
-            price: '$28.00'
-        },
-        {
-            category: 'Pices and seeds',
-            image: 'img/featured/feature-6.jpg',
-            name: 'Fastfood Frenzy',
-            price: '$18.00'
-        },
-        {
-            category: 'Others',
-            image: 'img/featured/feature-7.jpg',
-            name: 'Veggie Delight',
-            price: '$24.00'
-        },
-        {
-            category: 'Fruits',
-            image: 'img/featured/feature-8.jpg',
-            name: 'Tasty Treat',
-            price: '$26.00'
-        }
-    ];
-
     const [filter, setFilter] = useState('*'); // Initial filter state, '*' means showing all items
-
     const handleFilter = (filterType) => {
         setFilter(filterType); // Update the filter state based on the selected filter type
     };
     const filteredItems = filter === '*' ? featuredItems : featuredItems.filter(item => item.category.includes(filter));
+    const handleAddToCart = async (itemId) => {
+        try {
+            // Gọi API add to cart khi click vào icon
+            await addToCart('6564eb2812062f864554ea1d', 1); // Thay đổi thông tin productId và quantity tùy theo cấu trúc dữ liệu của bạn
 
+            // Hiển thị thông báo thành công khi thêm vào giỏ hàng
+            toast.success('Sản phẩm đã được thêm vào giỏ hàng!');
+        } catch (error) {
+            // Xử lý lỗi nếu cần
+            console.error('Error adding to cart:', error);
+            // Hiển thị thông báo lỗi khi có lỗi xảy ra
+            toast.error('Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng!');
+        }
+    };
     return (
         <section className="featured spad">
+            <ToastContainer
+                position="top-left"
+                autoClose={1500}
+                hideProgressBar={false}
+                newestOnTop={true}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
             <div className="container">
                 <div className="row">
                     <div className="col-lg-12">
@@ -87,11 +64,15 @@ const FeaturedItems = () => {
                                 <div className="featured__item">
                                     <div className="featured__item__pic set-bg" style={{ backgroundImage: `url(${item.image})` }}>
                                         <ul className="featured__item__pic__hover">
-                                            <li><a href="#"><i className="fa fa-shopping-cart"></i></a></li>
+                                            <li>
+                                                <a onClick={() => handleAddToCart(item.id)}>
+                                                    <i className="fa fa-shopping-cart"></i>
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
                                     <div className="featured__item__text">
-                                        <h6><Link to="/product-detail">{item.name}</Link></h6>
+                                        <h6><Link to={`/product-detail/${item.id}`}>{item.name}</Link></h6>
                                         <h5>{item.price}</h5>
                                     </div>
                                 </div>

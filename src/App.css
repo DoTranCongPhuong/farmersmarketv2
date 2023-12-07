@@ -1,3 +1,8 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 .slick-slider:hover .slick-prev:before,
 .slick-slider:hover .slick-next:before {
   color: black;
@@ -5,7 +10,9 @@
 .hero__categories {
   position: relative;
 }
-
+a:hover {
+  color: none !important;
+}
 
 
 .hero__categories ul {

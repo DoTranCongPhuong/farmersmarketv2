@@ -19,7 +19,6 @@ const SellerInfor = () => {
                 toast.error('Failed to load data, please log in again');
             }
         };
-
         fetchData();
     }, []);
 

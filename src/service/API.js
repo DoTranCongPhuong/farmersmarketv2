@@ -34,6 +34,78 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+
+export const updateCart = (cartItems) => {
+  return axiosInstance.put('update-cart', { cartItems })
+    .then(response => {
+      // Xử lý kết quả nếu cần thiết
+      return response.data; // Hoặc return một giá trị khác tuỳ theo cần thiết
+    })
+    .catch(error => {
+      // Xử lý lỗi nếu cần thiết
+      throw error; // Hoặc xử lý lỗi và trả về một giá trị khác
+    });
+};
+
+
+export const getCartData = async () => {
+  try {
+    const response = await axiosInstance.get('/cart');
+    return response.data; // Trả về dữ liệu từ phản hồi của API
+  } catch (error) {
+    // Xử lý lỗi nếu có
+    console.error('Error fetching cart data:', error);
+    throw error; // Ném lại lỗi để component có thể xử lý
+  }
+};
+
+export const addToCart = async (productId, quantity) => {
+  try {
+    const response = await axiosInstance.post('/add-to-cart', {
+      productId: productId,
+      quantity: quantity,
+    });
+
+    return response.data; // Trả về dữ liệu từ API nếu cần
+  } catch (error) {
+    console.error('Error adding to cart:', error);
+    throw error; // Xử lý lỗi hoặc ném lỗi để xử lý ở mức cao hơn
+  }
+};
+
+export const getCategoryData = async (category) => {
+  try {
+    const response = await axiosInstance.get(`/category?category=${category}`);
+    return response.data; // Trả về dữ liệu từ API
+  } catch (error) {
+    console.error('Lỗi khi lấy dữ liệu danh mục:', error);
+    throw error; // Xử lý lỗi hoặc ném lỗi để xử lý ở mức cao hơn
+  }
+};
+
+const search = async (query) => {
+  try {
+    const response = await axiosInstance.get(`/search?search=${query}`);
+    return response.data; // Giả sử phản hồi chứa dữ liệu bạn cần
+  } catch (error) {
+    // Xử lý các trường hợp lỗi
+    if (error.response) {
+      // Yêu cầu đã được thực hiện và máy chủ đã phản hồi với mã trạng thái nằm ngoài phạm vi của 2xx
+      console.error('Lỗi phản hồi:', error.response.data);
+      return null; // hoặc ném một lỗi, hoặc xử lý tùy thuộc vào từng trường hợp
+    } else if (error.request) {
+      // Yêu cầu đã được thực hiện nhưng không nhận được phản hồi
+      console.error('Không nhận được phản hồi:', error.request);
+      return null; // hoặc ném một lỗi, hoặc xử lý tùy thuộc vào từng trường hợp
+    } else {
+      // Có điều gì đó xảy ra trong việc thiết lập yêu cầu gây ra lỗi
+      console.error('Lỗi thiết lập yêu cầu:', error.message);
+      return null; // hoặc ném một lỗi, hoặc xử lý tùy thuộc vào từng trường hợp
+    }
+  }
+};
+
+
 const getProductInfor = async (productId) => {
   try {
     const response = await axiosInstance.get(`/product/${productId}`);
@@ -131,6 +203,6 @@ const sendContact = async (name, email, message) => {
 
 export {
   register, login, getUserInfo, updateUser, changeUserPassword, axiosInstance, sendContact
-  , getProductInfor
+  , getProductInfor, search
 };
 

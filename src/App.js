@@ -28,7 +28,7 @@ const App = () => {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/products-page" element={<ProductsPage />} />
         <Route path="/product-detail/:productId" element={<ProductDetailPage />} />
-        <Route path="/cart-page" element={<CartPage />} />
+        <Route path="/cart-page" element={<PrivateRoute component={CartPage} />} />
         <Route path="/contact-page" element={<ContactPage />} />
         <Route path="/checkout-page" element={<CheckoutPage />} />
         <Route path="/user-page" element={<PrivateRoute component={UserPage} />} />

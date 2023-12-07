@@ -1,16 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import categoryList from "../BaseData/CategoryList";
 
-
-const departmentsData = [
-  'Fruits',
-  'Vegetables',
-  'Local specialty foods',
-  'Organic food',
-  'Pices and seeds',
-  'Others',
-];
 
 const HeroSection = () => {
   const { t } = useTranslation();
@@ -34,6 +26,18 @@ const HeroSection = () => {
     setShowCategories(!showCategories);
   };
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearch = (event) => {
+    event.preventDefault(); // Ngăn chặn việc tải lại trang khi submit form
+    navigate(`/products-page?search=${searchTerm}`);
+  };
+
+  const handleInputChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
 
   return (
     <section className="hero">
@@ -46,9 +50,9 @@ const HeroSection = () => {
                 <span>{t('All Categories')}</span>
               </div>
               <ul style={{ display: showCategories ? 'block' : 'none' }}>
-                {departmentsData.map((department, index) => (
+                {categoryList.map((categoryList, index) => (
                   <li key={index}>
-                    <a href="#">{department}</a>
+                    <Link to={`/products-page?category=${categoryList.category}`}>{categoryList.title}</Link>
                   </li>
                 ))}
               </ul>
@@ -57,22 +61,16 @@ const HeroSection = () => {
           <div className="col-lg-9">
             <div className="hero__search">
               <div className="hero__search__form">
-                <form action="#">
-                  <input type="text" placeholder={t('What do you need?')} />
+                <form onSubmit={handleSearch}>
+                  <input
+                    type="text"
+                    placeholder={t('What do you need?')}
+                    value={searchTerm}
+                    onChange={handleInputChange}
+                  />
                   <button type="submit" className="site-btn">{t('SEARCH')}</button>
                 </form>
               </div>
-              <a href="https://zalo.me/+84898537761">
-                <div className="hero__search__phone">
-                  <div className="hero__search__phone__icon">
-                    <i className="fa fa-phone"></i>
-                  </div>
-                  <div className="hero__search__phone__text">
-                    <h5>+84 898.537.761</h5>
-                    <span>{t('support 24/7 time')}</span>
-                  </div>
-                </div>
-              </a>
             </div>
             <div className="hero__item set-bg align-items-center" style={{
               display: activeLink === '/' ? 'flex' : 'none',

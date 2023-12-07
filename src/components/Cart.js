@@ -1,39 +1,43 @@
-import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { getCartData, updateCart } from '../service/API';
+import React, { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ShoppingCart = () => {
     const { t } = useTranslation();
-    // Cart data initialization
-    const [cartItems, setCartItems] = useState([
-        {
-            id: 1,
-            name: 'Vegetable’s Package',
-            price: 55.00,
-            quantity: 1,
-            image: 'img/cart/cart-1.jpg'
-        },
-        {
-            id: 2,
-            name: 'Fresh Garden Vegetable',
-            price: 39.00,
-            quantity: 1,
-            image: 'img/cart/cart-2.jpg'
-        },
-        {
-            id: 3,
-            name: 'Organic Bananas',
-            price: 69.00,
-            quantity: 1,
-            image: 'img/cart/cart-3.jpg'
-        }
-        // ... add more items as needed
-    ]);
+    const [cartItems, setCartItems] = useState([]);
 
+    const fetchCartData = async () => {
+        try {
+            const cartData = await getCartData();
+            setCartItems(cartData.cartItems);
+        } catch (error) {
+            console.error('Error fetching cart data:', error);
+            toast.error('Có lỗi xảy ra khi lấy giỏ hàng!');
+        }
+    };
+
+    useEffect(() => {
+        fetchCartData();
+    }, []);
+
+    const handleUpdateCart = async () => {
+        try {
+            await updateCart(cartItems);
+            toast.success('Giỏ hàng đã được cập nhật thành công!');
+            fetchCartData();
+        } catch (error) {
+            console.error('Có lỗi xảy ra khi cập nhật giỏ hàng:', error);
+            toast.error('Có lỗi xảy ra khi cập nhật giỏ hàng!');
+            fetchCartData();
+        }
+    };
     // Function to update quantity in the cart
-    const handleQuantityChange = (id, value) => {
+    const handleQuantityChange = (productId, value) => {
         const updatedCartItems = cartItems.map(item => {
-            if (item.id === id) {
+            if (item.productId === productId) {
                 return { ...item, quantity: value };
             }
             return item;
@@ -42,8 +46,8 @@ const ShoppingCart = () => {
     };
 
     // Function to remove item from the cart
-    const removeCartItem = id => {
-        const updatedCartItems = cartItems.filter(item => item.id !== id);
+    const removeCartItem = productId => {
+        const updatedCartItems = cartItems.filter(item => item.productId !== productId);
         setCartItems(updatedCartItems);
     };
 
@@ -58,6 +62,7 @@ const ShoppingCart = () => {
 
     return (
         <section className="shoping-cart spad">
+            <ToastContainer />
             <div className="container">
                 <div className="row">
                     <div className="col-lg-12">
@@ -66,7 +71,9 @@ const ShoppingCart = () => {
                                 <thead>
                                     <tr>
                                         <th className="shoping__product">{t('Products')}</th>
-                                        <th>{t('Price')}</th>
+                                        <th>{t('Original price')}</th>
+                                        <th>{t('Discount')}</th>
+                                        <th>{t('Current Price')}</th>
                                         <th>{t('Quantity')}</th>
                                         <th>{t('Total')}</th>
                                         <th></th>
@@ -74,13 +81,24 @@ const ShoppingCart = () => {
                                 </thead>
                                 <tbody>
                                     {cartItems.map(item => (
-                                        <tr key={item.id}>
+                                        <tr key={item.productId}>
                                             <td className="shoping__cart__item">
-                                                <img src={item.image} alt={item.name} />
-                                                <h5><Link to="/product-detail">{item.name}</Link></h5>
+                                                <img src={item.image[1]} style={{
+                                                    wproductIdth: '100px',
+                                                    height: '100px',
+                                                    objectFit: 'cover',
+                                                    borderRadius: '5px'
+                                                }} alt={item.name} />
+                                                <h5><Link to={`/product-detail/${item.productId}`}>{item.name}</Link></h5>
                                             </td>
                                             <td className="shoping__cart__price">
                                                 ${item.price.toFixed(2)}
+                                            </td>
+                                            <td className="shoping__cart__price">
+                                                {item.discount.toFixed(1)}%
+                                            </td>
+                                            <td className="shoping__cart__price">
+                                                ${item.discountPrice.toFixed(2)}
                                             </td>
                                             <td className="shoping__cart__quantity">
                                                 <div className="quantity">
@@ -89,7 +107,7 @@ const ShoppingCart = () => {
                                                             className="dec qtybtn"
                                                             onClick={() => {
                                                                 if (item.quantity > 1) {
-                                                                    handleQuantityChange(item.id, item.quantity - 1);
+                                                                    handleQuantityChange(item.productId, item.quantity - 1);
                                                                 }
                                                             }}
                                                         >
@@ -98,11 +116,11 @@ const ShoppingCart = () => {
                                                         <input
                                                             type="text"
                                                             value={item.quantity}
-                                                            onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
+                                                            onChange={(e) => handleQuantityChange(item.productId, parseInt(e.target.value))}
                                                         />
                                                         <span
                                                             className="inc qtybtn"
-                                                            onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                                                            onClick={() => handleQuantityChange(item.productId, item.quantity + 1)}
                                                         >
                                                             +
                                                         </span>
@@ -113,7 +131,7 @@ const ShoppingCart = () => {
                                                 ${(item.price * item.quantity).toFixed(2)}
                                             </td>
                                             <td className="shoping__cart__item__close">
-                                                <span className="icon_close" onClick={() => removeCartItem(item.id)}></span>
+                                                <span className="icon_close" onClick={() => removeCartItem(item.productId)}></span>
                                             </td>
                                         </tr>
                                     ))}
@@ -126,9 +144,11 @@ const ShoppingCart = () => {
                     <div className="col-lg-12">
                         <div className="shoping__cart__btns">
                             <a href="#" className="primary-btn cart-btn">{t('CONTINUE SHOPPING')}</a>
-                            <a href="#" className="primary-btn cart-btn cart-btn-right">
-                                <span className="icon_loading"></span>{t('UPDATE CART')}
-                            </a>
+                            <button
+                                className="primary-btn cart-btn cart-btn-right"
+                                onClick={handleUpdateCart}>
+                                <span className="icon_loading"></span>UPDATE CART
+                            </button>
                         </div>
                     </div>
                     <div className="col-lg-6">

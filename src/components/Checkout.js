@@ -34,7 +34,6 @@ const Checkout = () => {
     const handleSuccess = (data, actions) => {
         // Xử lý khi thanh toán thành công
         console.log('Payment successful:', data);
-        // Redirect hoặc thực hiện các hành động sau khi thanh toán thành công
     };
 
     // Hàm xử lý khi có lỗi trong quá trình thanh toán

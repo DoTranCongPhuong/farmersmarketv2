@@ -18,8 +18,8 @@ const ProductsPage = () => {
                             <LeftBar />
                         </div>
                         <div className='col-lg-9'>
-                            <ProductDiscount />
                             <ListProduct />
+                            <ProductDiscount />
                         </div>
                     </div>
                 </div>
