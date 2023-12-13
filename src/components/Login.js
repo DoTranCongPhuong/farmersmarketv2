@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { login } from '../service/API';
+import { login, getUserInfo } from '../service/API';
 
 const Login = () => {
     const [numberPhone, setNumberPhone] = useState('');
@@ -31,9 +31,30 @@ const Login = () => {
             const loggedInUser = await login(userData);
             const token = loggedInUser.token; // Giả sử token được trả về từ API là loggedInUser.token
 
+
+
             localStorage.setItem('token', token);
             setSuccessMessage('Login successful!');
             setErrorMessage('');
+
+            const userInfoResponse = await getUserInfo();
+            const userInfo = userInfoResponse.user;
+            localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+            // Lấy thông tin userInfo từ local storage
+            const userInfoString = localStorage.getItem('userInfo');
+
+            // Kiểm tra xem thông tin userInfo có tồn tại không
+            if (userInfoString) {
+                // Parse chuỗi JSON thành đối tượng JavaScript
+                const userInfo = JSON.parse(userInfoString);
+
+                // Lấy thông tin name từ đối tượng userInfo
+
+                console.log('User userInfo:', userInfo);
+            } else {
+                console.log('User Info not found in local storage');
+            }
 
             setTimeout(() => {
                 navigate('/');
@@ -137,7 +158,7 @@ const Login = () => {
                         <div className="row">
                             <small>Don't have an account? <Link className='nomal__a' to="/register">Sign Up</Link></small>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>

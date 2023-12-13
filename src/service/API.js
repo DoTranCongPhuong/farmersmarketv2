@@ -34,6 +34,25 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+export const getProductReviews = async (productId) => {
+  try {
+    const response = await axiosInstance.get(`/product/${productId}/reviews`);
+    return response.data; // Trả về dữ liệu từ response nếu yêu cầu thành công
+  } catch (error) {
+    throw new Error(error.response.data); // Ném ra một lỗi với dữ liệu từ response nếu yêu cầu thất bại
+  }
+};
+
+export const postReview = async (reviewData) => {
+  try {
+    console.log(reviewData)
+    const response = await axiosInstance.post('/reviews', reviewData);
+    return response.data; // Return the response data
+  } catch (error) {
+    throw new Error(error.response.data); // Throw an error with the response data if request fails
+  }
+};
+
 
 export const updateCart = (cartItems) => {
   return axiosInstance.put('update-cart', { cartItems })

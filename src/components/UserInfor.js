@@ -25,6 +25,8 @@ const UserInfor = () => {
                 const userInfo = await getUserInfo(token);
                 setUser(userInfo.user);
                 setAvatar(userInfo.user.image || './user.png');
+
+                
             } catch (error) {
                 // Xử lý lỗi khi không thể lấy thông tin người dùng từ API
                 console.error('Error fetching user information:', error);
@@ -110,6 +112,11 @@ const UserInfor = () => {
             toast.success('User information updated successfully');
             console.log('User information updated successfully');
 
+            const userInfoResponse = await getUserInfo();
+            const userInfo = userInfoResponse.user;
+            localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+
         } catch (error) {
             console.error('Error updating user information:', error);
             toast.error('Failed to update user information');
@@ -119,6 +126,7 @@ const UserInfor = () => {
 
     const handleSignOut = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('userInfo');
         navigate('/login');
     };
 

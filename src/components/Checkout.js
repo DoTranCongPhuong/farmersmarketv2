@@ -30,18 +30,30 @@ const Checkout = () => {
         currency: 'USD',
         components: 'buttons',
     };
+    const sampleCartItems = [
+        {
+            name: 'Product 1',
+            price: 20.0,
+            quantity: 2,
+        },
+        {
+            name: 'Product 2',
+            price: 15.0,
+            quantity: 1,
+        },
+    ];
 
-    const handleSuccess = (data, actions) => {
+    const onSuccess = (data, actions) => {
         // Xử lý khi thanh toán thành công
-        console.log('Payment successful:', data);
-    };
-
-    // Hàm xử lý khi có lỗi trong quá trình thanh toán
-    const handleError = (err) => {
+        console.log('Payment was successful!', data);
+        // Thực hiện các hành động khác ở đây nếu cần
+      };
+    
+      const onError = (err) => {
         // Xử lý khi có lỗi trong quá trình thanh toán
-        console.error('Payment error:', err);
-        // Hiển thị thông báo lỗi hoặc thực hiện các hành động khác khi có lỗi
-    };
+        console.error('Error in payment:', err);
+        // Thực hiện các hành động khác ở đây nếu cần
+      };
 
     const handlePaymentSelection = (method) => {
         setSelectedPayment(method);
@@ -103,10 +115,11 @@ const Checkout = () => {
                             </div>
                             <div>
                                 <PayPalCheckout
-                                    amount="100.00" // Thay đổi giá trị theo đơn hàng thực tế
-                                    currency="USD"
-                                    onSuccess={handleSuccess}
-                                    onError={handleError}
+                                    onSuccess={onSuccess}
+                                    onError={onError}
+                                    // clientId="YOUR_CLIENT_ID_HERE" // Thay YOUR_CLIENT_ID_HERE bằng client ID của bạn
+                                    cartItems={sampleCartItems}
+                                // Các thông số khác nếu cần
                                 />
                             </div>
                             <label htmlFor="cod">Payment on delivery (COD)</label>

@@ -1,134 +1,86 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getProductInfor } from '../service/API';
-import axios from 'axios';
-import CommentComponent from "./Comments";
+import { getProductInfor, getProductReviews } from '../service/API';
+import CommentComponent from "./commentComponent/Comments";
+import { Icon } from 'semantic-ui-react';
+import { Rate } from 'antd';
 
-let obj1 = {
-  name: "Vetgetable’s Package",
-  rating: 4.5,
-  price: "$50.00",
-  description: "Mauris blandit aliquet elit, eget tincidunt nibh pulvinar Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Sed porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Proin eget tortor risus.",
-  quantity: 1,
-  weight: "0.5 kg",
-  image: [
-    "/img/product/details/product-details-1.jpg",
-    "/img/product/details/product-details-2.jpg",
-    "/img/product/details/product-details-3.jpg",
-    "/img/product/details/product-details-5.jpg",
-    "/img/product/details/product-details-4.jpg"
-  ],
-  descriptionDetail: 'hello',
-  reviews: [
-    {
-      id: 1,
-      userId: 1,
-      avatar: 'https://react.semantic-ui.com/images/avatar/small/matt.jpg',
-      author: 'Matt',
-      time: 'Today at 5:42PM',
-      text: 'How artistic!',
-      rating: 2,
-    },
-    {
-      id: 2,
-      userId: 2,
-      avatar: 'https://react.semantic-ui.com/images/avatar/small/elliot.jpg',
-      author: 'Elliot Fu',
-      time: 'Yesterday at 12:30AM',
-      text: 'This has been very useful for my research. Thanks as well!',
-      rating: 3,
-    },
-    {
-      id: 3,
-      userId: 3,
-      avatar: 'https://react.semantic-ui.com/images/avatar/small/jenny.jpg',
-      author: 'Jenny Hess',
-      time: 'Just now',
-      text: 'Elliot you are always so right :)',
-      rating: 4,
-    },
-    {
-      id: 4,
-      userId: 4,
-      avatar: 'https://react.semantic-ui.com/images/avatar/small/joe.jpg',
-      author: 'Joe Henderson',
-      time: '5 days ago',
-      text: 'Dude, this is awesome. Thanks so much',
-      rating: 5,
-    },
-  ],
-  infoFarmer: {
-    "dateOfBirth": null,
-    "country": null,
-    "city": null,
-    "district": null,
-    "ward": null,
-    "street": null,
-    "addressDetail": null,
-    "_id": "6564d3f5316b9fe3ce685d62",
-    "lastName": "anhthien4",
-    "firstName": "anhthien4",
-    "email": "admin4@gmail.com",
-    "numberPhone": "anhthien4",
-    "role": "farmer",
-    "image": "https://png.pngtree.com/png-vector/20220709/ourmid/pngtree-businessman-user-avatar-wearing-suit-with-red-tie-png-image_5809521.png",
-    "__v": 0
-  },
-}
+
 
 const ProductDetails = () => {
-  const { productId } = useParams();
-  console.log('ưcefffffff', productId)
-  const [product, setProduct] = useState(obj1);
+  const obj1 = {
+    name: "Vetgetable’s Package",
+    rating: 4.5,
+    price: "$50.00",
+    description: "Mauris blandit aliquet elit, eget tincidunt nibh pulvinar Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Sed porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Proin eget tortor risus.",
+    quantity: 1,
+    weight: "0.5 kg",
+    image: [
+      "/img/product/details/product-details-1.jpg",
+      "/img/product/details/product-details-2.jpg",
+      "/img/product/details/product-details-3.jpg",
+      "/img/product/details/product-details-5.jpg",
+      "/img/product/details/product-details-4.jpg"
+    ],
+    descriptionDetail: 'hello',
+    infoFarmer: {
+      "dateOfBirth": null,
+      "country": null,
+      "city": null,
+      "district": null,
+      "ward": null,
+      "street": null,
+      "addressDetail": null,
+      "_id": "6564d3f5316b9fe3ce685d62",
+      "lastName": "anhthien4",
+      "firstName": "anhthien4",
+      "email": "admin4@gmail.com",
+      "numberPhone": "anhthien4",
+      "role": "farmer",
+      "image": "https://png.pngtree.com/png-vector/20220709/ourmid/pngtree-businessman-user-avatar-wearing-suit-with-red-tie-png-image_5809521.png",
+      "__v": 0
+    },
+  };
 
+  const { productId } = useParams();
+  const [product, setProduct] = useState(obj1);
+  const [reviewsData, setReviewData] = useState({});
+  const [imgLarge, setImgLarge] = useState(product.image ? product.image[0] : '');
+  const [quantity, setQuantity] = useState(1);
+  const [activeTab, setActiveTab] = useState(1);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await getProductReviews('6564e7c2e3fb2bb37016c074');
+        console.log('Reviews Data:', res.reviews);
+        setReviewData(res.reviews);
+      } catch (error) {
+        console.error('Error when loading reviews:', error.message);
+      }
+    };
+
+    fetchReviews();
+  }, [productId]);
 
   useEffect(() => {
     const fetchProductInformation = async () => {
       try {
         const productData = await getProductInfor(productId);
-        console.log('Product Data:', productData); // Log dữ liệu sản phẩm trước khi cập nhật state
-        setProduct(... obj1,...productData);
+        console.log('Product Data:', productData);
+        setProduct(productData); // Update product state with new data from productData
       } catch (error) {
         console.error('Error fetching product information:', error);
       }
     };
 
-    fetchProductInformation(); // Gọi hàm fetchProductInformation khi productId thay đổi
+    fetchProductInformation();
   }, [productId]);
-
-
-
-  const [imgLarge, setImgLarge] = useState(product.image[0]);
 
   const handleImgClick = (img) => {
     setImgLarge(img);
   };
 
-  const renderStars = () => {
-    const stars = [];
-    const fullStars = Math.floor(product.rating);
-    const hasHalfStar = product.rating % 1 !== 0;
-
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(<i key={i} className="fa fa-star"></i>);
-    }
-
-    if (hasHalfStar) {
-      stars.push(<i key={fullStars} className="fa fa-star-half-o"></i>);
-    }
-
-    return (
-      <div className="product__details__rating">
-        {stars}
-        {product.reviews && Array.isArray(product.reviews) && (
-          <span>({product.reviews.length} reviews)</span>
-        )}
-      </div>
-    );
-  };
-
-
-  const [quantity, setQuantity] = useState(1);
 
   const decreaseQuantity = () => {
     if (quantity > 1) {
@@ -140,11 +92,13 @@ const ProductDetails = () => {
     setQuantity(quantity + 1);
   };
 
-  const [activeTab, setActiveTab] = useState(1);
-
   const handleTabClick = (tabNumber) => {
     setActiveTab(tabNumber);
   };
+
+  const reviews = reviewsData;
+  const totalRating = reviews.reduce((total, review) => total + review.rate, 0);
+  const averageRating = totalRating / reviews.length;
 
   return (
     <section className="product-details spad pt-1">
@@ -170,7 +124,10 @@ const ProductDetails = () => {
           <div className="col-lg-6 col-md-6">
             <div className="product__details__text">
               <h3>{product.name}</h3>
-              {renderStars()}
+              <div>
+                <Rate allowHalf disabled defaultValue={averageRating} />
+                
+              </div>
               <div className="product__details__price">{product.price}</div>
               <p>{product.description}</p>
               <div className="product__details__quantity">
@@ -215,9 +172,7 @@ const ProductDetails = () => {
                     role="tab"
                     aria-selected={activeTab === 2 ? 'true' : 'false'}
                   >
-                    {product.reviews && (
-                      <span>Reviews ({product.reviews.length})</span>
-                    )}
+                    <span>Reviews </span>
                   </a>
                 </li>
               </ul>
@@ -229,7 +184,7 @@ const ProductDetails = () => {
                 </div>
                 <div className={`tab-pane ${activeTab === 2 ? 'active' : ''}`} id="tab2" role="tabpanel">
                   <div className="product__details__tab__desc">
-                    <CommentComponent comments={product.reviews} currentUserId={'1'} />
+                    <CommentComponent productId={'6564e7c2e3fb2bb37016c074' || productId} />
                   </div>
                 </div>
               </div>
