@@ -1,16 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Comment, Icon } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import { Image, Space } from 'antd';
 
 
 
-const CommentItem = ({ comment, onDeleteComment, currentUserId, setComments }) => {
+const CommentItem = ({ comment, onDeleteComment, currentUserId, onUpdateComment }) => {
+
     const handleDelete = () => {
         if (comment.userId === currentUserId) {
             onDeleteComment(comment.id);
         } else {
             alert('You are not authorized to delete this comment.');
+        }
+    };
+
+    const handleUpdate = () => {
+        if (comment.userId === currentUserId) {
+            onUpdateComment(comment)
+            document.getElementById('form').scrollIntoView();
+        } else {
+            alert('You are not authorized to update this comment.');
         }
     };
 
@@ -53,7 +63,10 @@ const CommentItem = ({ comment, onDeleteComment, currentUserId, setComments }) =
                 </div>
                 <Comment.Actions>
                     {comment.userId === currentUserId && (
-                        <Comment.Action onClick={handleDelete}>Delete</Comment.Action>
+                        <div>
+                            <Comment.Action onClick={handleUpdate}>Update</Comment.Action>
+                            <Comment.Action onClick={handleDelete}>Delete</Comment.Action>
+                        </div>
                     )}
                 </Comment.Actions>
 

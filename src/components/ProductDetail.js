@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { getProductInfor, getProductReviews } from '../service/API';
 import CommentComponent from "./commentComponent/Comments";
 import { Icon } from 'semantic-ui-react';
-import { Rate } from 'antd';
+
 
 
 
@@ -44,7 +44,7 @@ const ProductDetails = () => {
 
   const { productId } = useParams();
   const [product, setProduct] = useState(obj1);
-  const [reviewsData, setReviewData] = useState({});
+  const [reviewsData, setReviewData] = useState([]);
   const [imgLarge, setImgLarge] = useState(product.image ? product.image[0] : '');
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState(1);
@@ -99,6 +99,49 @@ const ProductDetails = () => {
   const reviews = reviewsData;
   const totalRating = reviews.reduce((total, review) => total + review.rate, 0);
   const averageRating = totalRating / reviews.length;
+  const renderStars = (averageRating) => {
+    const stars = [];
+    const maxStars = 5; // Số sao tối đa là 5
+    const roundedRating = Math.min(Math.round(averageRating * 2) / 2, maxStars); // Làm tròn đến 0.5 gần nhất và giới hạn tối đa là 5 sao
+
+    // Thêm các sao vào mảng
+    for (let i = 0; i < maxStars; i++) {
+      let starName, starColor;
+
+      if (i < roundedRating) {
+        if (i < roundedRating - 0.5) {
+          starName = 'star';
+          starColor = 'yellow';
+        } else {
+          starName = 'star half';
+          starColor = 'yellow';
+        }
+      } else {
+        starName = 'star outline';
+        starColor = 'black';
+      }
+
+      stars.push(
+        <Icon
+          key={`star-${i}`}
+          size='large'
+          name={starName}
+          color={starColor}
+        />
+      );
+    }
+
+    // Trả về JSX hiển thị sao
+    return (
+      <div className='mb-3'>
+        {stars.map((star, index) => (
+          <span key={index}>{star}</span>
+        ))}
+      </div>
+    );
+  };
+
+  console.log(' ,,,,,,,,,,,,,,,', averageRating)
 
   return (
     <section className="product-details spad pt-1">
@@ -122,11 +165,13 @@ const ProductDetails = () => {
             </div>
           </div>
           <div className="col-lg-6 col-md-6">
-            <div className="product__details__text">
-              <h3>{product.name}</h3>
-              <div>
-                <Rate allowHalf disabled defaultValue={averageRating} />
-                
+            <div class="product__details__text">
+              <h3>Vetgetable’s Package</h3>
+              <div className='mb-3'>
+                {renderStars(3.5)}
+              </div>
+              <div class="product__details__rating">
+                <span>({reviews.length} reviews)</span>
               </div>
               <div className="product__details__price">{product.price}</div>
               <p>{product.description}</p>
@@ -144,7 +189,14 @@ const ProductDetails = () => {
                 <li><b>Availability</b> <span>{product.availability}</span></li>
                 <li><b>Shipping</b> <span>{product.shipping}</span></li>
                 <li><b>Weight</b> <span>{product.weight}</span></li>
-                <li><b>Seller</b> <span>{product.infoFarmer.firstName + ' ' + product.infoFarmer.lastName}</span></li>
+                <li><b>Seller</b>
+                  <Link to={`/seller-page/${product.infoFarmer._id}`}>
+                  <img  className="m-1 p-1 border "style={{ height: '36px', width: '36px', objectFit: 'contain' }} 
+                  src={product.infoFarmer.image} 
+                  alt="Farmer avatar" />
+                    <span>{product.infoFarmer.firstName + ' ' + product.infoFarmer.lastName}</span>
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>

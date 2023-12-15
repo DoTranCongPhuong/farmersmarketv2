@@ -32,7 +32,7 @@ const App = () => {
         <Route path="/contact-page" element={<ContactPage />} />
         <Route path="/checkout-page" element={<CheckoutPage />} />
         <Route path="/user-page" element={<PrivateRoute component={UserPage} />} />
-        <Route path="/seller-page" element={<SellerPage />} />
+        <Route path="/seller-page/:farmerId" element={<SellerPage />} />
       </Routes>
     </Router>
   );

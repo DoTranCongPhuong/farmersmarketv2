@@ -26,7 +26,7 @@ const UserInfor = () => {
                 setUser(userInfo.user);
                 setAvatar(userInfo.user.image || './user.png');
 
-                
+
             } catch (error) {
                 // Xử lý lỗi khi không thể lấy thông tin người dùng từ API
                 console.error('Error fetching user information:', error);
@@ -99,10 +99,11 @@ const UserInfor = () => {
     // Hàm xử lý khi người dùng thay đổi thông tin
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        setUser({
-            ...user,
+        setUser((prevUser) => ({
+            ...prevUser,
             [name]: value, // Cập nhật giá trị của trường thông tin người dùng
-        });
+        }));
+        // console.log(name, value)
     };
 
     // Hàm xử lý khi người dùng nhấn nút để cập nhật thông tin
@@ -255,7 +256,6 @@ const UserInfor = () => {
                                             )
                                         )}
                                 </div>
-
                             </form>
                         </div>
                     </div>

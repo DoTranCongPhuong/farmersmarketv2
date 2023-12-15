@@ -34,6 +34,33 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+export const getUserInfoById = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/user-info/${userId}`);
+    return response.data; // Trả về dữ liệu từ response
+  } catch (error) {
+    throw error; // Ném lỗi nếu có lỗi xảy ra
+  }
+};
+
+export const deleteReview = async (reviewId) => {
+  try {
+    const response = await axiosInstance.delete(`/delete-review/${reviewId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateReview = async (reviewId, updatedData) => {
+  try {
+    const response = await axiosInstance.put(`/update-review/${reviewId}`, updatedData);
+    return response.data; // Trả về dữ liệu sau khi cập nhật thành công (nếu cần)
+  } catch (error) {
+    throw error; // Xử lý lỗi nếu gặp phải
+  }
+};
+
 export const getProductReviews = async (productId) => {
   try {
     const response = await axiosInstance.get(`/product/${productId}/reviews`);

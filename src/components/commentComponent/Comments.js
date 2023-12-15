@@ -3,9 +3,10 @@ import { Button, Comment, Form, Header, Icon } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import ImageForm from '../ImageForm';
 import CommentItem from './CommentItem';
-import { postReview, getProductReviews } from '../../service/API';
+import { postReview, getProductReviews, deleteReview, updateReview } from '../../service/API';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import normalizeReviews from './normalizeReviews';
 
 const CommentComponent = ({ productId }) => {
   let currentUserId = '';
@@ -19,40 +20,13 @@ const CommentComponent = ({ productId }) => {
     console.log('User Info not found in local storage');
   }
 
-  const normalizeReviews = (reviewsData) => {
-    return reviewsData.map(review => {
-      const date = new Date(review.createdAt);
-  
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-  
-      const hours = String(date.getHours()).padStart(2, '0');
-      const minutes = String(date.getMinutes()).padStart(2, '0');
-      const seconds = String(date.getSeconds()).padStart(2, '0');
-  
-      const formattedDate = `${day}/${month}/${year}`;
-      const formattedTime = `${hours}:${minutes}:${seconds}`;
-  
-      return {
-        id: review._id,
-        userId: review.userId._id,
-        avatar: review.userId.image,
-        author: `${review.userId.firstName} ${review.userId.lastName}`,
-        images: review.images,
-        time: `${formattedDate} ${formattedTime}`,
-        text: review.comment,
-        rating: review.rate
-      };
-    });
-  };
-  
-  const initialComments = [];
 
-  const [comments, setComments] = useState(initialComments);
+  const [comments, setComments] = useState([]);
   const [newCommentText, setNewCommentText] = useState('');
   const [newCommentRating, setNewCommentRating] = useState(1);
   const [newCommentImages, setNewCommentImages] = useState([]);
+  const [currentIdComment, setCurrentIdComment] = useState('');
+
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -71,16 +45,35 @@ const CommentComponent = ({ productId }) => {
   }, [productId]);
 
 
-
   const updateImages = (newImageArray) => {
     setNewCommentImages(newImageArray);
-    console.log('------------', newImageArray)
   };
 
 
-  const handleDeleteComment = (commentId) => {
-    const updatedComments = comments.filter((comment) => comment.id !== commentId);
-    setComments(updatedComments);
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await deleteReview(commentId);
+      const updatedComments = comments.filter((comment) => comment.id !== commentId);
+      setComments(updatedComments);
+      toast.success('Comment deleted successfully!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 1500,
+      });
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      // Xử lý lỗi tại đây nếu cần thiết
+    }
+  };
+
+
+
+
+  const handleSelectComment = async (updatedComment) => {
+    console.log(updatedComment)
+    setNewCommentText(updatedComment.text);
+    setNewCommentRating(updatedComment.rating);
+    setNewCommentImages(updatedComment.images);
+    setCurrentIdComment(updatedComment.id)
   };
 
   const handleAddComment = async () => {
@@ -95,14 +88,15 @@ const CommentComponent = ({ productId }) => {
       await postReview(newComment);
       setComments(prevComments => [...prevComments, newComment]);
       setNewCommentText('');
-      setNewCommentRating(0);
+      setNewCommentRating(1);
       setNewCommentImages([])
+      setCurrentIdComment('')
       const reviewsData = await getProductReviews(productId);
       const normalizedData = normalizeReviews(reviewsData.reviews);
       setComments(normalizedData);
       toast.success('Review has been successfully submitted!', {
         position: toast.POSITION.TOP_RIGHT,
-        autoClose: 1500, // Display time for the toast (milliseconds)
+        autoClose: 1500,
       });
     } catch (error) {
       toast.error('Error submitting the review!', {
@@ -110,9 +104,43 @@ const CommentComponent = ({ productId }) => {
         autoClose: 1500,
       });
       console.error('Error submitting review:', error.message);
-      // Handle errors if necessary
     }
   };
+  const handleUpdateComment = async () => {
+    const updateComment = {
+      productId: currentIdComment,
+      images: newCommentImages,
+      comment: newCommentText,
+      rate: newCommentRating,
+    };
+
+    try {
+      await updateReview(currentIdComment, updateComment );
+      setNewCommentText('');
+      setNewCommentRating(1);
+      setNewCommentImages([])
+      const reviewsData = await getProductReviews(productId);
+      const normalizedData = normalizeReviews(reviewsData.reviews);
+      setComments(normalizedData);
+      toast.success('Review has been updated!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 1500,
+      });
+    } catch (error) {
+      toast.error('Error update the review!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 1500,
+      });
+      console.error('Error submitting review:', error.message);
+    }
+  };
+
+  const handleCancel = () => {
+    setNewCommentText('');
+    setNewCommentRating(1);
+    setNewCommentImages([])
+    setCurrentIdComment('')
+  }
 
 
   // Sort comments to display current user's comments first
@@ -125,7 +153,7 @@ const CommentComponent = ({ productId }) => {
   return (
     <Comment.Group className='container'>
       <ToastContainer />
-      <Form reply>
+      <Form reply id='form'>
         <div className='mb-3'>
           {[1, 2, 3, 4, 5].map((star) => (
             <Icon
@@ -152,15 +180,33 @@ const CommentComponent = ({ productId }) => {
             </div>
           </div>
         </div>
-        <Button
-          content='Add Comment'
-          labelPosition='left'
-          icon='edit'
-          primary
-          onClick={() => handleAddComment()} // Thay đổi ở đây
-        />
+        {currentIdComment === '' ? (
+          <Button
+            content='Add Comment'
+            labelPosition='left'
+            icon='add'
+            primary
+            onClick={() => handleAddComment()}
+          />
+        ) : (
+          <div>
+            <Button
+              content='Update Comment'
+              labelPosition='left'
+              icon='edit'
+              positive
+              onClick={() => handleUpdateComment()}
+            />
+            <Button
+              content='Cancel'
+              labelPosition='left'
+              icon='cancel'
+              negative
+              onClick={() => handleCancel()}
+            />
+          </div>
+        )}
       </Form>
-
       <Header as='h3' dividing>
         Comments
       </Header>
@@ -173,14 +219,13 @@ const CommentComponent = ({ productId }) => {
               borderRadius: '4px'
             }}>
             < CommentItem
+              key={comment._id}
               comment={comment}
               onDeleteComment={handleDeleteComment}
               currentUserId={currentUserId}
-            // setComments={setComments}
-            // updateComments={setComments}
+              onUpdateComment={handleSelectComment}
             />
           </div>
-
         ))}
       </div>
     </Comment.Group>

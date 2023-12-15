@@ -45,7 +45,6 @@ const ListProduct = () => {
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
-                // Xử lý lỗi nếu có
             }
         };
 

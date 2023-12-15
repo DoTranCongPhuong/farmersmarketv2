@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { getUserInfo } from '../service/API';
+import { useParams } from 'react-router-dom';
+import { getUserInfoById } from '../service/API';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const SellerInfor = () => {
+    const { farmerId } = useParams(); // Retrieve farmerId from URL params
     const [user, setUser] = useState({});
     const [avatar, setAvatar] = useState('/loading.gif');
+
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = localStorage.getItem('token');
-                const userInfo = await getUserInfo(token);
+                const userInfo = await getUserInfoById(farmerId); // Pass farmerId to your API call
                 setUser(userInfo.user);
                 setAvatar(userInfo.user.image || './user.png');
             } catch (error) {
@@ -20,11 +22,8 @@ const SellerInfor = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [farmerId]);
 
-    const formatKey = (key) => {
-        return key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
-    };
 
     const renderUserInfo = () => {
         const formattedAddress = `${user.addressDetail}, ${user.street}, ${user.ward}, ${user.district}, ${user.city}, ${user.country}`;
@@ -53,6 +52,12 @@ const SellerInfor = () => {
                         <div className="checkout__input">
                             <p>Address</p>
                             <div>{formattedAddress}</div>
+                        </div>
+                    </div>
+                    <div className="col-lg-12">
+                        <div className="checkout__input">
+                            <p>Introducing farmers</p>
+                            <div>{user.description}</div>
                         </div>
                     </div>
                 </>

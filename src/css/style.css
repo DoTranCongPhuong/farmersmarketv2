@@ -1682,9 +1682,8 @@ ol {
   margin-bottom: 12px;
 }
 
-.product__details__text .product__details__rating i {
+.product__details__text .product__details__rating path {
   margin-right: -2px;
-  color: #edbb0e;
 }
 
 .product__details__text .product__details__rating span {

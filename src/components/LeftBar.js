@@ -1,71 +1,88 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Dropdown, Input, Button, Segment } from 'semantic-ui-react';
+import 'semantic-ui-css/semantic.min.css';
 
-const LeftBar = () => {
-    const priceRangeData = {
-        min: 10,
-        max: 540
+const FilterComponent = ({ handlePriceFilter, handleRatingFilter }) => {
+    const [minPrice, setMinPrice] = useState('');
+    const [maxPrice, setMaxPrice] = useState('');
+    const [ratingValue, setRatingValue] = useState('');
+    const [error, setError] = useState('');
+
+    const ratingOptions = [
+        { key: 'all', text: 'All Ratings', value: '' },
+        { key: '1', text: '1 Star', value: '1' },
+        { key: '2', text: '2 Stars', value: '2' },
+        { key: '3', text: '3 Stars', value: '3' },
+        { key: '4', text: '4 Stars', value: '4' },
+        { key: '5', text: '5 Stars', value: '5' },
+    ];
+
+    const handleRatingChange = (e, { value }) => {
+        setRatingValue(value);
+        handleRatingFilter(value);
     };
 
-    const colorsData = ['White', 'Gray', 'Red', 'Black', 'Blue', 'Green'];
+    const handleMinPriceChange = (e) => {
+        const { value } = e.target;
+        setMinPrice(value); // Update the state with the new value
+    };
 
-    const popularSizesData = ['Large', 'Medium', 'Small', 'Tiny'];
+    const handleMaxPriceChange = (e) => {
+        const { value } = e.target;
+        setMaxPrice(value); // Update the state with the new value
+    };
+
+    const handleFilter = () => {
+        if (parseFloat(minPrice) > parseFloat(maxPrice)) {
+            setError('Minimum price must be less than or equal to maximum price.');
+            return;
+        }
+
+        const priceFilter = {
+            min: minPrice,
+            max: maxPrice,
+        };
+        handlePriceFilter(priceFilter);
+    };
 
     return (
-        <div >
-               {/* <div className="col-lg-3 col-md-5"></div> */}
-            <div className="sidebar">
-                <div className="sidebar__item">
-                    <h4>Price</h4>
-
-                    <div className="price-range-wrap">
-                        <div
-                            className="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
-                            data-min={priceRangeData.min}
-                            data-max={priceRangeData.max}
-                        >
-                            <div className="ui-slider-range ui-corner-all ui-widget-header"></div>
-                            <span
-                                tabIndex="0"
-                                className="ui-slider-handle ui-corner-all ui-state-default"
-                            ></span>
-                            <span
-                                tabIndex="0"
-                                className="ui-slider-handle ui-corner-all ui-state-default"
-                            ></span>
-                        </div>
-                        <div className="range-slider">
-                            <div className="price-input">
-                                <input type="text" id="minamount" />
-                                <input type="text" id="maxamount" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="sidebar__item sidebar__item__color--option">
-                    <h4>Colors</h4>
-                    {colorsData.map((color, index) => (
-                        <div key={index} className={`sidebar__item__color sidebar__item__color--${color.toLowerCase()}`}>
-                            <label htmlFor={color.toLowerCase()}>
-                                {color}
-                                <input type="radio" id={color.toLowerCase()} />
-                            </label>
-                        </div>
-                    ))}
-                </div>
-                <div className="sidebar__item">
-                    <h4>Popular Size</h4>
-                    {popularSizesData.map((size, index) => (
-                        <div key={index} className="sidebar__item__size">
-                            <label htmlFor={size.toLowerCase()}>
-                                {size}
-                                <input type="radio" id={size.toLowerCase()} />
-                            </label>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
+        <Segment>
+            <h1>Filter</h1>
+            <Input
+                className='m-3'
+                placeholder='Min Price'
+                title='Minimum Price'
+                value={minPrice} // Use value instead of defaultValue
+                onChange={handleMinPriceChange} // Use onChange instead of onBlur
+                type='number'
+                step='0.1'
+                min='0'
+            />
+            <Input
+                className='m-3'
+                placeholder='Max Price'
+                title='Maximum Price'
+                value={maxPrice} // Use value instead of defaultValue
+                onChange={handleMaxPriceChange} // Use onChange instead of onBlur
+                type='number'
+                step='0.1'
+                min='0'
+            />
+            <Dropdown
+                className='m-3'
+                placeholder='Select rating'
+                selection
+                options={ratingOptions}
+                value={ratingValue}
+                onChange={handleRatingChange}
+            />
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <Button onClick={handleFilter}
+            className='m-3'>
+                Filter
+            </Button>
+        </Segment>
     );
 };
 
-export default LeftBar;
+export default FilterComponent;
