@@ -56,5 +56,116 @@ const featuredItems = [
         price: '$26.00'
     }
 ];
+ // const products = [
+    //     {
+    //         id: 1,
+    //         imageUrl: 'img/product/product-1.jpg',
+    //         discount: '-20%',
+    //         productName: 'Dried Fruit',
+    //         productNameLink: 'Raisin’n’nuts',
+    //         price: '$30.00',
+    //         oldPrice: '$36.00'
+    //     },
+    //     {
+    //         id: 2,
+    //         imageUrl: 'img/product/product-2.jpg',
+    //         discount: '-15%',
+    //         productName: 'Vegetables',
+    //         productNameLink: 'Vegetables’package',
+    //         price: '$28.00',
+    //         oldPrice: '$33.00'
+    //     },
+    //     {
+    //         id: 3,
+    //         imageUrl: 'img/product/product-3.jpg',
+    //         discount: '-25%',
+    //         productName: 'Dried Fruit',
+    //         productNameLink: 'Mixed Fruitss',
+    //         price: '$32.00',
+    //         oldPrice: '$42.00'
+    //     },
+    //     {
+    //         id: 4,
+    //         imageUrl: 'img/product/product-4.jpg',
+    //         discount: '-10%',
+    //         productName: 'Dried Fruit',
+    //         productNameLink: 'Raisin’n’nuts',
+    //         price: '$25.00',
+    //         oldPrice: '$30.00'
+    //     },
+    //     {
+    //         id: 5,
+    //         imageUrl: 'img/product/product-5.jpg',
+    //         discount: '-18%',
+    //         productName: 'Dried Fruit',
+    //         productNameLink: 'Raisin’n’nuts',
+    //         price: '$27.00',
+    //         oldPrice: '$33.00'
+    //     },
+    //     {
+    //         id: 6,
+    //         imageUrl: 'img/product/product-6.jpg',
+    //         discount: '-22%',
+    //         productName: 'Dried Fruit',
+    //         productNameLink: 'Raisin’n’nuts',
+    //         price: '$29.00',
+    //         oldPrice: '$37.00'
+    //     },
+    //     {
+    //         id: 7,
+    //         imageUrl: 'img/product/product-7.jpg',
+    //         discount: '-30%',
+    //         productName: 'Dried Fruit',
+    //         productNameLink: 'Raisin’n’nuts',
+    //         price: '$20.00',
+    //         oldPrice: '$28.00'
+    //     },
+    //     {
+    //         id: 8,
+    //         imageUrl: 'img/product/product-8.jpg',
+    //         discount: '-15%',
+    //         productName: 'Dried Fruit',
+    //         productNameLink: 'Raisin’n’nuts',
+    //         price: '$26.00',
+    //         oldPrice: '$30.00'
+    //     },
+    //     {
+    //         id: 9,
+    //         imageUrl: 'img/product/product-9.jpg',
+    //         discount: '-28%',
+    //         productName: 'Dried Fruit',
+    //         productNameLink: 'Raisin’n’nuts',
+    //         price: '$22.00',
+    //         oldPrice: '$30.00'
+    //     },
+    //     {
+    //         id: 10,
+    //         imageUrl: 'img/product/product-10.jpg',
+    //         discount: '-20%',
+    //         productName: 'Dried Fruit',
+    //         productNameLink: 'Raisin’n’nuts',
+    //         price: '$28.00',
+    //         oldPrice: '$35.00'
+    //     },
+    //     {
+    //         id: 11,
+    //         imageUrl: 'img/product/product-11.jpg',
+    //         discount: '-12%',
+    //         productName: 'Dried Fruit',
+    //         productNameLink: 'Raisin’n’nuts',
+    //         price: '$24.00',
+    //         oldPrice: '$27.00'
+    //     },
+    //     {
+    //         id: 12,
+    //         imageUrl: 'img/product/product-12.jpg',
+    //         discount: '-18%',
+    //         productName: 'Dried Fruit',
+    //         productNameLink: 'Raisin’n’nuts',
+    //         price: '$26.00',
+    //         oldPrice: '$32.00'
+    //     }
+    // ];
+
 
 export default featuredItems;  

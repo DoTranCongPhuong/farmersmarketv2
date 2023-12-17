@@ -34,6 +34,29 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+export const getDiscountProducts = async () => {
+  try {
+    const response = await axios.get('https://farmer-ecommerce-m4j8.vercel.app/flashsale');
+    // Xử lý dữ liệu từ response
+    return response.data; // Trả về dữ liệu từ yêu cầu GET
+  } catch (error) {
+    // Xử lý lỗi nếu có
+    console.error('Error getting discount products:', error.message);
+    throw new Error('Error getting discount products');
+  }
+
+};
+
+
+export const getProductList = async (page = 1, limit = 10, sortField = 'price', sortOrder = 'desc') => {
+  try {
+    const response = await axiosInstance.get(`/products?page=${page}&limit=${limit}&sortField=${sortField}&sortOrder=${sortOrder}`);
+    return response.data; // Trả về dữ liệu từ response
+  } catch (error) {
+    throw new Error(error.message); // Xử lý lỗi nếu có
+  }
+};
+
 export const getUserInfoById = async (userId) => {
   try {
     const response = await axiosInstance.get(`/user-info/${userId}`);

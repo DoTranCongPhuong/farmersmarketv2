@@ -25,8 +25,20 @@ const ContactSection = () => {
     };
 
 
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+
+
+    // Lấy dữ liệu từ localStorage
+    const userInfoString = localStorage.getItem('userInfo');
+
+    // Khởi tạo state mặc định
+    const defaultUserInfo = { firstName: '', lastName: '', email: '' };
+
+    // Parse dữ liệu từ localStorage thành đối tượng userInfo (hoặc sử dụng defaultUserInfo nếu không tồn tại)
+    const userInfo = userInfoString ? JSON.parse(userInfoString) : defaultUserInfo;
+
+    // Sử dụng useState với giá trị ban đầu từ đối tượng userInfo
+    const [name, setName] = useState(userInfo.firstName + ' ' + userInfo.lastName);
+    const [email, setEmail] = useState(userInfo.email);
     const [message, setMessage] = useState('');
 
     const handleSubmit = async (event) => {
@@ -54,6 +66,7 @@ const ContactSection = () => {
             console.error('Error sending contact:', error);
         }
     };
+    const token = localStorage.getItem('token'); // Lấy token từ Local Storage
 
 
     return (
@@ -66,7 +79,9 @@ const ContactSection = () => {
                 </div>
             </div>
             {/* Contact Form Begin */}
-            <div className="contact-form spad">
+            <div className="contact-form spad "
+                title={!token ? 'Cần đăng nhập để sử dụng tính năng này' : ''}
+            >
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-12">
@@ -75,31 +90,37 @@ const ContactSection = () => {
                             </div>
                         </div>
                     </div>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} >
                         <div className="row">
                             <div className="col-lg-6 col-md-6">
                                 <input
                                     type="text"
                                     placeholder="Your name"
-                                    value={name}
+                                    className="form-control"
+                                    value={userInfo.name || 'Your Name'}
                                     onChange={(e) => setName(e.target.value)}
+                                    disabled={true}
                                 />
                             </div>
                             <div className="col-lg-6 col-md-6">
                                 <input
                                     type="text"
                                     placeholder="Your Email"
-                                    value={email}
+                                    className="form-control"
+                                    value={userInfo.email || 'Your Email'}
                                     onChange={(e) => setEmail(e.target.value)}
+                                    disabled={true}
                                 />
                             </div>
                             <div className="col-lg-12 text-center">
                                 <textarea
+                                    className='form-control'
                                     placeholder="Your message"
                                     value={message}
                                     onChange={(e) => setMessage(e.target.value)}
+                                    disabled={!token}
                                 ></textarea>
-                                <button type="submit" className="site-btn">SEND MESSAGE</button>
+                                <button type="submit" disabled={!token} className="site-btn">SEND MESSAGE</button>
                             </div>
                         </div>
                     </form>

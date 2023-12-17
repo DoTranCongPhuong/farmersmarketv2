@@ -1,26 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getProductInfor, getProductReviews } from '../service/API';
+import { getProductInfor, getProductReviews, addToCart } from '../service/API';
 import CommentComponent from "./commentComponent/Comments";
 import { Icon } from 'semantic-ui-react';
+import { toast, ToastContainer } from 'react-toastify';
 
 
 
 
 const ProductDetails = () => {
   const obj1 = {
-    name: "Vetgetable’s Package",
-    rating: 4.5,
+    name: "",
+    rating: 0,
     price: "$50.00",
-    description: "Mauris blandit aliquet elit, eget tincidunt nibh pulvinar Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Sed porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Proin eget tortor risus.",
+    description: "",
     quantity: 1,
     weight: "0.5 kg",
     image: [
-      "/img/product/details/product-details-1.jpg",
-      "/img/product/details/product-details-2.jpg",
-      "/img/product/details/product-details-3.jpg",
-      "/img/product/details/product-details-5.jpg",
-      "/img/product/details/product-details-4.jpg"
+
     ],
     descriptionDetail: 'hello',
     infoFarmer: {
@@ -31,13 +28,13 @@ const ProductDetails = () => {
       "ward": null,
       "street": null,
       "addressDetail": null,
-      "_id": "6564d3f5316b9fe3ce685d62",
-      "lastName": "anhthien4",
-      "firstName": "anhthien4",
-      "email": "admin4@gmail.com",
-      "numberPhone": "anhthien4",
+      "_id": "",
+      "lastName": "",
+      "firstName": "",
+      "email": "",
+      "numberPhone": "",
       "role": "farmer",
-      "image": "https://png.pngtree.com/png-vector/20220709/ourmid/pngtree-businessman-user-avatar-wearing-suit-with-red-tie-png-image_5809521.png",
+      "image": "",
       "__v": 0
     },
   };
@@ -45,15 +42,14 @@ const ProductDetails = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState(obj1);
   const [reviewsData, setReviewData] = useState([]);
-  const [imgLarge, setImgLarge] = useState(product.image ? product.image[0] : '');
+  const [imgLarge, setImgLarge] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState(1);
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const res = await getProductReviews('6564e7c2e3fb2bb37016c074');
-        console.log('Reviews Data:', res.reviews);
+        const res = await getProductReviews(productId);
         setReviewData(res.reviews);
       } catch (error) {
         console.error('Error when loading reviews:', error.message);
@@ -69,6 +65,7 @@ const ProductDetails = () => {
         const productData = await getProductInfor(productId);
         console.log('Product Data:', productData);
         setProduct(productData); // Update product state with new data from productData
+        setImgLarge(productData.image[0])
       } catch (error) {
         console.error('Error fetching product information:', error);
       }
@@ -77,9 +74,39 @@ const ProductDetails = () => {
     fetchProductInformation();
   }, [productId]);
 
+  useEffect(() => {
+    // Gọi hàm showWholesalePrice mỗi khi giá trị của quantity thay đổi
+    toggleWholesalePrice();
+  }, [quantity]);
+  const toggleWholesalePrice = () => {
+    // Kiểm tra nếu số lượng đủ để bán buôn
+    if (quantity >= product.limitedProduct) {
+      setShowWholesalePrice(true);
+    } else {
+      setShowWholesalePrice(false);
+    }
+  };
+  const handleAddToCart = async () => {
+    try {
+      // Gọi API add to cart khi click vào nút "ADD TO CART"
+      await addToCart(productId, quantity); // Thay đổi thông tin productId và quantity tùy theo cấu trúc dữ liệu của bạn
+
+      // Hiển thị thông báo thành công khi thêm vào giỏ hàng
+      toast.success('Sản phẩm đã được thêm vào giỏ hàng!');
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+      console.error('Error adding to cart:', error);
+      // Hiển thị thông báo lỗi khi có lỗi xảy ra
+      toast.error('Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng!');
+    }
+  };
   const handleImgClick = (img) => {
     setImgLarge(img);
   };
+
+  const [showWholesalePrice, setShowWholesalePrice] = useState(false);
+
+
 
 
   const decreaseQuantity = () => {
@@ -141,40 +168,72 @@ const ProductDetails = () => {
     );
   };
 
-  console.log(' ,,,,,,,,,,,,,,,', averageRating)
 
   return (
     <section className="product-details spad pt-1">
+       <ToastContainer
+                position="top-right"
+                autoClose={1500}
+                hideProgressBar={false}
+                newestOnTop={true}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
       <div className="container">
         <div className="row">
           <div className="col-lg-6 col-md-6">
             <div className="product__details__pic">
               <div className="product__details__pic__item">
-                <img className="product__details__pic__item--large" src={imgLarge} alt="" />
+                <img className="product__details__pic__item--large"
+                  style={{
+                    width: '555px',
+                    height: '555px',
+                    objectFit: 'cover', // Tuỳ chỉnh theo ý muốn (cover, contain, ...)
+                    borderRadius: '5px', // Border radius là 5px
+                    border: '1px solid #ccc' // Viền 1px với màu xám #ccc
+                  }} src={imgLarge} alt="" />
               </div>
-              <div className="product__details__pic__slider owl-carousel detail-mini-pic">
+              <div className="product__details__pic__slider owl-carousel detail-mini-pic d-flex justify-content-between">
                 {product.image.map((img, index) => (
                   <img
                     key={index}
                     src={img}
                     alt={`Product ${index}`}
                     onClick={() => handleImgClick(img)}
+                    style={{
+                      width: '80px',
+                      height: '80px',
+                      objectFit: 'cover', // Tuỳ chỉnh theo ý muốn (cover, contain, ...)
+                      borderRadius: '5px', // Border radius là 5px
+                      border: '1px solid #ccc' // Viền 1px với màu xám #ccc
+                    }}
                   />
                 ))}
               </div>
             </div>
           </div>
           <div className="col-lg-6 col-md-6">
-            <div class="product__details__text">
-              <h3>Vetgetable’s Package</h3>
+            <div className="product__details__text">
+              <h1 style={{fontSize: '40px'}}>{product.name}</h1>
               <div className='mb-3'>
-                {renderStars(3.5)}
+                {renderStars(averageRating)}
               </div>
-              <div class="product__details__rating">
-                <span>({reviews.length} reviews)</span>
+              <div className="product__details__rating">
+                <span>({reviewsData.length} reviews)</span>
               </div>
-              <div className="product__details__price">{product.price}</div>
-              <p>{product.description}</p>
+              <span className={showWholesalePrice ? 'product__details__price text-decoration-line-through font-italic' : 'product__details__price'}>
+                {product.originalPrice + '$'}
+              </span>
+              <span className={showWholesalePrice ? 'product__details__price' : 'd-none'}>
+                {'  ' + product.wholesalePrice + '$'}
+              </span>
+              <p dangerouslySetInnerHTML={{
+                __html: product.description.replace(/\n/g, '<br/>')
+              }}></p>
               <div className="product__details__quantity">
                 <div className="quantity">
                   <div className="pro-qty">
@@ -184,16 +243,17 @@ const ProductDetails = () => {
                   </div>
                 </div>
               </div>
-              <button className="primary-btn">ADD TO CARD</button>
+            <button className="primary-btn" onClick={handleAddToCart}>ADD TO CART</button>
               <ul>
-                <li><b>Availability</b> <span>{product.availability}</span></li>
-                <li><b>Shipping</b> <span>{product.shipping}</span></li>
-                <li><b>Weight</b> <span>{product.weight}</span></li>
-                <li><b>Seller</b>
+                <li><b>Unit:</b> <span>{product.unit}</span></li>
+                <li><b>Whole sale Price: </b> <span>{product.wholesalePrice}</span></li>
+                <li><b>Minimum wholesale quantity: </b> <span>{product.limitedProduct}</span></li>
+                <li><b>Quantity in stock:</b> <span>{product.totalWeight}</span></li>
+                <li><b>Seller:</b>
                   <Link to={`/seller-page/${product.infoFarmer._id}`}>
-                  <img  className="m-1 p-1 border "style={{ height: '36px', width: '36px', objectFit: 'contain' }} 
-                  src={product.infoFarmer.image} 
-                  alt="Farmer avatar" />
+                    <img className="m-1 p-1 border " style={{ height: '36px', width: '36px', objectFit: 'contain' }}
+                      src={product.infoFarmer.image}
+                      alt="Farmer avatar" />
                     <span>{product.infoFarmer.firstName + ' ' + product.infoFarmer.lastName}</span>
                   </Link>
                 </li>
@@ -231,12 +291,14 @@ const ProductDetails = () => {
               <div className="tab-content">
                 <div className={`tab-pane ${activeTab === 1 ? 'active' : ''}`} id="tab1" role="tabpanel">
                   <div className="product__details__tab__desc">
-                    <p>{product.descriptionDetail}</p>
+                    <p dangerouslySetInnerHTML={{
+                      __html: product.descriptionDetail.replace(/\n/g, '<br/>')
+                    }}></p>
                   </div>
                 </div>
                 <div className={`tab-pane ${activeTab === 2 ? 'active' : ''}`} id="tab2" role="tabpanel">
                   <div className="product__details__tab__desc">
-                    <CommentComponent productId={'6564e7c2e3fb2bb37016c074' || productId} />
+                    <CommentComponent productId={productId} />
                   </div>
                 </div>
               </div>

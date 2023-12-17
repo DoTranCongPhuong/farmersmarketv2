@@ -45,16 +45,16 @@ const Login = () => {
             const userInfoString = localStorage.getItem('userInfo');
 
             // Kiểm tra xem thông tin userInfo có tồn tại không
-            if (userInfoString) {
-                // Parse chuỗi JSON thành đối tượng JavaScript
-                const userInfo = JSON.parse(userInfoString);
+            // if (userInfoString) {
+            //     // Parse chuỗi JSON thành đối tượng JavaScript
+            //     const userInfo = JSON.parse(userInfoString);
 
-                // Lấy thông tin name từ đối tượng userInfo
+            //     // Lấy thông tin name từ đối tượng userInfo
 
-                console.log('User userInfo:', userInfo);
-            } else {
-                console.log('User Info not found in local storage');
-            }
+            //     console.log('User userInfo:', userInfo);
+            // } else {
+            //     console.log('User Info not found in local storage');
+            // }
 
             setTimeout(() => {
                 navigate('/');
@@ -148,12 +148,6 @@ const Login = () => {
                         </div>
                         <div className="input-group mb-3">
                             <button className="btn btn-lg btn-primary w-100 fs-6 site-btn" onClick={handleLogin}>Login</button>
-                        </div>
-                        <div className="input-group mb-3">
-                            <button className="btn btn-lg btn-light w-100 fs-6">
-                                <img src="google.png" style={{ width: '20px' }} className="me-2" alt="Google" />
-                                <small>Sign In with Google</small>
-                            </button>
                         </div>
                         <div className="row">
                             <small>Don't have an account? <Link className='nomal__a' to="/register">Sign Up</Link></small>

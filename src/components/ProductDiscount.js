@@ -1,68 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Slider from "react-slick";
 import { Link } from 'react-router-dom';
 
-import { addToCart } from '../service/API';
+import { addToCart, getDiscountProducts } from '../service/API';
 import { toast, ToastContainer } from 'react-toastify';
 
 const ProductDiscount = () => {
-    const products = [
+    const [products, setProducts] = useState([
         {
-
-            id: '6564eb2812062f864554ea1d',
-            image: 'img/product/discount/pd-3.jpg',
-            category: 'Dried Fruit',
-            name: 'Raisinnnuts',
-            price: '$30.00',
-            discountedPrice: '$36.00'
+            _id: "",
+            name: "",
+            category: "",
+            description: "",
+            descriptionDetail: "",
+            discount: "",
+            discountPrice: "",
+            image: [],
+            limitedProduct: "",
+            originalPrice: "",
+            totalWeight: "",
+            unit: "",
+            wholesalePrice: "",
         },
-        {
-            id: '6564eb2812062f864554ea1d',
-            image: 'img/product/discount/pd-2.jpg',
-            category: 'Vegetables',
-            name: 'Vegetablespackage',
-            price: '$30.00',
-            discountedPrice: '$36.00'
-        },
-        {
-            id: '6564eb2812062f864554ea1d',
-            image: 'img/product/discount/pd-3.jpg',
-            category: 'Dried Fruit',
-            name: 'Mixed Fruitss',
-            price: '$30.00',
-            discountedPrice: '$36.00'
-        },
-        {
-            id: '6564eb2812062f864554ea1d',
-            image: 'img/product/discount/pd-4.jpg',
-            category: 'Dried Fruit',
-            name: 'Raisinnnuts',
-            price: '$30.00',
-            discountedPrice: '$36.00'
-        },
-        {
-            id: '6564eb2812062f864554ea1d',
-            image: 'img/product/discount/pd-5.jpg',
-            category: 'Dried Fruit',
-            name: 'Raisinnnuts',
-            price: '$30.00',
-            discountedPrice: '$36.00'
-        },
-        {
-            id: '6564eb2812062f864554ea1d',
-            image: 'img/product/discount/pd-6.jpg',
-            category: 'Dried Fruit',
-            name: 'Raisinnnuts',
-            price: '$30.00',
-            discountedPrice: '$36.00'
-        },
-        // Add other product data in a similar format
-    ];
+    ]);
 
     const handleAddToCart = async (itemId) => {
         try {
             // Gọi API add to cart khi click vào icon
-            await addToCart('6564eb2812062f864554ea1d', 1); // Thay đổi thông tin productId và quantity tùy theo cấu trúc dữ liệu của bạn
+            await addToCart(itemId, 1); // Thay đổi thông tin productId và quantity tùy theo cấu trúc dữ liệu của bạn
 
             // Hiển thị thông báo thành công khi thêm vào giỏ hàng
             toast.success('Sản phẩm đã được thêm vào giỏ hàng!');
@@ -74,11 +39,25 @@ const ProductDiscount = () => {
         }
     };
 
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await getDiscountProducts();
+                setProducts(response.products)
+                console.log(response.products)
+            } catch (error) {
+                console.error('Error fetching products:', error.message);
+            }
+        };
+
+        fetchProducts(); // Gọi hàm để lấy dữ liệu khi component được mount
+    }, []);
+
     const settings = {
         dots: true,
         infinite: true,
         speed: 500,
-        slidesToShow: 3, // Số slide hiển thị cùng một lúc
+        slidesToShow: 4, // Số slide hiển thị cùng một lúc
         slidesToScroll: 1, // Số slide cuộn khi di chuyển
         autoplay: true, // Tự động chuyển slide
         autoplaySpeed: 2000, // Thời gian chờ trước khi chuyển slide tiếp theo (miligiây)
@@ -118,7 +97,7 @@ const ProductDiscount = () => {
             {/* <div className="col-lg-9 col-md-7"></div> */}
             <div className="product__discount">
                 <div className="section-title product__discount__title">
-                    <h2>Sale Off</h2>
+                    <h2 className='text-danger'>Flashsale</h2>
                 </div>
                 <div className="row">
                     <div className="product__discount__slider owl-carousel">
@@ -128,13 +107,16 @@ const ProductDiscount = () => {
                                     <div className="product__discount__item">
                                         <div
                                             className="product__discount__item__pic set-bg"
-                                            style={{ backgroundImage: `url("${product.image}")` }}
+                                            style={{
+                                                backgroundImage: `url("${product.image[0]}")`,
+                                                borderRadius: '10px',
+                                            }}
                                         >
-                                            <div className="product__discount__percent">-20%</div>
+                                            <div className="product__discount__percent">{product.discount}%</div>
                                             <ul className="product__item__pic__hover">
 
                                                 <li>
-                                                    <a onClick={() => handleAddToCart(product.id)}>
+                                                    <a onClick={() => handleAddToCart(product._id)}>
                                                         <i className="fa fa-shopping-cart"></i>
                                                     </a>
                                                 </li>
@@ -143,13 +125,12 @@ const ProductDiscount = () => {
                                         <div className="product__discount__item__text">
                                             <span>{product.category}</span>
                                             <h5><Link to="/product-detail">{product.name}</Link></h5>
-                                            <div className="product__item__price">{product.price} <span>{product.discountedPrice}</span></div>
+                                            <div className="product__item__price">{product.originalPrice} <span>{product.discountPrice}</span></div>
                                         </div>
                                     </div>
                                 </div>
                             ))}
                         </Slider>
-
                     </div>
                 </div>
             </div>

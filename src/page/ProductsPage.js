@@ -13,15 +13,11 @@ const ProductsPage = () => {
             <Hero />
             <div className='container'>
                 <div className='container'>
-                    <div className='row'>
-                        <div className='col-lg-3'>
-                            <LeftBar />
-                        </div>
-                        <div className='col-lg-9'>
-                            <ListProduct />
-                            <ProductDiscount />
-                        </div>
-                    </div>
+
+
+                    <ListProduct />
+                    <ProductDiscount />
+
                 </div>
             </div>
             <Footer />

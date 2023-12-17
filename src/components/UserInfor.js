@@ -238,7 +238,7 @@ const UserInfor = () => {
                                 <div className="row">
                                     {user &&
                                         Object.keys(user).map((key) =>
-                                            key === 'image' || key === '__v' || key === 'role' ? null : (
+                                            key === 'image' || key === '__v' || key === 'role' || key === 'id'  || key === 'description'? null : (
                                                 <div className="col-lg-6" key={key}>
                                                     <div className="checkout__input">
                                                         <p>

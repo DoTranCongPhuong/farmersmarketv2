@@ -8,6 +8,7 @@ const FilterComponent = ({ handlePriceFilter, handleRatingFilter }) => {
     const [ratingValue, setRatingValue] = useState('');
     const [error, setError] = useState('');
 
+
     const ratingOptions = [
         { key: 'all', text: 'All Ratings', value: '' },
         { key: '1', text: '1 Star', value: '1' },
@@ -19,7 +20,6 @@ const FilterComponent = ({ handlePriceFilter, handleRatingFilter }) => {
 
     const handleRatingChange = (e, { value }) => {
         setRatingValue(value);
-        handleRatingFilter(value);
     };
 
     const handleMinPriceChange = (e) => {
@@ -43,6 +43,8 @@ const FilterComponent = ({ handlePriceFilter, handleRatingFilter }) => {
             max: maxPrice,
         };
         handlePriceFilter(priceFilter);
+        handleRatingFilter(ratingValue);
+
     };
 
     return (

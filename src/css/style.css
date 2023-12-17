@@ -1273,7 +1273,7 @@ ol {
 }
 
 .product__discount__item__pic {
-  height: 270px;
+  height: 180px;
   position: relative;
   overflow: hidden;
 }
@@ -1692,7 +1692,7 @@ ol {
 }
 
 .product__details__text .product__details__price {
-  font-size: 30px;
+  font-size: 48px;
   color: #dd2222;
   font-weight: 600;
   margin-bottom: 15px;
@@ -1731,7 +1731,7 @@ ol {
 
 .product__details__text ul li b {
   font-weight: 700;
-  width: 170px;
+  width: 280;
   display: inline-block;
 }
 

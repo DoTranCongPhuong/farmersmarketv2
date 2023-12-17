@@ -8,6 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 const ShoppingCart = () => {
     const { t } = useTranslation();
     const [cartItems, setCartItems] = useState([]);
+    const [quantity, setQuantity] = useState(1);
+    const [discount, setDiscount] = useState(0);
 
     const fetchCartData = async () => {
         try {
@@ -23,6 +25,23 @@ const ShoppingCart = () => {
         fetchCartData();
     }, []);
 
+    useEffect(() => {
+        // Gọi hàm showWholesalePrice mỗi khi giá trị của quantity thay đổi
+        toggleWholesalePrice();
+    }, [quantity]);
+
+    const toggleWholesalePrice = (quantity, limitedProduct) => {
+        // Kiểm tra nếu số lượng đủ để bán buôn
+        if (quantity >= limitedProduct) {
+            setShowWholesalePrice(true);
+        } else {
+            setShowWholesalePrice(false);
+        }
+    };
+
+    const [showWholesalePrice, setShowWholesalePrice] = useState(false);
+
+
     const handleUpdateCart = async () => {
         try {
             await updateCart(cartItems);
@@ -34,6 +53,11 @@ const ShoppingCart = () => {
             fetchCartData();
         }
     };
+    const handleApplyCoupon = async () => {
+        handleUpdateCart();
+        
+    };
+    
     // Function to update quantity in the cart
     const handleQuantityChange = (productId, value) => {
         const updatedCartItems = cartItems.map(item => {
@@ -55,11 +79,14 @@ const ShoppingCart = () => {
     const calculateTotal = () => {
         let total = 0;
         cartItems.forEach(item => {
-            total += item.price * item.quantity;
+            if (item.quantity >= item.limitedProduct) {
+                total += item.wholesalePrice * (100 - item.discount) / 100 * item.quantity;
+            } else {
+                total += item.discountPrice * item.quantity;
+            }
         });
         return total.toFixed(2);
     };
-
     return (
         <section className="shoping-cart spad">
             <ToastContainer />
@@ -84,7 +111,7 @@ const ShoppingCart = () => {
                                         <tr key={item.productId}>
                                             <td className="shoping__cart__item">
                                                 <img src={item.image[1]} style={{
-                                                    wproductIdth: '100px',
+                                                    width: '100px',
                                                     height: '100px',
                                                     objectFit: 'cover',
                                                     borderRadius: '5px'
@@ -92,13 +119,35 @@ const ShoppingCart = () => {
                                                 <h5><Link to={`/product-detail/${item.productId}`}>{item.name}</Link></h5>
                                             </td>
                                             <td className="shoping__cart__price">
-                                                ${item.price.toFixed(2)}
+                                                {item.quantity >= item.limitedProduct ? (
+                                                    <>
+                                                        <span className="product__details__price text-decoration-line-through font-italic">
+                                                            {`$${item.originalPrice.toFixed(2)}`}
+                                                        </span>
+                                                        <span className="product__details__price">
+                                                            {` $${item.wholesalePrice}`}
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    `$${item.originalPrice.toFixed(2)}`
+                                                )}
                                             </td>
                                             <td className="shoping__cart__price">
                                                 {item.discount.toFixed(1)}%
                                             </td>
                                             <td className="shoping__cart__price">
-                                                ${item.discountPrice.toFixed(2)}
+                                                {item.quantity >= item.limitedProduct ? (
+                                                    <>
+                                                        <span className="product__details__price text-decoration-line-through font-italic">
+                                                            {`$${item.discountPrice.toFixed(2)}`}
+                                                        </span>
+                                                        <span className="product__details__price">
+                                                            {` $${(item.wholesalePrice * (100 - item.discount) / 100).toFixed(2)}`}
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    `$${item.discountPrice.toFixed(2)}`
+                                                )}
                                             </td>
                                             <td className="shoping__cart__quantity">
                                                 <div className="quantity">
@@ -128,8 +177,20 @@ const ShoppingCart = () => {
                                                 </div>
                                             </td>
                                             <td className="shoping__cart__total">
-                                                ${(item.price * item.quantity).toFixed(2)}
+                                                {item.quantity >= item.limitedProduct ? (
+                                                    <>
+                                                        <span className="product__details__price text-decoration-line-through font-italic">
+                                                            {`$${(item.discountPrice * item.quantity).toFixed(2)}`}
+                                                        </span>
+                                                        <span className="product__details__price">
+                                                            {` $${((item.wholesalePrice * (100 - item.discount) / 100) * item.quantity).toFixed(2)}`}
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    `$${(item.discountPrice * item.quantity).toFixed(2)}`
+                                                )}
                                             </td>
+
                                             <td className="shoping__cart__item__close">
                                                 <span className="icon_close" onClick={() => removeCartItem(item.productId)}></span>
                                             </td>
@@ -157,7 +218,8 @@ const ShoppingCart = () => {
                                 <h5>{t('Discount Codes')}</h5>
                                 <form action="#">
                                     <input type="text" className='form-group' placeholder={t('Enter your coupon code')} />
-                                    <button type="submit" className="site-btn form-group">{t('APPLY COUPON')}</button>
+                                    <button onClick={handleApplyCoupon}
+                                        className="site-btn form-group">{t('APPLY COUPON')}</button>
                                 </form>
                             </div>
                         </div>
@@ -167,6 +229,7 @@ const ShoppingCart = () => {
                             <h5>{t('Cart Total')}</h5>
                             <ul>
                                 <li> {t('Subtotal')}<span>${calculateTotal()}</span></li>
+                                <li>{t('Discount')} <span>{(discount)}%</span></li>
                                 <li>{t('Total')} <span>${calculateTotal()}</span></li>
                             </ul>
                             <Link to="/checkout-page" className="primary-btn">{t('PROCEED TO CHECKOUT')}</Link>
