@@ -70,7 +70,6 @@ const ListProduct = () => {
     const filteredProducts = listProducts.filter(product => {
         return product.discountPrice >= priceFilter.min && product.discountPrice <= priceFilter.max;
     });
-    console.log(priceFilter.min + ' '+priceFilter.max)
 
     // Lấy ra các sản phẩm hiện tại dựa trên trang và sản phẩm trên mỗi trang
     const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
@@ -89,8 +88,13 @@ const ListProduct = () => {
     };
 
     const handlePriceFilter = (props) => {
+        console.log('--11111111-         '+priceFilter.min + ' ---'+priceFilter.max)
+
+        if (props.min == '') props.min = 0;
+        if (props.max =='') props.max = 9999999;
         setPriceFilter(props);
     };
+    console.log('--------'+priceFilter.min + ' ---'+priceFilter.max)
 
 
     return (

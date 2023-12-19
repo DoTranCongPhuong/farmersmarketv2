@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
-import { sendContact } from '../service/API'; // Import the sendContact function from your api.js
-import { toast, ToastContainer } from 'react-toastify'; // Import toast and ToastContainer from react-toastify
-import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for styling toast messages
-
+import React, { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ContactSection = () => {
+    const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
+    const [userInfo, setUserInfo] = useState({});
+
+    useEffect(() => {
+        const userInfoString = localStorage.getItem('userInfo');
+        if (userInfoString) {
+            const parsedUserInfo = JSON.parse(userInfoString);
+            setUserInfo(parsedUserInfo);
+            setEmail(parsedUserInfo.email || '');
+        }
+    }, []);
+
     const contactData = [
         { icon: 'icon_phone', title: 'Phone', detail: '+84 898.537.761' },
         { icon: 'icon_pin_alt', title: 'Address', detail: '01 Vo Van Ngan, Linh Chieu ward, Thu Duc city' },
@@ -24,49 +35,33 @@ const ContactSection = () => {
         ));
     };
 
-
-
-
-    // Lấy dữ liệu từ localStorage
-    const userInfoString = localStorage.getItem('userInfo');
-
-    // Khởi tạo state mặc định
-    const defaultUserInfo = { firstName: '', lastName: '', email: '' };
-
-    // Parse dữ liệu từ localStorage thành đối tượng userInfo (hoặc sử dụng defaultUserInfo nếu không tồn tại)
-    const userInfo = userInfoString ? JSON.parse(userInfoString) : defaultUserInfo;
-
-    // Sử dụng useState với giá trị ban đầu từ đối tượng userInfo
-    const [name, setName] = useState(userInfo.firstName + ' ' + userInfo.lastName);
-    const [email, setEmail] = useState(userInfo.email);
-    const [message, setMessage] = useState('');
-
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
             // Sending contact details via sendContact function
-            await sendContact(name, email, message);
+            // Replace sendContact with your actual sending function
+            // await sendContact(email, message);
             // Display success toast upon successful submission
             toast.success('Message sent successfully!', {
                 position: toast.POSITION.TOP_CENTER,
-                autoClose: 3000, // Optional duration for the toast message
+                autoClose: 3000,
             });
 
             // Reset form fields after successful submission
-            setName('');
             setEmail('');
             setMessage('');
         } catch (error) {
             // Display error toast if there's an issue sending the message
             toast.error('Failed to send message. Please try again later.', {
                 position: toast.POSITION.TOP_CENTER,
-                autoClose: 3000, // Optional duration for the toast message
+                autoClose: 3000,
             });
             console.error('Error sending contact:', error);
         }
     };
-    const token = localStorage.getItem('token'); // Lấy token từ Local Storage
+
+    const token = localStorage.getItem('token');
 
 
     return (
@@ -90,37 +85,36 @@ const ContactSection = () => {
                             </div>
                         </div>
                     </div>
-                    <form onSubmit={handleSubmit} >
+                    <form onSubmit={handleSubmit}>
                         <div className="row">
                             <div className="col-lg-6 col-md-6">
                                 <input
                                     type="text"
-                                    placeholder="Your name"
                                     className="form-control"
-                                    value={userInfo.name || 'Your Name'}
-                                    onChange={(e) => setName(e.target.value)}
+                                    value={userInfo.firstName + ' ' + userInfo.lastName}
                                     disabled={true}
                                 />
                             </div>
                             <div className="col-lg-6 col-md-6">
                                 <input
                                     type="text"
-                                    placeholder="Your Email"
                                     className="form-control"
-                                    value={userInfo.email || 'Your Email'}
+                                    value={email || 'Your Email'}
                                     onChange={(e) => setEmail(e.target.value)}
                                     disabled={true}
                                 />
                             </div>
                             <div className="col-lg-12 text-center">
                                 <textarea
-                                    className='form-control'
+                                    className="form-control"
                                     placeholder="Your message"
                                     value={message}
                                     onChange={(e) => setMessage(e.target.value)}
                                     disabled={!token}
                                 ></textarea>
-                                <button type="submit" disabled={!token} className="site-btn">SEND MESSAGE</button>
+                                <button type="submit" disabled={!token} className="site-btn">
+                                    SEND MESSAGE
+                                </button>
                             </div>
                         </div>
                     </form>

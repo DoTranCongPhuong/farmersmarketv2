@@ -34,6 +34,19 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+export const applyVoucher = async (voucherCode) => {
+  try {
+    const response = await axiosInstance.post('/apply-voucher', {
+      voucherCode: voucherCode,
+    });
+    return response.data
+
+  } catch (error) {
+    console.error('Error applying voucher:', error);
+    // Xử lý lỗi nếu có
+  }
+};
+
 export const getDiscountProducts = async () => {
   try {
     const response = await axios.get('https://farmer-ecommerce-m4j8.vercel.app/flashsale');

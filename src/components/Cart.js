@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getCartData, updateCart } from '../service/API';
+import { getCartData, updateCart, applyVoucher } from '../service/API';
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,6 +10,8 @@ const ShoppingCart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [quantity, setQuantity] = useState(1);
     const [discount, setDiscount] = useState(0);
+    const [couponCode, setCouponCode] = useState('');
+
 
     const fetchCartData = async () => {
         try {
@@ -54,10 +56,21 @@ const ShoppingCart = () => {
         }
     };
     const handleApplyCoupon = async () => {
-        handleUpdateCart();
-        
+        try {
+            if (!couponCode) {
+                console.log('Please enter a coupon code.');
+                return;
+            }
+
+            const discountRes = await applyVoucher(couponCode);
+            setDiscount(discountRes.discount);
+
+        } catch (error) {
+            console.error('Error applying coupon:', error);
+            // Xử lý lỗi khi áp dụng voucher không thành công
+        }
     };
-    
+
     // Function to update quantity in the cart
     const handleQuantityChange = (productId, value) => {
         const updatedCartItems = cartItems.map(item => {
@@ -124,7 +137,7 @@ const ShoppingCart = () => {
                                                         <span className="product__details__price text-decoration-line-through font-italic">
                                                             {`$${item.originalPrice.toFixed(2)}`}
                                                         </span>
-                                                        <span className="product__details__price">
+                                                        <span className="product__details__price text-danger">
                                                             {` $${item.wholesalePrice}`}
                                                         </span>
                                                     </>
@@ -141,7 +154,7 @@ const ShoppingCart = () => {
                                                         <span className="product__details__price text-decoration-line-through font-italic">
                                                             {`$${item.discountPrice.toFixed(2)}`}
                                                         </span>
-                                                        <span className="product__details__price">
+                                                        <span className="product__details__price text-danger">
                                                             {` $${(item.wholesalePrice * (100 - item.discount) / 100).toFixed(2)}`}
                                                         </span>
                                                     </>
@@ -182,7 +195,7 @@ const ShoppingCart = () => {
                                                         <span className="product__details__price text-decoration-line-through font-italic">
                                                             {`$${(item.discountPrice * item.quantity).toFixed(2)}`}
                                                         </span>
-                                                        <span className="product__details__price">
+                                                        <span className="product__details__price text-danger">
                                                             {` $${((item.wholesalePrice * (100 - item.discount) / 100) * item.quantity).toFixed(2)}`}
                                                         </span>
                                                     </>
@@ -216,10 +229,19 @@ const ShoppingCart = () => {
                         <div className="shoping__continue">
                             <div className="shoping__discount row">
                                 <h5>{t('Discount Codes')}</h5>
-                                <form action="#">
-                                    <input type="text" className='form-group' placeholder={t('Enter your coupon code')} />
-                                    <button onClick={handleApplyCoupon}
-                                        className="site-btn form-group">{t('APPLY COUPON')}</button>
+                                <form onSubmit={(e) => {
+                                    e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+                                        }}>
+                                    <input
+                                        type="text"
+                                        className='form-group'
+                                        placeholder="Enter your coupon code"
+                                        value={couponCode}
+                                        onChange={(e) => setCouponCode(e.target.value)}
+                                    />
+                                    <button onClick={handleApplyCoupon} className="site-btn form-group">
+                                        APPLY COUPON
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -230,7 +252,7 @@ const ShoppingCart = () => {
                             <ul>
                                 <li> {t('Subtotal')}<span>${calculateTotal()}</span></li>
                                 <li>{t('Discount')} <span>{(discount)}%</span></li>
-                                <li>{t('Total')} <span>${calculateTotal()}</span></li>
+                                <li>{t('Total')} <span>${calculateTotal()*(100-discount)/100}</span></li>
                             </ul>
                             <Link to="/checkout-page" className="primary-btn">{t('PROCEED TO CHECKOUT')}</Link>
                         </div>
