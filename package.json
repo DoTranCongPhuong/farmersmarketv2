@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@paypal/react-paypal-js": "^8.1.3",
+    "@teachablemachine/image": "^0.8.5",
+    "@tensorflow/tfjs": "^1.3.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -13,7 +15,9 @@
     "firebase": "^10.6.0",
     "i18next": "^23.7.7",
     "mdb-react-ui-kit": "^7.0.0",
+    "ml5": "^0.12.2",
     "owl.carousel": "^2.3.4",
+    "p5": "^1.9.0",
     "query-string": "^8.1.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",

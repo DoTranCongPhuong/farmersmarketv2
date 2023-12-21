@@ -16,6 +16,7 @@ import {
   SellerPage
 } from './routes/Routes';
 import PrivateRoute from './routes/PrivateRoute';
+import HistoryPage from './page/HistoryPage';
 
 
 
@@ -24,8 +25,11 @@ const App = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/success" element={<HomePage />} />
+        <Route path="/failure" element={<HomePage />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/history-page" element={<HistoryPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/products-page" element={<ProductsPage />} />
         <Route path="/product-detail/:productId" element={<ProductDetailPage />} />

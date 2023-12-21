@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getCartData, updateCart, applyVoucher } from '../service/API';
+import { getCartData, updateCart, applyVoucher, order } from '../service/API';
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,6 +11,33 @@ const ShoppingCart = () => {
     const [quantity, setQuantity] = useState(1);
     const [discount, setDiscount] = useState(0);
     const [couponCode, setCouponCode] = useState('');
+    const [selectedPayment, setSelectedPayment] = useState('');
+
+    const handlePaymentSelection = (paymentMethod) => {
+        setSelectedPayment(paymentMethod);
+    };
+
+    const handlePlaceOrder = async () => {
+        if (selectedPayment) {
+            try {
+                const response = await order(selectedPayment, couponCode);
+
+                if (response && response.approval_url) {
+                    window.location.href = response.approval_url;
+                }
+
+                toast.success('Order placed successfully!');
+                // Thực hiện các xử lý tiếp theo sau khi đặt hàng thành công
+            } catch (error) {
+                // Xử lý khi đặt hàng không thành công
+                toast.error('Failed to place order. Please try again.');
+                // Hiển thị thông báo lỗi cho người dùng
+            }
+        } else {
+            toast.warning('Please select a payment method');
+        }
+    };
+
 
 
     const fetchCartData = async () => {
@@ -59,17 +86,26 @@ const ShoppingCart = () => {
         try {
             if (!couponCode) {
                 console.log('Please enter a coupon code.');
+                // Hoặc có thể hiển thị thông báo cho người dùng để nhập mã giảm giá trước khi áp dụng
                 return;
             }
 
             const discountRes = await applyVoucher(couponCode);
-            setDiscount(discountRes.discount);
 
+            if (discountRes.error) {
+                toast.error(discountRes.error);
+            } else {
+                setDiscount(discountRes.discount);
+                // Thông báo cho người dùng rằng mã giảm giá đã được áp dụng thành công nếu cần
+                toast.success('Coupon applied successfully!');
+            }
         } catch (error) {
+            // Xử lý lỗi khi gọi API áp dụng mã giảm giá
             console.error('Error applying coupon:', error);
-            // Xử lý lỗi khi áp dụng voucher không thành công
+            toast.error('Failed to apply coupon. Please try again.');
         }
     };
+
 
     // Function to update quantity in the cart
     const handleQuantityChange = (productId, value) => {
@@ -231,7 +267,7 @@ const ShoppingCart = () => {
                                 <h5>{t('Discount Codes')}</h5>
                                 <form onSubmit={(e) => {
                                     e.preventDefault(); // Ngăn chặn hành vi mặc định của form
-                                        }}>
+                                }}>
                                     <input
                                         type="text"
                                         className='form-group'
@@ -244,19 +280,104 @@ const ShoppingCart = () => {
                                     </button>
                                 </form>
                             </div>
+
+
                         </div>
                     </div>
-                    <div className="col-lg-6">
-                        <div className="shoping__checkout">
-                            <h5>{t('Cart Total')}</h5>
-                            <ul>
-                                <li> {t('Subtotal')}<span>${calculateTotal()}</span></li>
-                                <li>{t('Discount')} <span>{(discount)}%</span></li>
-                                <li>{t('Total')} <span>${calculateTotal()*(100-discount)/100}</span></li>
-                            </ul>
-                            <Link to="/checkout-page" className="primary-btn">{t('PROCEED TO CHECKOUT')}</Link>
+                    <div className='row mt-3'>
+                        <div className="col-lg-6">
+                            <div className="checkout__order">
+
+                                <div className="checkout__order__total">
+                                    Payment menthod
+                                </div>
+                                <div className="checkout__input__checkbox">
+                                    <input
+                                        type="radio"
+                                        id="vnpay"
+                                        name="paymentMethod"
+                                        value="vnpay"
+                                        checked={selectedPayment === 'vnpay'}
+                                        onChange={() => handlePaymentSelection('vnpay')}
+                                    />
+                                    <label htmlFor="vnpay">
+                                        <img
+                                            src="/vnpay.png"
+                                            className='mx-2'
+                                            alt="VNPay"
+                                            style={{
+                                                width: '50px',
+                                                height: '50px',
+                                                borderRadius: '5px'
+                                            }}
+                                        />
+                                        VNPay</label>
+                                </div>
+
+                                <div className="checkout__input__checkbox">
+                                    <input
+                                        type="radio"
+                                        id="paypal"
+                                        name="paymentMethod"
+                                        value="paypal"
+                                        checked={selectedPayment === 'paypal'}
+                                        onChange={() => handlePaymentSelection('paypal')}
+                                    />
+                                    <label htmlFor="paypal">
+                                        <img
+                                            src="/paypal.png"
+                                            className='mx-2'
+                                            alt="VNPay"
+                                            style={{
+                                                width: '50px',
+                                                height: '50px',
+                                                borderRadius: '5px'
+                                            }}
+                                        />
+                                        PayPal</label>
+                                </div>
+
+                                <div className="checkout__input__checkbox">
+                                    <input
+                                        type="radio"
+                                        id="cod"
+                                        name="paymentMethod"
+                                        value="cod"
+                                        checked={selectedPayment === 'COD'}
+                                        onChange={() => handlePaymentSelection('COD')}
+                                    />
+                                    <label htmlFor="cod">
+                                        <img
+                                            src="/cod.png"
+                                            className='mx-2'
+                                            alt="COD"
+                                            style={{
+                                                width: '50px',
+                                                height: '50px',
+                                                borderRadius: '5px'
+                                            }}
+                                        />
+                                        Payment on delivery (COD)</label>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div className="col-lg-6">
+                            <div className="shoping__checkout">
+                                <h5>{t('Cart Total')}</h5>
+                                <ul>
+                                    <li> {t('Subtotal')}<span>${calculateTotal()}</span></li>
+                                    <li>{t('Discount')} <span>{(discount)}%</span></li>
+                                    <li>{t('Total')} <span>${calculateTotal() * (100 - discount) / 100}</span></li>
+                                </ul>
+                                <button type="button" className="site-btn" onClick={handlePlaceOrder}>
+                                    PLACE ORDER
+                                </button>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </section>

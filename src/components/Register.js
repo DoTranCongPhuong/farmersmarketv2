@@ -38,19 +38,28 @@ const Register = () => {
 
     const handleSignUp = async (e) => {
         e.preventDefault();
-        try {
-            console.log("data: ", formData);
-            await register(formData);
-            setSuccessMessage('Registration successful!');
-            setErrorMessage('');
-            // Chuyển người dùng đến trang chủ sau khi đăng ký thành công
-            navigate('/');
-        } catch (error) {
-            setErrorMessage('Registration failed. Please try again.');
-            setSuccessMessage('');
-            console.error('Error registering:', error);
+      
+        // Kiểm tra xem các trường tên, email và số điện thoại có được điền đầy đủ không
+        if (!formData.firstName || !formData.lastName || !formData.email || !formData.numberPhone) {
+          setErrorMessage('Please fill in all required fields.');
+          setSuccessMessage('');
+          return; // Dừng việc thực hiện khi có trường dữ liệu không hợp lệ
         }
-    };
+      
+        try {
+          console.log("data: ", formData);
+          await register(formData);
+          setSuccessMessage('Registration successful!');
+          setErrorMessage('');
+          // Chuyển người dùng đến trang chủ sau khi đăng ký thành công
+          navigate('/');
+        } catch (error) {
+          setErrorMessage('Registration failed. Please try again.');
+          setSuccessMessage('');
+          console.error('Error registering:', error);
+        }
+      };
+      
 
     return (
         <div className="container d-flex justify-content-center align-items-center min-vh-75">
@@ -84,23 +93,7 @@ const Register = () => {
                                 />
                             </div>
                             {/* Role selection */}
-                            <div className="input-group mb-3">
-                                {/* <h5>Role:</h5>
-                                <div className="form-check ml-3">
-                                    <input
-                                        type="radio"
-                                        className="form-check-input"
-                                        id="user"
-                                        name="role"
-                                        checked={formData.role === 'user'}
-                                        onChange={handleInputChange}
-                                    />
-                                    <label htmlFor="user" className="form-check-label">
-                                        User
-                                    </label>
-                                </div>
-                          */}
-                            </div>
+
 
 
                             {/* Last Name */}

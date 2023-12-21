@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import categoryList from "../BaseData/CategoryList";
+import ClassificationFruit from './ClassificationFruit'
 
 
 const HeroSection = () => {
@@ -43,6 +44,7 @@ const HeroSection = () => {
     <section className="hero">
       <div className="container">
         <div className="row">
+          <ClassificationFruit/>
           <div className="col-lg-3">
             <div className="hero__categories">
               <div className="hero__categories__all" onClick={toggleCategories}>

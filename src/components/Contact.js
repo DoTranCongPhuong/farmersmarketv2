@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { sendContact } from '../service/API';
 
 const ContactSection = () => {
     const [email, setEmail] = useState('');
@@ -41,7 +42,7 @@ const ContactSection = () => {
         try {
             // Sending contact details via sendContact function
             // Replace sendContact with your actual sending function
-            // await sendContact(email, message);
+            await sendContact(email, message);
             // Display success toast upon successful submission
             toast.success('Message sent successfully!', {
                 position: toast.POSITION.TOP_CENTER,

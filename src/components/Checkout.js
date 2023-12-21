@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import PayPalCheckout from '../service/PayPalCheckout';
+import { getUserInfo } from '../service/API';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate, Link } from 'react-router-dom';
 
 // This value is from the props in the UI
 
@@ -15,49 +17,47 @@ const sample = {
     email: 'Please enter your email',
     orderNotes: 'Notes about your order, e.g. special notes for delivery.'
 };
+
+
 const bill = {
     subtotal: '$750.99',
     total: '$750.99',
     //... Other data
 };
 
+
 const Checkout = () => {
-
     const [selectedPayment, setSelectedPayment] = useState('');
+    const [user, setUser] = useState({});
+    const navigate = useNavigate();
 
-    const paypalOptions = {
-        'clientId': 'AYTOAJ31AZcksdFZBKXP4B0F_dMtF9VZDyEj8i8E0L22UDQSHaCXqU0JXjTUNR8I71mkpa8m6q1Gd0nK',
-        currency: 'USD',
-        components: 'buttons',
-    };
-    const sampleCartItems = [
-        {
-            name: 'Product 1',
-            price: 20.0,
-            quantity: 2,
-        },
-        {
-            name: 'Product 2',
-            price: 15.0,
-            quantity: 1,
-        },
-    ];
 
-    const onSuccess = (data, actions) => {
-        // Xử lý khi thanh toán thành công
-        console.log('Payment was successful!', data);
-        // Thực hiện các hành động khác ở đây nếu cần
-      };
-    
-      const onError = (err) => {
-        // Xử lý khi có lỗi trong quá trình thanh toán
-        console.error('Error in payment:', err);
-        // Thực hiện các hành động khác ở đây nếu cần
-      };
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const userInfo = await getUserInfo(token);
+                const addressFields = ['addressDetail', 'city', 'country', 'district', 'street', 'ward'];
+                const addressEmpty = addressFields.some(field => !userInfo.user[field]);
+
+                if (addressEmpty) {
+                    alert('Please update your address information');
+                    navigate('/user-page');
+                    return;
+                }
+                setUser(userInfo.user);
+            } catch (error) {
+                // Xử lý lỗi khi không thể lấy thông tin người dùng từ API
+                console.error('Error fetching user information:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
 
     const handlePaymentSelection = (method) => {
         setSelectedPayment(method);
-        // Xử lý việc chọn hình thức thanh toán
     };
 
     return (
@@ -69,16 +69,25 @@ const Checkout = () => {
                             <h4>Billing Details</h4>
                             <form action="#">
                                 <div className="row">
-                                    {Object.keys(sample).map((key) => (
-                                        <div className="col-lg-12" key={key}>
-                                            <div className="checkout__input">
-                                                <p>
-                                                    {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}<span>*</span>
-                                                </p>
-                                                <input type="text" placeholder={sample[key]} />
-                                            </div>
-                                        </div>
-                                    ))}
+                                    {user &&
+                                        Object.keys(user).map((key) =>
+                                            key === 'image' || key === '__v' || key === 'role' || key === 'id' || key === 'description' ? null : (
+                                                <div className="col-lg-6" key={key}>
+                                                    <div className="checkout__input">
+                                                        <p>
+                                                            {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
+                                                            <span>*</span>
+                                                        </p>
+                                                        <input
+                                                            type="text"
+                                                            value={user[key]}
+                                                            name={key}
+                                                            readOnly
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )
+                                        )}
                                 </div>
                             </form>
                         </div>
@@ -114,15 +123,8 @@ const Checkout = () => {
                                 <label htmlFor="cod">Payment on delivery (COD)</label>
                             </div>
                             <div>
-                                <PayPalCheckout
-                                    onSuccess={onSuccess}
-                                    onError={onError}
-                                    // clientId="YOUR_CLIENT_ID_HERE" // Thay YOUR_CLIENT_ID_HERE bằng client ID của bạn
-                                    cartItems={sampleCartItems}
-                                // Các thông số khác nếu cần
-                                />
+
                             </div>
-                            <label htmlFor="cod">Payment on delivery (COD)</label>
                             <button type="submit" className="site-btn">PLACE ORDER</button>
                         </div>
                     </div>

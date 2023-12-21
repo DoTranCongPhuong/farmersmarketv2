@@ -1,15 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { getUserVoucherList } from '../service/API';
+import Slider from 'react-slick';
+
 
 const Header = () => {
+  useEffect(() => {
+    // Kiểm tra xem URL có chứa '/success' không
+    if (window.location.href.includes('/success')) {
+      // Nếu URL có '/success', hiển thị thông báo "Thanh toán thành công" bằng alert
+      alert('Thanh toán thành công');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (window.location.href.includes('/failure')) {
+      // Nếu URL có '/success', hiển thị thông báo "Thanh toán thành công" bằng alert
+      alert('Thanh toán thất bại');
+    }
+  }, []);
+
+  const settings = {
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplaySpeed: 2000,
+    swipeToSlide: true,
+    arrows: true,
+    dots: false,
+  };
   const [activeLink, setActiveLink] = useState('/');
   const location = useLocation();
   const { t } = useTranslation();
   const { i18n } = useTranslation();
   const [showLanguages, setShowLanguages] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('en'); // Mã ngôn ngữ mặc định
+  const [userVoucherList, setUserVoucherList] = useState([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Gọi API để lấy danh sách voucher người dùng khi component được tải
+        const vouchers = await getUserVoucherList();
+        setUserVoucherList(vouchers.vouchers);
+      } catch (error) {
+        console.error('Error fetching user vouchers:', error);
+        // Xử lý lỗi nếu cần
+      }
+    };
+
+    fetchData(); // Gọi hàm fetchData để lấy dữ liệu khi component được tải
+  }, []); // Tham số truyền vào useEffect là một mảng rỗng để chỉ thực hiện effect này một lần khi component được tải
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
     setSelectedLanguage(lng); // Cập nhật ngôn ngữ đã chọn
@@ -26,7 +69,15 @@ const Header = () => {
     setShowMenu(!showMenu);
   };
 
-
+  const handleCopyCode = (code) => {
+    navigator.clipboard.writeText(code)
+      .then(() => {
+        alert('Đã copy voucher: ' + code);
+      })
+      .catch(err => {
+        console.error('Lỗi khi sao chép voucher:', err);
+      });
+  };
   return (
     <>
       <div onClick={handleShowMenu} className={`humberger__menu__overlay ${showMenu ? 'active' : ''}`}></div>
@@ -69,10 +120,7 @@ const Header = () => {
           <ul>
             <li className={activeLink === '/' ? 'active' : ''}><Link to="/">{t('Home')}</Link></li>
             <li className={activeLink === '/products-page' ? 'active' : ''}><Link to="/products-page">{t('Shop')}</Link></li>
-            <li>
-              <Link to="#">{t('Pages')}</Link>
-            </li>
-            {/* <li><Link to="/blog">Blog</Link></li> */}
+            <li className={activeLink === '/history-page' ? 'active' : ''}><Link to="/history-page">{t('Purchase history')}</Link></li>
             <li className={activeLink === '/contact-page' ? 'active' : ''}><Link to="/contact-page">{t('Contact')}</Link></li>
           </ul>
         </nav>
@@ -82,7 +130,18 @@ const Header = () => {
         <div className="humberger__menu__contact">
           <ul>
             <li><i className="fa fa-envelope"></i>farmmersmarket@example.com </li>
-            <li>{t('Free Shipping for all Order of $99')}</li>
+            <li className="banner-list-slider">
+              {userVoucherList.map(banner => (
+                <div key={banner.code}>
+                  <span>
+                    <h3>Code: {banner.code}</h3>
+                    <p>Discount: {banner.discount}%</p>
+                    <p>Start Date: {new Date(banner.startDate).toLocaleDateString()}</p>
+                    <p>Expiration Date: {new Date(banner.expirationDate).toLocaleDateString()}</p>
+                  </span>
+                </div>
+              ))}
+            </li>
           </ul>
         </div>
       </div>
@@ -90,15 +149,28 @@ const Header = () => {
         <div className="header__top">
           <div className="container">
             <div className="row">
-              <div className="col-lg-6 col-md-6">
+              <div className="col-lg-9 col-md-9">
                 <div className="header__top__left">
-                  <ul>
+                  <ul className='d-flex' >
                     <li><i className="fa fa-envelope"></i> farmmersmarket@example.com</li>
-                    <li>{t('Free Shipping for all Order of $99')}</li>
+                    <div
+                      className='col-8 text-danger'
+                    >
+                      <Slider {...settings}>
+                        {userVoucherList.map(banner => (
+                          <span key={banner.code}
+                            onClick={() => handleCopyCode(banner.code)}
+                            style={{ cursor: 'pointer', marginRight: '10px' }}>
+                            Voucher: {banner.code} - {banner.discount}% - {new Date(banner.startDate).toLocaleDateString()}-{new Date(banner.expirationDate).toLocaleDateString()}
+                          </span>
+                        ))}
+                      </Slider>
+                    </div>
+
                   </ul>
                 </div>
               </div>
-              <div className="col-lg-6 col-md-6">
+              <div className="col-lg-3 col-md-3">
                 <div className="header__top__right">
                   <div className="header__top__right__language">
                     <img
@@ -140,25 +212,14 @@ const Header = () => {
               <ul>
                 <li className={activeLink === '/' ? 'active' : ''}><Link to="/">{t('Home')}</Link></li>
                 <li className={activeLink === '/products-page' ? 'active' : ''}><Link to="/products-page">{t('Shop')}</Link></li>
-                <li>
-                  <Link to="#">{t('Pages')}</Link>
-                  <ul className="sub-menu">
-                    <ul class="header__menu__dropdown">
-                      <li><a><Link to="/shop-details">{t('Shop Details')}</Link></a></li>
-                      <li><a><Link to="/cart-page">{t('Shopping Cart')}</Link></a></li>
-                      <li><a><Link to="/checkout">{t('Check Out')}</Link></a></li>
-                      <li><a><Link to="/blog-details">{t('Blog Details')}</Link></a></li>
-                    </ul>
-                  </ul>
-                </li>
-                {/* <li><Link to="/blog">Blog</Link></li> */}
+                <li className={activeLink === '/history-page' ? 'active' : ''}><Link to="/history-page">{t('Purchase history')}</Link></li>
                 <li className={activeLink === '/contact-page' ? 'active' : ''}><Link to="/contact-page">{t('Contact')}</Link></li>
               </ul>
             </nav>
             <div className="col-lg-3 d-flex justify-content-center align-items-center">
               <div className="hero__search__phone">
                 <div className="hero__search__phone__icon">
-                <Link to="/cart-page"><i className="fa fa-shopping-bag m-3" style={{ color: 'black' }}></i></Link>
+                  <Link to="/cart-page"><i className="fa fa-shopping-bag m-3" style={{ color: 'black' }}></i></Link>
                 </div>
               </div>
               <a href="https://zalo.me/+84898537761">

@@ -34,6 +34,37 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+export const historyOrders = async () => {
+  try {
+    const response = await axiosInstance.get('/user-history-orders');
+    return response.data; // Trả về dữ liệu từ response
+  } catch (error) {
+    console.error('Error fetching history orders:', error);
+    throw error;
+  }
+};
+
+export const order = async (paymentMethod, voucherCode ) => {
+  try {
+    const response = await axiosInstance.post('/order', {
+      paymentMethod,
+      voucherCode
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getUserVoucherList = async () => {
+  try {
+    const response = await axiosInstance.get('/user-voucher-list');
+    return response.data; // Trả về dữ liệu từ phản hồi nếu thành công
+  } catch (error) {
+    throw error; // Ném lỗi nếu có lỗi xảy ra
+  }
+};
+
 export const applyVoucher = async (voucherCode) => {
   try {
     const response = await axiosInstance.post('/apply-voucher', {
@@ -270,11 +301,10 @@ const changeUserPassword = async (currentPassword, newPassword) => {
   }
 };
 
-const sendContact = async (name, email, message) => {
+const sendContact = async ( email, message) => {
   try {
     const response = await axiosInstance.post('/save-email', {
       content: message,
-      title: name,
       email: email,
     });
     return response.data; // Return the response data if needed

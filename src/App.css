@@ -99,3 +99,18 @@ a:hover {
   border-radius: 4px;
   font-weight: 600;
 }
+
+.banner-list-slider {
+  list-style: none; /* Loại bỏ các dấu đầu dòng của danh sách */
+  padding: 0; /* Loại bỏ padding mặc định của danh sách */
+  white-space: nowrap; /* Ngăn chặn các phần tử xuống dòng */
+  overflow: hidden; /* Ẩn nội dung dư thừa khi vượt quá kích thước của danh sách */
+}
+
+.banner-list-slider span {
+  display: inline-block; /* Hiển thị các phần tử trên cùng một hàng */
+}
+
+.slick-prev:before, .slick-next:before {
+  color: #ffffff00;
+}
