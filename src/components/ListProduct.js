@@ -17,22 +17,20 @@ const ListProduct = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                let productList = [];
-                let productListProduct = {};
-
                 const searchParams = queryString.parse(location.search);
-                const searchTerm = searchParams.search;
-                const category = searchParams.category;
+                const { search: searchTerm, category } = searchParams;
+
+                let productsData = {};
 
                 if (searchTerm) {
-                    productList = await search(searchTerm);
+                    productsData = await search(searchTerm);
                 } else if (category) {
-                    productList = await getCategoryData(category);
+                    productsData = await getCategoryData(category);
                 } else {
-                    productListProduct = await getProductList(1, 50, 'price', 'desc');
+                    productsData = await getProductList(1, 100, 'price', 'desc');
                 }
 
-                setListProducts(productListProduct.products || productList);
+                setListProducts(productsData.products || productsData);
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -40,7 +38,8 @@ const ListProduct = () => {
         };
 
         fetchData();
-    }, [location.search, currentPage]);
+    }, [location.search]); // Ensure this includes all variables from the hook that might change
+
 
     const handleAddToCart = async (itemId) => {
         try {

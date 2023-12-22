@@ -1,13 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import featuredItems from "../BaseData/FeaturedItems";
-import { addToCart } from '../service/API';
+import { addToCart, axiosInstance } from '../service/API';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const FeaturedItems = () => {
-    // Sample data object (you can replace this with your actual data)
-    const [filter, setFilter] = useState('*'); // Initial filter state, '*' means showing all items
+    const [featuredItems, setFeaturedItems] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axiosInstance.get('/newest-products');
+                setFeaturedItems(response.data.products); // Đặt dữ liệu từ API vào state
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData(); // Gọi hàm lấy dữ liệu khi component được mount
+    }, []);
+
+    const [filter, setFilter] = useState('*');
+
     const handleFilter = (filterType) => {
         setFilter(filterType); // Update the filter state based on the selected filter type
     };
@@ -15,7 +29,7 @@ const FeaturedItems = () => {
     const handleAddToCart = async (itemId) => {
         try {
             // Gọi API add to cart khi click vào icon
-            await addToCart('6564eb2812062f864554ea1d', 1); // Thay đổi thông tin productId và quantity tùy theo cấu trúc dữ liệu của bạn
+            await addToCart(itemId, 1); // Thay đổi thông tin productId và quantity tùy theo cấu trúc dữ liệu của bạn
 
             // Hiển thị thông báo thành công khi thêm vào giỏ hàng
             toast.success('Sản phẩm đã được thêm vào giỏ hàng!');
@@ -44,7 +58,7 @@ const FeaturedItems = () => {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="section-title">
-                            <h2>Featured Product</h2>
+                            <h2>Latest products</h2>
                         </div>
                         <div className="featured__controls">
                             <ul>
@@ -62,7 +76,10 @@ const FeaturedItems = () => {
                         {filteredItems.map((item, index) => (
                             <div key={index} className={`col-lg-3 col-md-4 col-sm-6 mix ${item.category}`}>
                                 <div className="featured__item">
-                                    <div className="featured__item__pic set-bg" style={{ backgroundImage: `url(${item.image})` }}>
+                                    <div className="featured__item__pic set-bg" style={{
+                                        backgroundImage: `url(${item.image[0]})`,
+                                        borderRadius: '10px',
+                                    }}>
                                         <ul className="featured__item__pic__hover">
                                             <li>
                                                 <a onClick={() => handleAddToCart(item.id)}>
@@ -72,8 +89,8 @@ const FeaturedItems = () => {
                                         </ul>
                                     </div>
                                     <div className="featured__item__text">
-                                        <h6><Link to={`/product-detail/${item.id}`}>{item.name}</Link></h6>
-                                        <h5>{item.price}</h5>
+                                        <h6><Link to={`/product-detail/${item._id}`}>{item.name}</Link></h6>
+                                        <h6>{item.discountPrice}$</h6>
                                     </div>
                                 </div>
                             </div>

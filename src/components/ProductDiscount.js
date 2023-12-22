@@ -124,8 +124,8 @@ const ProductDiscount = () => {
                                         </div>
                                         <div className="product__discount__item__text">
                                             <span>{product.category}</span>
-                                            <h5><Link to="/product-detail">{product.name}</Link></h5>
-                                            <div className="product__item__price">{product.originalPrice} <span>{product.discountPrice}</span></div>
+                                            <h5><Link to={`/product-detail/${product._id}`}>{product.name}</Link></h5>
+                                            <div className="product__item__price text-danger">{product.originalPrice}$ <span>{product.discountPrice}</span></div>
                                         </div>
                                     </div>
                                 </div>

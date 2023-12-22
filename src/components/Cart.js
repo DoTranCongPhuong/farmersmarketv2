@@ -1,11 +1,13 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getCartData, updateCart, applyVoucher, order } from '../service/API';
-import React, { useState, useEffect } from 'react';
+import { getCartData, updateCart, applyVoucher, order, getUserInfo } from '../service/API';
+import React, { useState, useEffect, } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 const ShoppingCart = () => {
+    const navigate = useNavigate();
     const { t } = useTranslation();
     const [cartItems, setCartItems] = useState([]);
     const [quantity, setQuantity] = useState(1);
@@ -19,7 +21,7 @@ const ShoppingCart = () => {
 
     const handlePlaceOrder = async () => {
 
-
+        checkAddress();
         if (selectedPayment) {
             try {
                 const response = await order(selectedPayment, couponCode);
@@ -29,6 +31,7 @@ const ShoppingCart = () => {
                     toast.success('Redirecting to payment gateway...');
                 } else if (response.message) {
                     toast.success(response.message);
+                    fetchCartData();
                 } else {
                     window.location.href = response;
                 }
@@ -39,9 +42,6 @@ const ShoppingCart = () => {
         } else {
             toast.warning('Please select a payment method');
         }
-        const cartData = await getCartData();
-        setCartItems(cartData.cartItems);
-
     };
 
 
@@ -102,13 +102,29 @@ const ShoppingCart = () => {
                 toast.error(discountRes.error);
             } else {
                 setDiscount(discountRes.discount);
-                // Thông báo cho người dùng rằng mã giảm giá đã được áp dụng thành công nếu cần
                 toast.success('Coupon applied successfully!');
             }
         } catch (error) {
             // Xử lý lỗi khi gọi API áp dụng mã giảm giá
             console.error('Error applying coupon:', error);
             toast.error('Failed to apply coupon. Please try again.');
+        }
+    };
+    const checkAddress = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const userInfo = await getUserInfo(token);
+            const addressFields = ['addressDetail', 'city', 'country', 'district', 'street', 'ward'];
+            const addressEmpty = addressFields.some(field => !userInfo.user[field]);
+
+            if (addressEmpty) {
+                alert('Please update your address information');
+                navigate('/user-page');
+                return;
+            }
+        } catch (error) {
+            // Xử lý lỗi khi không thể lấy thông tin người dùng từ API
+            console.error('Error fetching user information:', error);
         }
     };
 
@@ -375,7 +391,9 @@ const ShoppingCart = () => {
                                 <ul>
                                     <li> {t('Subtotal')}<span>${calculateTotal()}</span></li>
                                     <li>{t('Discount')} <span>{(discount)}%</span></li>
-                                    <li>{t('Total')} <span>${calculateTotal() * (100 - discount) / 100}</span></li>
+                                    <li>
+                                        {t('Total')} <span>${(calculateTotal() * (100 - discount) / 100).toFixed(2)}</span>
+                                    </li>
                                 </ul>
                                 <button type="button" className="site-btn" onClick={handlePlaceOrder}>
                                     PLACE ORDER
