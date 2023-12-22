@@ -61,7 +61,6 @@ const CommentComponent = ({ productId }) => {
       });
     } catch (error) {
       console.error('Error deleting comment:', error);
-      // Xử lý lỗi tại đây nếu cần thiết
     }
   };
 

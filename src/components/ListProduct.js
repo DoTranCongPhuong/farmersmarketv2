@@ -3,42 +3,36 @@ import { useLocation, Link } from 'react-router-dom';
 import queryString from 'query-string';
 import { search, getCategoryData, addToCart, getProductList } from '../service/API';
 import { toast, ToastContainer } from 'react-toastify';
-import LeftBar from './LeftBar'
+import LeftBar from './LeftBar';
 
-const productsPerPage = 9; // Số sản phẩm trên mỗi trang
+const productsPerPage = 12;
 
 const ListProduct = () => {
-    const [listProducts, setListProducts] = useState([]); // Khởi tạo listProducts là một mảng rỗng
+    const [listProducts, setListProducts] = useState([]);
     const location = useLocation();
     const [currentPage, setCurrentPage] = useState(1);
-    const [priceFilter, setPriceFilter] = useState({
-        min: 0,
-        max: 999999,
-    });
+    const [priceFilter, setPriceFilter] = useState({ min: 0, max: 999999 });
     const [ratingFilter, setRatingFilter] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 let productList = [];
+                let productListProduct = {};
 
-                if (location.search) {
-                    const searchParams = queryString.parse(location.search);
-                    const searchTerm = searchParams.search;
-                    const category = searchParams.category;
+                const searchParams = queryString.parse(location.search);
+                const searchTerm = searchParams.search;
+                const category = searchParams.category;
 
-                    if (searchTerm) {
-                        productList = await search(searchTerm);
-                        setListProducts(productList);
-                    } else if (category) {
-                        productList = await getCategoryData(category);
-                        setListProducts(productList.products);
-
-                    }
+                if (searchTerm) {
+                    productList = await search(searchTerm);
+                } else if (category) {
+                    productList = await getCategoryData(category);
                 } else {
-                    productList = await getProductList(currentPage, productsPerPage, 'price', 'desc');
-                    setListProducts(productList.products);
+                    productListProduct = await getProductList(1, 50, 'price', 'desc');
                 }
+
+                setListProducts(productListProduct.products || productList);
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -50,15 +44,10 @@ const ListProduct = () => {
 
     const handleAddToCart = async (itemId) => {
         try {
-            // Gọi API add to cart khi click vào icon
-            await addToCart(itemId, 1); // Thay đổi thông tin productId và quantity tùy theo cấu trúc dữ liệu của bạn
-
-            // Hiển thị thông báo thành công khi thêm vào giỏ hàng
+            await addToCart(itemId, 1);
             toast.success('Sản phẩm đã được thêm vào giỏ hàng!');
         } catch (error) {
-            // Xử lý lỗi nếu cần
             console.error('Error adding to cart:', error);
-            // Hiển thị thông báo lỗi khi có lỗi xảy ra
             toast.error('Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng!');
         }
     };
@@ -66,36 +55,30 @@ const ListProduct = () => {
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
 
-    // Lọc danh sách sản phẩm theo giá từ priceFilter.min đến priceFilter.max
     const filteredProducts = listProducts.filter(product => {
         return product.discountPrice >= priceFilter.min && product.discountPrice <= priceFilter.max;
     });
 
-    // Lấy ra các sản phẩm hiện tại dựa trên trang và sản phẩm trên mỗi trang
     const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
-    // Tạo mảng số trang dựa trên số lượng sản phẩm phân trang
-    const pageNumbers = [1, 2, '..'];
-    for (let i = 1; i < Math.ceil(filteredProducts.length / productsPerPage); i++) {
-        pageNumbers.push(i);
-    }
+    const getPageNumbers = () => {
+        const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+        return Array.from({ length: totalPages }, (_, i) => i + 1);
+    };
 
-    const paginate = (pageNumber) => {
+    const paginate = pageNumber => {
         setCurrentPage(pageNumber);
     };
+
     const handleRatingFilter = (props) => {
         setRatingFilter(props);
     };
 
     const handlePriceFilter = (props) => {
-        console.log('--11111111-         '+priceFilter.min + ' ---'+priceFilter.max)
-
-        if (props.min == '') props.min = 0;
-        if (props.max =='') props.max = 9999999;
+        if (props.min === '') props.min = 0;
+        if (props.max === '') props.max = 999999;
         setPriceFilter(props);
     };
-    console.log('--------'+priceFilter.min + ' ---'+priceFilter.max)
-
 
     return (
         <div className="py-3">
@@ -142,7 +125,7 @@ const ListProduct = () => {
                                         <div className="product__discount__item__text">
                                             <h5><Link to={`/product-detail/${product._id}`}>{product.name}</Link></h5>
                                             <div className="product__item__price text-danger">
-                                                {product.discountPrice} $ <span>{product.discount == 0 ? '' : product.originalPrice}</span>
+                                                {product.discountPrice} $ <span>{product.discount === 0 ? '' : product.originalPrice}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -151,18 +134,18 @@ const ListProduct = () => {
                         </div>
                     </div>
                     <div className="product__pagination">
-                        {pageNumbers.map(number => (
-                            <a key={number} onClick={() => paginate(number)}>
+                        <a onClick={() => currentPage > 1 && paginate(currentPage - 1)}>&laquo;</a>
+                        {getPageNumbers().map(number => (
+                            <a key={number} className={(currentPage) == number ? 'active' : ''} onClick={() => paginate(number)}>
                                 {number}
                             </a>
                         ))}
+                        <a onClick={() => currentPage < getPageNumbers().length && paginate(currentPage + 1)}>&raquo;</a>
                     </div>
                 </div>
             </div>
-
         </div>
     );
 };
-
 
 export default ListProduct;

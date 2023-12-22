@@ -114,3 +114,7 @@ a:hover {
 .slick-prev:before, .slick-next:before {
   color: #ffffff00;
 }
+
+.product__pagination .active{
+  color: #000;
+}

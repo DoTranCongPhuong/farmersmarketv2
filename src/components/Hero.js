@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import categoryList from "../BaseData/CategoryList";
-import ClassificationFruit from './ClassificationFruit'
+import ClassifierModal from './ClassificationFruit'
 
 
 const HeroSection = () => {
@@ -44,7 +44,6 @@ const HeroSection = () => {
     <section className="hero">
       <div className="container">
         <div className="row">
-          <ClassificationFruit/>
           <div className="col-lg-3">
             <div className="hero__categories">
               <div className="hero__categories__all" onClick={toggleCategories}>
@@ -63,13 +62,14 @@ const HeroSection = () => {
           <div className="col-lg-9">
             <div className="hero__search">
               <div className="hero__search__form">
-                <form onSubmit={handleSearch}>
+                <form onSubmit={handleSearch} className='d-flex'>
                   <input
                     type="text"
                     placeholder={t('What do you need?')}
                     value={searchTerm}
                     onChange={handleInputChange}
                   />
+                  <div><ClassifierModal /></div>
                   <button type="submit" className="site-btn">{t('SEARCH')}</button>
                 </form>
               </div>

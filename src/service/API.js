@@ -40,7 +40,6 @@ export const historyOrders = async () => {
     return response.data; // Trả về dữ liệu từ response
   } catch (error) {
     console.error('Error fetching history orders:', error);
-    throw error;
   }
 };
 
@@ -52,7 +51,8 @@ export const order = async (paymentMethod, voucherCode ) => {
     });
     return response.data;
   } catch (error) {
-    throw error;
+    console.log(error)
+
   }
 };
 
@@ -61,7 +61,7 @@ export const getUserVoucherList = async () => {
     const response = await axiosInstance.get('/user-voucher-list');
     return response.data; // Trả về dữ liệu từ phản hồi nếu thành công
   } catch (error) {
-    throw error; // Ném lỗi nếu có lỗi xảy ra
+    console.log(error)
   }
 };
 
@@ -86,18 +86,18 @@ export const getDiscountProducts = async () => {
   } catch (error) {
     // Xử lý lỗi nếu có
     console.error('Error getting discount products:', error.message);
-    throw new Error('Error getting discount products');
+    console.log(error)
   }
 
 };
 
 
-export const getProductList = async (page = 1, limit = 10, sortField = 'price', sortOrder = 'desc') => {
+export const getProductList = async (page = 1, limit = 50, sortField = 'price', sortOrder = 'desc') => {
   try {
     const response = await axiosInstance.get(`/products?page=${page}&limit=${limit}&sortField=${sortField}&sortOrder=${sortOrder}`);
     return response.data; // Trả về dữ liệu từ response
   } catch (error) {
-    throw new Error(error.message); // Xử lý lỗi nếu có
+    console.log(error)
   }
 };
 
@@ -106,7 +106,7 @@ export const getUserInfoById = async (userId) => {
     const response = await axiosInstance.get(`/user-info/${userId}`);
     return response.data; // Trả về dữ liệu từ response
   } catch (error) {
-    throw error; // Ném lỗi nếu có lỗi xảy ra
+    console.log(error)
   }
 };
 
@@ -115,7 +115,7 @@ export const deleteReview = async (reviewId) => {
     const response = await axiosInstance.delete(`/delete-review/${reviewId}`);
     return response.data;
   } catch (error) {
-    throw error;
+    console.log(error)
   }
 };
 
@@ -124,7 +124,7 @@ export const updateReview = async (reviewId, updatedData) => {
     const response = await axiosInstance.put(`/update-review/${reviewId}`, updatedData);
     return response.data; // Trả về dữ liệu sau khi cập nhật thành công (nếu cần)
   } catch (error) {
-    throw error; // Xử lý lỗi nếu gặp phải
+    console.log(error)
   }
 };
 
@@ -133,7 +133,7 @@ export const getProductReviews = async (productId) => {
     const response = await axiosInstance.get(`/product/${productId}/reviews`);
     return response.data; // Trả về dữ liệu từ response nếu yêu cầu thành công
   } catch (error) {
-    throw new Error(error.response.data); // Ném ra một lỗi với dữ liệu từ response nếu yêu cầu thất bại
+    console.log(error)
   }
 };
 
@@ -143,7 +143,7 @@ export const postReview = async (reviewData) => {
     const response = await axiosInstance.post('/reviews', reviewData);
     return response.data; // Return the response data
   } catch (error) {
-    throw new Error(error.response.data); // Throw an error with the response data if request fails
+    console.log(error)
   }
 };
 
@@ -156,7 +156,7 @@ export const updateCart = (cartItems) => {
     })
     .catch(error => {
       // Xử lý lỗi nếu cần thiết
-      throw error; // Hoặc xử lý lỗi và trả về một giá trị khác
+      console.log(error)
     });
 };
 
@@ -166,9 +166,7 @@ export const getCartData = async () => {
     const response = await axiosInstance.get('/cart');
     return response.data; // Trả về dữ liệu từ phản hồi của API
   } catch (error) {
-    // Xử lý lỗi nếu có
     console.error('Error fetching cart data:', error);
-    throw error; // Ném lại lỗi để component có thể xử lý
   }
 };
 
@@ -182,7 +180,6 @@ export const addToCart = async (productId, quantity) => {
     return response.data; // Trả về dữ liệu từ API nếu cần
   } catch (error) {
     console.error('Error adding to cart:', error);
-    throw error; // Xử lý lỗi hoặc ném lỗi để xử lý ở mức cao hơn
   }
 };
 
@@ -192,7 +189,6 @@ export const getCategoryData = async (category) => {
     return response.data; // Trả về dữ liệu từ API
   } catch (error) {
     console.error('Lỗi khi lấy dữ liệu danh mục:', error);
-    throw error; // Xử lý lỗi hoặc ném lỗi để xử lý ở mức cao hơn
   }
 };
 
@@ -226,7 +222,6 @@ const getProductInfor = async (productId) => {
   } catch (error) {
     // Xử lý lỗi ở đây nếu cần thiết
     console.error('Error fetching product information:', error);
-    throw error;
   }
 }
 
@@ -239,13 +234,10 @@ const register = async (userData) => {
       console.error('Server Response Error:', error.response.data);
       console.error('Server Response Status:', error.response.status);
       console.error('Server Response Headers:', error.response.headers);
-      throw new Error('Server Response Error');
     } else if (error.request) {
       console.error('No response received from server:', error.request);
-      throw new Error('No response received from server');
     } else {
       console.error('Error during request setup:', error.message);
-      throw new Error('Error during request setup');
     }
   }
 };
@@ -259,13 +251,10 @@ const login = async (userData) => {
       console.error('Server Response Error:', error.response.data);
       console.error('Server Response Status:', error.response.status);
       console.error('Server Response Headers:', error.response.headers);
-      throw new Error('Server Response Error');
     } else if (error.request) {
       console.error('No response received from server:', error.request);
-      throw new Error('No response received from server');
     } else {
       console.error('Error during request setup:', error.message);
-      throw new Error('Error during request setup');
     }
   }
 };
@@ -276,7 +265,7 @@ const getUserInfo = async () => {
     const response = await axiosInstance.get('/user-info');
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || error.message);
+    console.log(error)
   }
 };
 
@@ -285,7 +274,8 @@ const updateUser = async (userData) => {
     const response = await axiosInstance.put('/update-user', userData,);
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || error.message);
+    console.log(error)
+
   }
 };
 
@@ -297,7 +287,8 @@ const changeUserPassword = async (currentPassword, newPassword) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || error.message);
+    console.log(error)
+
   }
 };
 
@@ -309,7 +300,8 @@ const sendContact = async ( email, message) => {
     });
     return response.data; // Return the response data if needed
   } catch (error) {
-    throw new Error(error.response.data || error.message);
+    console.log(error)
+
   }
 };
 

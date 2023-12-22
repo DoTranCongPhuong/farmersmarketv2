@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import * as tf from '@tensorflow/tfjs';
+import { Modal, Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
-const ImageClassifier = () => {
+
+const ImageClassifier = ({ onPredict }) => {
   const [model, setModel] = useState(null);
   const [imageURL, setImageURL] = useState(null);
   const [prediction, setPrediction] = useState('');
-  const labels = ["apple","avocado","pinenapple","strawberry","cherry","kiwi","mango","orange","banana","watermelon"]; // Nhãn từ data.json
+  const labels = ["apple", "avocado", "pineapple", "strawberries", "cherry", "kiwi", "mango", "orange", "banana", "watermelon"]; // Nhãn từ data.json
 
   useEffect(() => {
     const loadModel = async () => {
@@ -46,16 +49,80 @@ const ImageClassifier = () => {
     const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
 
     setPrediction(labels[highestPredictionIndex]); // Sử dụng nhãn từ data.json
+    onPredict(labels[highestPredictionIndex]);
   };
 
   return (
-    <div>
-      <h2>Image Classifier with TensorFlow.js</h2>
-      <input type="file" accept="image/*" onChange={handleImageChange} />
-      {imageURL && <img src={imageURL} alt="Upload Preview" style={{width: '50px'}} />}
-      {prediction && <div>Prediction: {prediction}</div>}
+    <div className='d-flex flex-column align-items-center'>
+      <div className="d-flex justify-content-center">
+        <img
+          src={imageURL || "./clasification.webp"}
+          alt="Upload Preview"
+          style={{ objectFit: 'cover', width: '200px', height: '200px' }}
+        />
+      </div>
+      <div className="d-flex justify-content-center">
+        <input type="file" accept="image/*" onChange={handleImageChange} />
+      </div>
+      {prediction &&
+        <h3 className="d-flex justify-content-center">
+          Prediction: {prediction}
+        </h3>
+      }
     </div>
+
   );
 };
 
-export default ImageClassifier;
+// export default ImageClassifier;
+const ClassifierModal = () => {
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
+
+
+  const handlePrediction = (prediction) => {
+    setSearchTerm(prediction);
+  };
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+    navigate(`/products-page?search=${searchTerm}`);
+  };
+
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+
+  return (
+    <>
+      <button className="site-btn"
+        type='button' style={{
+          backgroundColor: "#04a9d1",
+          width: "124px",
+          padding: '0'
+        }}
+        onClick={showModal}>
+        Search with Image
+      </button>
+      <Modal
+        title="Search with Image"
+        open={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        width={800} // Adjust the width as needed
+      >
+        <ImageClassifier onPredict={handlePrediction} />
+      </Modal>
+    </>
+  );
+};
+
+export default ClassifierModal;

@@ -18,25 +18,32 @@ const ShoppingCart = () => {
     };
 
     const handlePlaceOrder = async () => {
+
+
         if (selectedPayment) {
             try {
                 const response = await order(selectedPayment, couponCode);
 
                 if (response && response.approval_url) {
                     window.location.href = response.approval_url;
+                    toast.success('Redirecting to payment gateway...');
+                } else if (response.message) {
+                    toast.success(response.message);
+                } else {
+                    window.location.href = response;
                 }
 
-                toast.success('Order placed successfully!');
-                // Thực hiện các xử lý tiếp theo sau khi đặt hàng thành công
             } catch (error) {
-                // Xử lý khi đặt hàng không thành công
                 toast.error('Failed to place order. Please try again.');
-                // Hiển thị thông báo lỗi cho người dùng
             }
         } else {
             toast.warning('Please select a payment method');
         }
+        const cartData = await getCartData();
+        setCartItems(cartData.cartItems);
+
     };
+
 
 
 
@@ -45,8 +52,7 @@ const ShoppingCart = () => {
             const cartData = await getCartData();
             setCartItems(cartData.cartItems);
         } catch (error) {
-            console.error('Error fetching cart data:', error);
-            toast.error('Có lỗi xảy ra khi lấy giỏ hàng!');
+            toast.error('Shopping cart is empty!');
         }
     };
 
