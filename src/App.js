@@ -17,29 +17,32 @@ import {
 } from './routes/Routes';
 import PrivateRoute from './routes/PrivateRoute';
 import HistoryPage from './page/HistoryPage';
-
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Payment from './components/Payment';
 
 
 const App = () => {
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/success" element={<HomePage />} />
-        <Route path="/failure" element={<HomePage />} />
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/history-page" element={<HistoryPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/products-page" element={<ProductsPage />} />
-        <Route path="/product-detail/:productId" element={<ProductDetailPage />} />
-        <Route path="/cart-page" element={<PrivateRoute component={CartPage} />} />
-        <Route path="/contact-page" element={<ContactPage />} />
-        <Route path="/checkout-page" element={<CheckoutPage />} />
-        <Route path="/user-page" element={<PrivateRoute component={UserPage} />} />
-        <Route path="/seller-page/:farmerId" element={<SellerPage />} />
-      </Routes>
-    </Router>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/success" element={<Payment />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/history-page" element={<HistoryPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/products-page" element={<ProductsPage />} />
+          <Route path="/product-detail/:productId" element={<ProductDetailPage />} />
+          <Route path="/cart-page" element={<PrivateRoute component={CartPage} />} />
+          <Route path="/contact-page" element={<ContactPage />} />
+          <Route path="/checkout-page" element={<CheckoutPage />} />
+          <Route path="/user-page" element={<PrivateRoute component={UserPage} />} />
+          <Route path="/seller-page/:farmerId" element={<SellerPage />} />
+        </Routes>
+        <Footer />
+      </Router>
   );
 };
 

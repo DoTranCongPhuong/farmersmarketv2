@@ -51,7 +51,6 @@ const Checkout = () => {
                 console.error('Error fetching user information:', error);
             }
         };
-
         fetchData();
     }, []);
 

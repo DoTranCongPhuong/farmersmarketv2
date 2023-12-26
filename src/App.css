@@ -118,3 +118,8 @@ a:hover {
 .product__pagination .active{
   color: #000;
 }
+
+.disabledDiv {
+  pointer-events: none; 
+  opacity: 0.5; 
+}

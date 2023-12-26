@@ -25,7 +25,7 @@ const Login = () => {
             const userData = {
                 numberPhone: numberPhone,
                 password: password,
-                role: selectedRole,
+                role: 'user',
             };
 
             const loggedInUser = await login(userData);
@@ -40,21 +40,6 @@ const Login = () => {
             const userInfoResponse = await getUserInfo();
             const userInfo = userInfoResponse.user;
             localStorage.setItem('userInfo', JSON.stringify(userInfo));
-
-            // Lấy thông tin userInfo từ local storage
-            const userInfoString = localStorage.getItem('userInfo');
-
-            // Kiểm tra xem thông tin userInfo có tồn tại không
-            // if (userInfoString) {
-            //     // Parse chuỗi JSON thành đối tượng JavaScript
-            //     const userInfo = JSON.parse(userInfoString);
-
-            //     // Lấy thông tin name từ đối tượng userInfo
-
-            //     console.log('User userInfo:', userInfo);
-            // } else {
-            //     console.log('User Info not found in local storage');
-            // }
 
             setTimeout(() => {
                 navigate('/');
@@ -78,7 +63,7 @@ const Login = () => {
                 <div className="col-md-6 right-box">
                     <div className="row align-items-center">
                         <div className="header-text mb-4">
-                            <h2>Hello, Again</h2>
+                            <h2>Hello</h2>
                             <p>We are happy to have you back.</p>
                         </div>
                         <div className="d-flex justify-content-center align-items-center mt-2">
@@ -104,55 +89,12 @@ const Login = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
-                        <div className="input-group p-3">
-                            <h5 className="m-2">Role:</h5>
-                            <div className="form-check m-2">
-                                <input
-                                    type="radio"
-                                    className="form-check-input"
-                                    id="admin"
-                                    value="admin"
-                                    checked={selectedRole === 'admin'}
-                                    onChange={handleRoleChange}
-                                />
-                                <label htmlFor="admin" className="form-check-label">
-                                    Admin
-                                </label>
-                            </div>
-                            <div className="form-check m-2">
-                                <input
-                                    type="radio"
-                                    className="form-check-input"
-                                    id="farmer"
-                                    value="farmer"
-                                    checked={selectedRole === 'farmer'}
-                                    onChange={handleRoleChange}
-                                />
-                                <label htmlFor="farmer" className="form-check-label">
-                                    Farmer
-                                </label>
-                            </div>
-                            <div className="form-check m-2">
-                                <input
-                                    type="radio"
-                                    className="form-check-input"
-                                    id="user"
-                                    value="user"
-                                    checked={selectedRole === 'user'}
-                                    onChange={handleRoleChange}
-                                />
-                                <label htmlFor="user" className="form-check-label">
-                                    User
-                                </label>
-                            </div>
-                        </div>
-                        <div className="input-group mb-3">
+                        <div className="input-group my-3 px-3">
                             <button className="btn btn-lg btn-primary w-100 fs-6 site-btn" onClick={handleLogin}>Login</button>
                         </div>
                         <div className="row">
                             <small>Don't have an account? <Link className='nomal__a' to="/register">Sign Up</Link></small>
                         </div>
-
                     </div>
                 </div>
             </div>

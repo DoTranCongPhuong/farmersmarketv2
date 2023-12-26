@@ -64,7 +64,7 @@ const ImageClassifier = ({ onPredict }) => {
       <div className="d-flex justify-content-center">
         <input type="file" accept="image/*" onChange={handleImageChange} />
       </div>
-      {prediction &&
+      {prediction ? <h3> Predicting...</h3> :
         <h3 className="d-flex justify-content-center">
           Prediction: {prediction}
         </h3>
@@ -75,7 +75,7 @@ const ImageClassifier = ({ onPredict }) => {
 };
 
 // export default ImageClassifier;
-const ClassifierModal = () => {
+const ClassifierModal = ({setSearchKeyWord}) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -93,6 +93,7 @@ const ClassifierModal = () => {
   const handleOk = () => {
     setIsModalVisible(false);
     navigate(`/products-page?search=${searchTerm}`);
+    setSearchKeyWord(searchTerm)
   };
 
 

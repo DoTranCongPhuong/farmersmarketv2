@@ -13,6 +13,7 @@ const CommentComponent = ({ productId }) => {
 
   const userInfoString = localStorage.getItem('userInfo');
 
+  let userWhoPurchased = [];
   if (userInfoString) {
     const userInfo = JSON.parse(userInfoString);
     currentUserId = userInfo.id
@@ -33,6 +34,7 @@ const CommentComponent = ({ productId }) => {
       try {
         const reviewsData = await getProductReviews(productId);
         const normalizedData = normalizeReviews(reviewsData.reviews);
+        userWhoPurchased = reviewsData.userWhoPurchased;
         setComments(normalizedData);
         // Lưu trữ dữ liệu đánh giá vào state sau khi lấy từ API
       } catch (error) {
@@ -75,6 +77,7 @@ const CommentComponent = ({ productId }) => {
     setCurrentIdComment(updatedComment.id)
   };
 
+
   const handleAddComment = async () => {
     const newComment = {
       productId: productId,
@@ -85,26 +88,32 @@ const CommentComponent = ({ productId }) => {
 
     try {
       await postReview(newComment);
-      setComments(prevComments => [...prevComments, newComment]);
+      toast.success('Đánh giá đã được gửi thành công!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 1500,
+      });
+      // Đặt lại các trường
       setNewCommentText('');
       setNewCommentRating(1);
-      setNewCommentImages([])
-      setCurrentIdComment('')
-      const reviewsData = await getProductReviews(productId);
-      const normalizedData = normalizeReviews(reviewsData.reviews);
-      setComments(normalizedData);
-      toast.success('Review has been successfully submitted!', {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 1500,
-      });
+      setNewCommentImages([]);
+      setCurrentIdComment('');
+
+      try {
+        const reviewsData = await getProductReviews(productId);
+        const normalizedData = normalizeReviews(reviewsData.reviews);
+        setComments(normalizedData);
+      } catch (innerError) {
+        console.error('Lỗi khi tải đánh giá sản phẩm:', innerError);
+      }
     } catch (error) {
-      toast.error('Error submitting the review!', {
+      toast.error(error.response.data.error, {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 1500,
       });
-      console.error('Error submitting review:', error.message);
     }
   };
+
+
   const handleUpdateComment = async () => {
     const updateComment = {
       productId: currentIdComment,
@@ -114,7 +123,7 @@ const CommentComponent = ({ productId }) => {
     };
 
     try {
-      await updateReview(currentIdComment, updateComment );
+      await updateReview(currentIdComment, updateComment);
       setNewCommentText('');
       setNewCommentRating(1);
       setNewCommentImages([])
@@ -150,84 +159,89 @@ const CommentComponent = ({ productId }) => {
   });
 
   return (
-    <Comment.Group className='container'>
-      <ToastContainer />
-      <Form reply id='form'>
-        <div className='mb-3'>
-          {[1, 2, 3, 4, 5].map((star) => (
-            <Icon
-              size='large'
-              key={star}
-              name={star <= newCommentRating ? 'star' : 'star outline'}
-              color={star <= newCommentRating ? 'yellow' : 'black'}
-              onClick={() => setNewCommentRating(star)}
+    <div>
+      <Comment.Group className={`container `}>
+        <ToastContainer />
+        {userWhoPurchased.includes(currentUserId) && (
+          <Form reply id='form'>
+            <div className='mb-3'>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Icon
+                  size='large'
+                  key={star}
+                  name={star <= newCommentRating ? 'star' : 'star outline'}
+                  color={star <= newCommentRating ? 'yellow' : 'black'}
+                  onClick={() => setNewCommentRating(star)}
+                />
+              ))}
+            </div>
+            <Form.TextArea
+              value={newCommentText}
+              onChange={(e) => setNewCommentText(e.target.value)}
             />
-          ))}
-        </div>
-        <Form.TextArea
-          value={newCommentText}
-          onChange={(e) => setNewCommentText(e.target.value)}
-        />
-        <div className="form-group">
-          <div className="row">
-            <div>
-              <label htmlFor="image">Image</label>
-              <ImageForm
-                imageArray={newCommentImages}
-                onArrayImageChange={updateImages}
+            <div className="form-group">
+              <div className="row">
+                <div>
+                  <label htmlFor="image">Image</label>
+                  <ImageForm
+                    imageArray={newCommentImages}
+                    onArrayImageChange={updateImages}
+                  />
+                </div>
+              </div>
+            </div>
+            {currentIdComment === '' ? (
+              <Button
+                content='Add Comment'
+                labelPosition='left'
+                icon='add'
+                primary
+                onClick={() => handleAddComment()}
+              />
+            ) : (
+              <div>
+                <Button
+                  content='Update Comment'
+                  labelPosition='left'
+                  icon='edit'
+                  positive
+                  onClick={() => handleUpdateComment()}
+                />
+                <Button
+                  content='Cancel'
+                  labelPosition='left'
+                  icon='cancel'
+                  negative
+                  onClick={() => handleCancel()}
+                />
+              </div>
+            )}
+          </Form>
+        )}
+        <Header as='h3' dividing>
+          Comments
+        </Header>
+        <div style={{ maxHeight: '600px', overflow: 'hidden auto', }}>
+          {sortedComments.map((comment) => (
+            <div
+              className='m-3 p-2'
+              style={{
+                border: '1px solid #e0e0e0',
+                borderRadius: '4px'
+              }}>
+              < CommentItem
+                key={comment._id}
+                comment={comment}
+                onDeleteComment={handleDeleteComment}
+                currentUserId={currentUserId}
+                onUpdateComment={handleSelectComment}
               />
             </div>
-          </div>
+          ))}
         </div>
-        {currentIdComment === '' ? (
-          <Button
-            content='Add Comment'
-            labelPosition='left'
-            icon='add'
-            primary
-            onClick={() => handleAddComment()}
-          />
-        ) : (
-          <div>
-            <Button
-              content='Update Comment'
-              labelPosition='left'
-              icon='edit'
-              positive
-              onClick={() => handleUpdateComment()}
-            />
-            <Button
-              content='Cancel'
-              labelPosition='left'
-              icon='cancel'
-              negative
-              onClick={() => handleCancel()}
-            />
-          </div>
-        )}
-      </Form>
-      <Header as='h3' dividing>
-        Comments
-      </Header>
-      <div style={{ maxHeight: '600px', overflow: 'hidden auto', }}>
-        {sortedComments.map((comment) => (
-          <div
-            className='m-3 p-2'
-            style={{
-              border: '1px solid #e0e0e0',
-              borderRadius: '4px'
-            }}>
-            < CommentItem
-              key={comment._id}
-              comment={comment}
-              onDeleteComment={handleDeleteComment}
-              currentUserId={currentUserId}
-              onUpdateComment={handleSelectComment}
-            />
-          </div>
-        ))}
-      </div>
-    </Comment.Group>
+      </Comment.Group>
+    </div >
+
   );
 };
 

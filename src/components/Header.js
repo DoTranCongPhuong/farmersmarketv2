@@ -6,21 +6,6 @@ import Slider from 'react-slick';
 
 
 const Header = () => {
-  useEffect(() => {
-    // Kiểm tra xem URL có chứa '/success' không
-    if (window.location.href.includes('/success')) {
-      // Nếu URL có '/success', hiển thị thông báo "Thanh toán thành công" bằng alert
-      alert('Thanh toán thành công');
-    }
-  }, []);
-
-  useEffect(() => {
-    if (window.location.href.includes('/failure')) {
-      // Nếu URL có '/success', hiển thị thông báo "Thanh toán thành công" bằng alert
-      alert('Thanh toán thất bại');
-    }
-  }, []);
-
   const settings = {
     infinite: true,
     speed: 500,

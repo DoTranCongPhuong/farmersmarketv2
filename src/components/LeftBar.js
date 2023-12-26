@@ -70,14 +70,14 @@ const FilterComponent = ({ handlePriceFilter, handleRatingFilter }) => {
                 step='0.1'
                 min='0'
             />
-            <Dropdown
+            {/* <Dropdown
                 className='m-3'
                 placeholder='Select rating'
                 selection
                 options={ratingOptions}
                 value={ratingValue}
                 onChange={handleRatingChange}
-            />
+            /> */}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <Button onClick={handleFilter}
             className='m-3'>

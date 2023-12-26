@@ -43,7 +43,7 @@ export const historyOrders = async () => {
   }
 };
 
-export const order = async (paymentMethod, voucherCode ) => {
+export const order = async (paymentMethod, voucherCode) => {
   try {
     const response = await axiosInstance.post('/order', {
       paymentMethod,
@@ -138,13 +138,8 @@ export const getProductReviews = async (productId) => {
 };
 
 export const postReview = async (reviewData) => {
-  try {
-    console.log(reviewData)
-    const response = await axiosInstance.post('/reviews', reviewData);
-    return response.data; // Return the response data
-  } catch (error) {
-    console.log(error)
-  }
+  const response = await axiosInstance.post('/reviews', reviewData);
+  return response.data;
 };
 
 
@@ -207,7 +202,6 @@ const search = async (query) => {
       console.error('Không nhận được phản hồi:', error.request);
       return null; // hoặc ném một lỗi, hoặc xử lý tùy thuộc vào từng trường hợp
     } else {
-      // Có điều gì đó xảy ra trong việc thiết lập yêu cầu gây ra lỗi
       console.error('Lỗi thiết lập yêu cầu:', error.message);
       return null; // hoặc ném một lỗi, hoặc xử lý tùy thuộc vào từng trường hợp
     }
@@ -292,7 +286,7 @@ const changeUserPassword = async (currentPassword, newPassword) => {
   }
 };
 
-const sendContact = async ( email, message) => {
+const sendContact = async (email, message) => {
   try {
     const response = await axiosInstance.post('/save-email', {
       content: message,

@@ -39,6 +39,9 @@ const HeroSection = () => {
     setSearchTerm(event.target.value);
   };
 
+  const setSearchKeyWord = (newSearchTerm) => {
+    setSearchTerm(newSearchTerm);
+  };
 
   return (
     <section className="hero">
@@ -69,7 +72,9 @@ const HeroSection = () => {
                     value={searchTerm}
                     onChange={handleInputChange}
                   />
-                  <div><ClassifierModal /></div>
+                  <div>
+                    <ClassifierModal setSearchKeyWord= {setSearchTerm} />
+                  </div>
                   <button type="submit" className="site-btn">{t('SEARCH')}</button>
                 </form>
               </div>

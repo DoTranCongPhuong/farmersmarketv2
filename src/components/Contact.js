@@ -92,7 +92,7 @@ const ContactSection = () => {
                                 <input
                                     type="text"
                                     className="form-control"
-                                    value={userInfo.firstName + ' ' + userInfo.lastName}
+                                    value={userInfo.firstName ? userInfo.firstName + ' ' + userInfo.lastName : 'User Name'}
                                     disabled={true}
                                 />
                             </div>
