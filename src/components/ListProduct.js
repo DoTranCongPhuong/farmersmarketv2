@@ -4,10 +4,12 @@ import queryString from 'query-string';
 import { search, getCategoryData, addToCart, getProductList } from '../service/API';
 import { toast, ToastContainer } from 'react-toastify';
 import LeftBar from './LeftBar';
+import { useTranslation } from 'react-i18next';
 
 const productsPerPage = 12;
 
 const ListProduct = () => {
+    const { t } = useTranslation();
     const [listProducts, setListProducts] = useState([]);
     const location = useLocation();
     const [currentPage, setCurrentPage] = useState(1);
@@ -103,7 +105,7 @@ const ListProduct = () => {
                 <div className='col-9'>
                     <div className="product__discount">
                         <div className="section-title product__discount__title">
-                            <h2>List Products</h2>
+                            <h2> {t('List Products')}</h2>
                         </div>
                         <div className="row">
                             {currentProducts.map(product => (
@@ -124,7 +126,7 @@ const ListProduct = () => {
                                         <div className="product__discount__item__text">
                                             <h5><Link to={`/product-detail/${product._id}`}>{product.name}</Link></h5>
                                             <div className="product__item__price text-danger">
-                                                {product.discountPrice} $ <span>{product.discount === 0 ? '' : product.originalPrice}</span>
+                                                {product.discountPrice} VND <span>{product.discount === 0 ? '' : product.originalPrice}</span>
                                             </div>
                                         </div>
                                     </div>

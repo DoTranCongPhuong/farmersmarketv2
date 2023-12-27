@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Banner = () => {
   // Sample data object containing image paths
@@ -15,7 +16,7 @@ const Banner = () => {
           {bannerImages.map((image, index) => (
             <div key={index} className="col-lg-6 col-md-6 col-sm-6">
               <div className="banner__pic">
-                <img src={image.src} alt={image.alt} />
+                <Link to="/products-page"> <img src={image.src} alt={image.alt} /></Link>
               </div>
             </div>
           ))}

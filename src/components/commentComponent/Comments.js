@@ -13,7 +13,6 @@ const CommentComponent = ({ productId }) => {
 
   const userInfoString = localStorage.getItem('userInfo');
 
-  let userWhoPurchased = [];
   if (userInfoString) {
     const userInfo = JSON.parse(userInfoString);
     currentUserId = userInfo.id
@@ -27,6 +26,7 @@ const CommentComponent = ({ productId }) => {
   const [newCommentRating, setNewCommentRating] = useState(1);
   const [newCommentImages, setNewCommentImages] = useState([]);
   const [currentIdComment, setCurrentIdComment] = useState('');
+  const [userWhoPurchased, setUserWhoPurchased] = useState([]);
 
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const CommentComponent = ({ productId }) => {
       try {
         const reviewsData = await getProductReviews(productId);
         const normalizedData = normalizeReviews(reviewsData.reviews);
-        userWhoPurchased = reviewsData.userWhoPurchased;
+        setUserWhoPurchased(reviewsData.userWhoPurchased) 
         setComments(normalizedData);
         // Lưu trữ dữ liệu đánh giá vào state sau khi lấy từ API
       } catch (error) {
@@ -45,7 +45,7 @@ const CommentComponent = ({ productId }) => {
 
     fetchReviews();
   }, [productId]);
-
+console.log(userWhoPurchased)
 
   const updateImages = (newImageArray) => {
     setNewCommentImages(newImageArray);

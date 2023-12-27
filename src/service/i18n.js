@@ -8,7 +8,7 @@ i18n
         resources: {
             en: {
                 translation: {
-                    'support 24/7 time':'Support 24/7 time',
+                    'support 24/7 time': 'Support 24/7 time',
                     'FRUIT FRESH': 'FRUIT FRESH',
                     'Vegetable': 'Vegetable',
                     'Organic': 'Organic',
@@ -82,9 +82,9 @@ i18n
             vi: {
                 translation: {
                     'Original price': 'Giá gốc',
-                   'Discount': 'Giảm giá',
+                    'Discount': 'Giảm giá',
                     'Current Price': 'Giá hiện tại',
-                    'support 24/7 time':'Hỗ trợ 24/7',
+                    'support 24/7 time': 'Hỗ trợ 24/7',
                     'FRUIT FRESH': 'Trái cây tươi',
                     'Vegetable': 'Rau củ',
                     'Organic': 'Hữu cơ',
@@ -97,7 +97,7 @@ i18n
                     'Pages': 'Trang',
                     'CONTACT': 'LIÊN HỆ',
                     'Free Shipping for all Order of $99': 'Miễn phí vận chuyển cho đơn hàng từ $99',
-                    'My account': 'Tài khoản của tôi',
+                    'My account': 'Tài khoản',
                     'Login': 'Đăng nhập',
                     'All Categories': 'Tất cả danh mục',
                     'Fruits': 'Trái cây',
@@ -132,7 +132,6 @@ i18n
                     'Phone: +84 123456789': 'Số điện thoại: +84 123456789',
                     'Sale Off': 'Giảm giá',
                     'List Products': 'Danh sách sản phẩm',
-                    'Leave Message': 'Để lại tin nhắn',
                     'Your name': 'Tên của bạn',
                     'Your Email': 'Email của bạn',
                     'Your Message': 'Tin nhắn của bạn',
@@ -146,20 +145,52 @@ i18n
                     'UPDATE CART': 'CẬP NHẬT GIỎ HÀNG',
                     'Discount Codes': 'Mã giảm giá',
                     'Enter your coupon code': 'Nhập mã giảm giá của bạn',
-                    'APPLY COUPON': 'ÁP DỤNG MÃ GIẢM GIÁ',
+                    'APPLY COUPON': 'ÁP MÃ',
                     'Cart Total': 'Tổng giỏ hàng',
                     'Subtotal': 'Tổng phụ',
                     'PROCEED TO CHECKOUT': 'TIẾN HÀNH THANH TOÁN',
                     'Shop Details': 'Chi tiết cửa hàng',
                     'Shopping Cart': 'Giỏ hàng',
                     'Check Out': 'Thanh toán',
-                    'Blog Details': 'Chi tiết Blog'
+                    'Blog Details': 'Chi tiết Blog',
+                    'Payment menthod': 'Phương thức thanh toán',
+                    'PLACE ORDER': 'ĐẶT HÀNG',
+                    'Purchase history': 'Lịch sử mua hàng',
+                    'Search with Image': 'Tìm bằng ảnh',
+                    'Leave Message': 'Gửi tin',
+                    'SEND MESSAGE': 'Gửi tin',
+                    "Fresh Fruit": "Trái cây tươi",
+                    "Local delicacies": "Đặc sản địa phương",
+                    "Spices and seeds": "Gia vị và hạt giống",
+                    'Latest products': 'Sản phẩm mới nhất',
+                    'Purchase history': 'Lịch sử đơn hàng',
+                    "Order ID": "Mã Đơn Hàng",
+                    "Seller": "Người Bán",
+                    "Number Phone": "Số Điện Thoại",
+                    "Email": "Email",
+                    "Address": "Địa Chỉ",
+                    "Order Price": "Giá Đơn Hàng",
+                    "Payment Method": "Phương Thức Thanh Toán",
+                    "Payment Status": "Trạng Thái Thanh Toán",
+                    "Order Status": "Trạng Thái Đơn Hàng",
+                    "Created At": "Đã Tạo Vào",
+                    "User": "Người Dùng",
+                    "User Number Phone": "Số Điện Thoại Người Dùng",
+                    "View Details": "Xem Chi Tiết",
+                    "Quantity": "Số Lượng",
+                    "Unit": "Đơn Vị",
+                    "Unit Price": "Giá Đơn Vị",
+                    "Price": "Giá",
+                    "Order Details": "Chi Tiết Đơn Hàng",
+                    "Filter": "Lọc",
+                    "Minimum Price": "Giá Tối Thiểu",
+                    "Maximum Price": "Giá Tối Đa",
                 }
 
             }
             // Thêm các ngôn ngữ khác nếu cần thiết
         },
-        lng: 'en', // Ngôn ngữ mặc định
+        lng: 'vi', // Ngôn ngữ mặc định
         fallbackLng: 'en',
         interpolation: {
             escapeValue: false

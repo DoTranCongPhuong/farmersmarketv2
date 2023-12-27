@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import { addToCart, axiosInstance } from '../service/API';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useTranslation } from 'react-i18next';
 
 const FeaturedItems = () => {
+    const { t } = useTranslation();
+
     const [featuredItems, setFeaturedItems] = useState([]);
 
     useEffect(() => {
@@ -58,16 +61,16 @@ const FeaturedItems = () => {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="section-title">
-                            <h2>Latest products</h2>
+                            <h2>{t('Latest products')}</h2>
                         </div>
                         <div className="featured__controls">
                             <ul>
-                                <li className={filter === '*' ? 'active' : ''} onClick={() => handleFilter('*')} data-filter="*">All</li>
-                                <li className={filter === 'Fruits' ? 'active' : ''} onClick={() => handleFilter('Fruits')} data-filter=".Fruits">Fruits</li>
-                                <li className={filter === 'Vegetables' ? 'active' : ''} onClick={() => handleFilter('Vegetables')} data-filter=".Vegetables">Vegetables</li>
-                                <li className={filter === 'Local specialty foods' ? 'active' : ''} onClick={() => handleFilter('Local specialty foods')} data-filter=".Local-specialty-foods">Local specialty foods</li>
-                                <li className={filter === 'Organic food' ? 'active' : ''} onClick={() => handleFilter('Organic food')} data-filter=".Organic-food">Organic food</li>
-                                <li className={filter === 'Pices and seeds' ? 'active' : ''} onClick={() => handleFilter('Pices and seeds')} data-filter=".Pices-and-seeds">Pices and seeds</li>
+                                <li className={filter === '*' ? 'active' : ''} onClick={() => handleFilter('*')} data-filter="*">{t('All')}</li>
+                                <li className={filter === 'Fruits' ? 'active' : ''} onClick={() => handleFilter('Fruits')} data-filter=".Fruits">{t('Fruits')}</li>
+                                <li className={filter === 'Vegetables' ? 'active' : ''} onClick={() => handleFilter('Vegetables')} data-filter=".Vegetables">{t('Vegetables')}</li>
+                                <li className={filter === 'Local specialty foods' ? 'active' : ''} onClick={() => handleFilter('Local specialty foods')} data-filter=".Local-specialty-foods">{t('Local specialty foods')}</li>
+                                <li className={filter === 'Organic food' ? 'active' : ''} onClick={() => handleFilter('Organic food')} data-filter=".Organic-food">{t('Organic food')}</li>
+                                <li className={filter === 'Pices and seeds' ? 'active' : ''} onClick={() => handleFilter('Pices and seeds')} data-filter=".Pices-and-seeds">{t('Pices and seeds')}</li>
                             </ul>
 
                         </div>

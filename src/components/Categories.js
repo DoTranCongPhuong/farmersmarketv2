@@ -2,8 +2,12 @@ import React from "react";
 import Slider from "react-slick";
 import { Link } from 'react-router-dom';
 import categoryList from "../BaseData/CategoryList";
+import { useTranslation } from 'react-i18next';
+
 
 const Categories = () => {
+  const { t } = useTranslation();
+
 
   const settings = {
     dots: true,
@@ -49,7 +53,7 @@ const Categories = () => {
                 }}
               />
               <h5 className="mt-5">
-                <Link to={`/products-page?category=${category.category}`}>{category.title}</Link>
+                <Link to={`/products-page?category=${category.category}`}>{t(category.title)}</Link>
               </h5>
             </div>
           </div>

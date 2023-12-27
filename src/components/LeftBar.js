@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { Dropdown, Input, Button, Segment } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
+import { useTranslation } from 'react-i18next';
+
+
 
 const FilterComponent = ({ handlePriceFilter, handleRatingFilter }) => {
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
     const [ratingValue, setRatingValue] = useState('');
     const [error, setError] = useState('');
+    const { t } = useTranslation();
 
 
     const ratingOptions = [
@@ -49,39 +53,31 @@ const FilterComponent = ({ handlePriceFilter, handleRatingFilter }) => {
 
     return (
         <Segment>
-            <h1>Filter</h1>
+            <h1>{t('Filter')}</h1>
             <Input
                 className='m-3'
-                placeholder='Min Price'
-                title='Minimum Price'
-                value={minPrice} // Use value instead of defaultValue
-                onChange={handleMinPriceChange} // Use onChange instead of onBlur
+                placeholder={t('Minimum Price')}
+                title={t('Minimum Price')}
+                value={minPrice}
+                onChange={handleMinPriceChange}
                 type='number'
                 step='0.1'
                 min='0'
             />
             <Input
                 className='m-3'
-                placeholder='Max Price'
-                title='Maximum Price'
-                value={maxPrice} // Use value instead of defaultValue
-                onChange={handleMaxPriceChange} // Use onChange instead of onBlur
+                placeholder={t('Maximum Price')}
+                title={t('Maximum Price')}
+                value={maxPrice}
+                onChange={handleMaxPriceChange}
                 type='number'
                 step='0.1'
                 min='0'
             />
-            {/* <Dropdown
-                className='m-3'
-                placeholder='Select rating'
-                selection
-                options={ratingOptions}
-                value={ratingValue}
-                onChange={handleRatingChange}
-            /> */}
+
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <Button onClick={handleFilter}
-            className='m-3'>
-                Filter
+            <Button onClick={handleFilter} className='m-3'>
+                {t('Filter')}
             </Button>
         </Segment>
     );

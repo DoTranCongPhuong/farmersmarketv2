@@ -56,7 +56,7 @@ const HeroSection = () => {
               <ul style={{ display: showCategories ? 'block' : 'none' }}>
                 {categoryList.map((categoryList, index) => (
                   <li key={index}>
-                    <Link to={`/products-page?category=${categoryList.category}`}>{categoryList.title}</Link>
+                    <Link to={`/products-page?category=${categoryList.category}`}>{t(categoryList.title)}</Link>
                   </li>
                 ))}
               </ul>

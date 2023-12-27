@@ -21,7 +21,7 @@ const Header = () => {
   const { t } = useTranslation();
   const { i18n } = useTranslation();
   const [showLanguages, setShowLanguages] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('en'); // Mã ngôn ngữ mặc định
+  const [selectedLanguage, setSelectedLanguage] = useState('vi'); 
   const [userVoucherList, setUserVoucherList] = useState([]);
 
   useEffect(() => {

@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { sendContact } from '../service/API';
+import { useTranslation } from 'react-i18next';
+
 
 const ContactSection = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [userInfo, setUserInfo] = useState({});
+    const { t } = useTranslation();
+
 
     useEffect(() => {
         const userInfoString = localStorage.getItem('userInfo');
@@ -82,7 +86,7 @@ const ContactSection = () => {
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="contact__form__title">
-                                <h2>Leave Message</h2>
+                                <h2>{t('Leave Message')}</h2>
                             </div>
                         </div>
                     </div>
@@ -114,7 +118,7 @@ const ContactSection = () => {
                                     disabled={!token}
                                 ></textarea>
                                 <button type="submit" disabled={!token} className="site-btn">
-                                    SEND MESSAGE
+                                    {t('SEND MESSAGE')}
                                 </button>
                             </div>
                         </div>
