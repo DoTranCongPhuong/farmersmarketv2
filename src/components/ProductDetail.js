@@ -4,22 +4,25 @@ import { getProductInfor, getProductReviews, addToCart } from '../service/API';
 import CommentComponent from "./commentComponent/Comments";
 import { Icon } from 'semantic-ui-react';
 import { toast, ToastContainer } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 
 
 
 const ProductDetails = () => {
+  const { t } = useTranslation();
+
   const obj1 = {
     name: "",
     rating: 0,
-    price: "$50.00",
+    price: 0,
     description: "",
     quantity: 1,
-    weight: "0.5 kg",
+    weight: "",
     image: [
 
     ],
-    descriptionDetail: 'hello',
+    descriptionDetail: '',
     infoFarmer: {
       "dateOfBirth": null,
       "country": null,
@@ -171,18 +174,18 @@ const ProductDetails = () => {
 
   return (
     <section className="product-details spad pt-1">
-       <ToastContainer
-                position="top-right"
-                autoClose={1500}
-                hideProgressBar={false}
-                newestOnTop={true}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
+      <ToastContainer
+        position="top-right"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="container">
         <div className="row">
           <div className="col-lg-6 col-md-6">
@@ -218,7 +221,7 @@ const ProductDetails = () => {
           </div>
           <div className="col-lg-6 col-md-6">
             <div className="product__details__text">
-              <h1 style={{fontSize: '40px'}}>{product.name}</h1>
+              <h1 style={{ fontSize: '40px' }}>{product.name}</h1>
               <div className='mb-3'>
                 {renderStars(averageRating)}
               </div>
@@ -226,10 +229,10 @@ const ProductDetails = () => {
                 <span>({reviewsData.length} reviews)</span>
               </div>
               <span className={showWholesalePrice ? 'product__details__price text-decoration-line-through font-italic' : 'product__details__price'}>
-                {product.originalPrice + '$'}
+                {product.originalPrice + 'VND'}
               </span>
               <span className={showWholesalePrice ? 'product__details__price' : 'd-none'}>
-                {'  ' + product.wholesalePrice + '$'}
+                {'  ' + product.wholesalePrice + 'VND'}
               </span>
               <p dangerouslySetInnerHTML={{
                 __html: product.description.replace(/\n/g, '<br/>')
@@ -243,13 +246,22 @@ const ProductDetails = () => {
                   </div>
                 </div>
               </div>
-            <button className="primary-btn" onClick={handleAddToCart}>ADD TO CART</button>
+              <button className="primary-btn" onClick={handleAddToCart}>ADD TO CART</button>
               <ul>
-                <li><b>Unit:</b> <span>{product.unit}</span></li>
-                <li><b>Whole sale Price: </b> <span>{product.wholesalePrice}</span></li>
-                <li><b>Minimum wholesale quantity: </b> <span>{product.limitedProduct}</span></li>
-                <li><b>Quantity in stock:</b> <span>{product.totalWeight}</span></li>
-                <li><b>Seller:</b>
+                <li>
+                  <b>{t('Unit')}:</b> <span>{product.unit}</span>
+                </li>
+                <li>
+                  <b>{t('Whole sale Price')}: </b> <span>{product.wholesalePrice}VND</span>
+                </li>
+                <li>
+                  <b>{t('Minimum wholesale quantity')}: </b> <span>{product.limitedProduct}</span>
+                </li>
+                <li>
+                  <b>{t('Quantity in stock')}:</b> <span>{product.totalWeight}</span>
+                </li>
+                <li>
+                  <b>{t('Seller')}:</b>
                   <Link to={`/seller-page/${product.infoFarmer._id}`}>
                     <img className="m-1 p-1 border " style={{ height: '36px', width: '36px', objectFit: 'contain' }}
                       src={product.infoFarmer.image}
@@ -272,7 +284,7 @@ const ProductDetails = () => {
                     role="tab"
                     aria-selected={activeTab === 1 ? 'true' : 'false'}
                   >
-                    Description {activeTab === 1}
+                    {t('Description')} {activeTab === 1}
                   </a>
                 </li>
                 <li className="nav-item">

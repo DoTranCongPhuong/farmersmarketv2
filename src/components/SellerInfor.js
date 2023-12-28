@@ -3,8 +3,11 @@ import { useParams } from 'react-router-dom';
 import { getUserInfoById } from '../service/API';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useTranslation } from 'react-i18next';
 
 const SellerInfor = () => {
+    const { t } = useTranslation();
+
     const { farmerId } = useParams(); // Retrieve farmerId from URL params
     const [user, setUser] = useState({});
     const [avatar, setAvatar] = useState('/loading.gif');
@@ -32,31 +35,31 @@ const SellerInfor = () => {
                 <>
                     <div className="col-lg-6">
                         <div className="checkout__input">
-                            <p>Name of Fammer</p>
+                            <p>{t('Name of Farmer')}</p>
                             <div>{`${user.lastName} ${user.firstName}`}</div>
                         </div>
                     </div>
                     <div className="col-lg-6">
                         <div className="checkout__input">
-                            <p>Email</p>
+                            <p>{t('Email')}</p>
                             <div>{user.email}</div>
                         </div>
                     </div>
                     <div className="col-lg-6">
                         <div className="checkout__input">
-                            <p>Number Phone</p>
+                            <p>{t('Number Phone')}</p>
                             <div>{user.numberPhone}</div>
                         </div>
                     </div>
                     <div className="col-lg-6">
                         <div className="checkout__input">
-                            <p>Address</p>
+                            <p>{t('Address')}</p>
                             <div>{formattedAddress}</div>
                         </div>
                     </div>
                     <div className="col-lg-12">
                         <div className="checkout__input">
-                            <p>Introducing farmers</p>
+                            <p>{t('Introducing farmers')}</p>
                             <div>{user.description}</div>
                         </div>
                     </div>
@@ -70,12 +73,12 @@ const SellerInfor = () => {
                 <div className="row">
                     <div className="col-lg-4 col-md-6">
                         <div className="checkout__form">
-                            <h3>Farmer Profile</h3>
+                            <h3>{t('Farmer Profile')}</h3>
                             <div className="container mt-4 row">
                                 <div className="text-center mb-4">
                                     <img
                                         src={avatar}
-                                        alt="Avatar Preview"
+                                        alt={t('Avatar Preview')}
                                         className="img-thumbnail"
                                     />
                                 </div>
@@ -84,7 +87,7 @@ const SellerInfor = () => {
                     </div>
                     <div className="col-lg-8 col-md-6">
                         <div className="checkout__form">
-                            <h4>User Information</h4>
+                            <h4>{t('User Information')}</h4>
                             <div className="row">{renderUserInfo()}</div>
                         </div>
                     </div>

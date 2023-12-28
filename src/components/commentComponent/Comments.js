@@ -219,7 +219,7 @@ console.log(userWhoPurchased)
           </Form>
         )}
         <Header as='h3' dividing>
-          Comments
+          
         </Header>
         <div style={{ maxHeight: '600px', overflow: 'hidden auto', }}>
           {sortedComments.map((comment) => (

@@ -93,7 +93,7 @@ const FeaturedItems = () => {
                                     </div>
                                     <div className="featured__item__text">
                                         <h6><Link to={`/product-detail/${item._id}`}>{item.name}</Link></h6>
-                                        <h6>{item.discountPrice}$</h6>
+                                        <h6>{item.discountPrice}VND</h6>
                                     </div>
                                 </div>
                             </div>

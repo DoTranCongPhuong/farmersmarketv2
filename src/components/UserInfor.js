@@ -5,9 +5,11 @@ import { getUserInfo, updateUser, changeUserPassword } from '../service/API';
 import { upLoadImgFirebase } from '../service/Firebase';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useTranslation } from 'react-i18next';
 
 
 const UserInfor = () => {
+    const { t } = useTranslation();
 
     const [user, setUser] = useState({});
     const [avatar, setAvatar] = useState('/loading.gif');
@@ -149,16 +151,15 @@ const UserInfor = () => {
                 <div className="row">
                     <div className="col-lg-4 col-md-6">
                         <div className="checkout__form">
-                            <h4>Hi {user?.firstName + '!'}</h4>
+                            <h4>{t('Hi')} {user?.firstName + '!'}</h4>
                             <div className="container mt-4 row">
                                 <div className="text-center mb-4">
                                     <img
                                         src={avatar}
-                                        alt="Avatar Preview"
+                                        alt={t('Avatar Preview')}
                                         className="img-thumbnail"
                                     />
                                 </div>
-
                                 <Form>
                                     <Form.Group controlId="formFile" className="mb-3 text-center">
                                         <h5 className="mb-3">Choose Avatar</h5>
@@ -171,61 +172,62 @@ const UserInfor = () => {
                                 </Form>
                                 <button
                                     type="button"
-                                    className="btn btn-primary "
+                                    className="btn btn-primary"
                                     onClick={handleUpdateUserInfo}
                                 >
-                                    Save my information
+                                    {t('Save my information')}
                                 </button>
+
                                 <button
                                     type="button"
                                     className="btn btn-danger mt-2"
                                     onClick={handleSignOut}
                                 >
-                                    Sign Out
+                                    {t('Sign Out')}
                                 </button>
                                 <div className='mt-4'>
-                                    <h4 className='mb-1'>Change Password</h4>
+                                    <h4 className='mb-1'>{t('Change Password')}</h4>
                                     <div className="d-flex justify-content-center align-items-center">
                                         {successMessage && <div className="alert alert-success ">{successMessage}</div>}
                                         {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
                                     </div>
                                     <form onSubmit={handleSubmit} className='row'>
                                         <div className="form-group">
-                                            <label htmlFor="oldPassword">Current Password</label>
+                                            <label htmlFor="oldPassword">{t('Current Password')}</label>
                                             <input
                                                 type="password"
                                                 name="oldPassword"
                                                 value={oldPassword}
                                                 onChange={handleChangePassword}
                                                 className="form-control"
-                                                placeholder="Enter your current password"
+                                                placeholder={t('Enter your current password')}
                                             />
                                         </div>
 
                                         <div className="form-group">
-                                            <label htmlFor="newPassword">New Password</label>
+                                            <label htmlFor="newPassword">{t('New Password')}</label>
                                             <input
                                                 type="password"
                                                 name="newPassword"
                                                 value={newPassword}
                                                 onChange={handleChangePassword}
                                                 className="form-control"
-                                                placeholder="Enter your new password"
+                                                placeholder={t('Enter your new password')}
                                             />
                                         </div>
 
                                         <div className="form-group">
-                                            <label htmlFor="confirmPassword">Confirm Password</label>
+                                            <label htmlFor="confirmPassword">{t('Confirm Password')}</label>
                                             <input
                                                 type="password"
                                                 name="confirmPassword"
                                                 value={confirmPassword}
                                                 onChange={handleChangePassword}
                                                 className="form-control"
-                                                placeholder="Confirm your new password"
+                                                placeholder={t('Confirm your new password')}
                                             />
                                         </div>
-                                        <button className='btn btn-warning' type="submit">Change Password</button>
+                                        <button className='btn btn-warning' type="submit">{t('Change Password')}</button>
                                     </form>
                                 </div>
                             </div>
@@ -233,23 +235,23 @@ const UserInfor = () => {
                     </div>
                     <div className="col-lg-8 col-md-6">
                         <div className="checkout__form">
-                            <h4>User Information</h4>
+                            <h4>{t('User Information')}</h4>
                             <form>
                                 <div className="row">
                                     {user &&
                                         Object.keys(user).map((key) =>
-                                            key === 'image' || key === '__v' || key === 'role' || key === 'id'  || key === 'description'? null : (
+                                            key === 'image' || key === '__v' || key === 'role' || key === 'id' || key === 'description' ? null : (
                                                 <div className="col-lg-6" key={key}>
                                                     <div className="checkout__input">
                                                         <p>
-                                                            {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
+                                                            {t(key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1'))}
                                                             <span>*</span>
                                                         </p>
                                                         <input
                                                             type="text"
                                                             value={user[key]}
-                                                            name={key} // Đặt tên của input là key để xác định trường cần cập nhật
-                                                            onChange={handleInputChange} // Xử lý sự kiện khi người dùng thay đổi giá trị
+                                                            name={key}
+                                                            onChange={handleInputChange}
                                                         />
                                                     </div>
                                                 </div>
@@ -259,9 +261,10 @@ const UserInfor = () => {
                             </form>
                         </div>
                     </div>
+
                 </div>
             </div>
-        </section>
+        </section >
     );
 };
 

@@ -4,8 +4,11 @@ import { Link } from 'react-router-dom';
 
 import { addToCart, getDiscountProducts } from '../service/API';
 import { toast, ToastContainer } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const ProductDiscount = () => {
+    const { t } = useTranslation();
+
     const [products, setProducts] = useState([
         {
             _id: "",
@@ -123,9 +126,9 @@ const ProductDiscount = () => {
                                             </ul>
                                         </div>
                                         <div className="product__discount__item__text">
-                                            <span>{product.category}</span>
+                                            <span>{t(product.category)}</span>
                                             <h5><Link to={`/product-detail/${product._id}`}>{product.name}</Link></h5>
-                                            <div className="product__item__price text-danger">{product.originalPrice}$ <span>{product.discountPrice}</span></div>
+                                            <div className="product__item__price text-danger">{product.discountPrice}VND <span>{product.originalPrice}</span></div>
                                         </div>
                                     </div>
                                 </div>

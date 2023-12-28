@@ -3,7 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getUserVoucherList } from '../service/API';
 import Slider from 'react-slick';
-
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const Header = () => {
   const settings = {
@@ -21,7 +22,7 @@ const Header = () => {
   const { t } = useTranslation();
   const { i18n } = useTranslation();
   const [showLanguages, setShowLanguages] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('vi'); 
+  const [selectedLanguage, setSelectedLanguage] = useState('vi');
   const [userVoucherList, setUserVoucherList] = useState([]);
 
   useEffect(() => {
@@ -143,11 +144,13 @@ const Header = () => {
                     >
                       <Slider {...settings}>
                         {userVoucherList.map(banner => (
-                          <span key={banner.code}
+                          <div
+                            key={banner.code}
                             onClick={() => handleCopyCode(banner.code)}
-                            style={{ cursor: 'pointer', marginRight: '10px' }}>
+                            style={{ cursor: 'pointer', marginRight: '10px' }}
+                          >
                             Voucher: {banner.code} - {banner.discount}% - {new Date(banner.startDate).toLocaleDateString()}-{new Date(banner.expirationDate).toLocaleDateString()}
-                          </span>
+                          </div>
                         ))}
                       </Slider>
                     </div>
