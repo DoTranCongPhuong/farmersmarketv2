@@ -22,12 +22,18 @@ const Register = () => {
 
 
 
-    const handleInputChange = (e) => {
+    const handleInputChange = async (e) => {
         const { name, value, type, files } = e.target;
-
+    
         if (type === 'file') {
             const file = files[0];
-            upLoadImgFirebase(file);
+            const url = await upLoadImgFirebase(file); // Assuming upLoadImgFirebase returns the uploaded image URL asynchronously
+    
+            // Once the image is uploaded, update the formData with the image URL
+            setFormData((prevData) => ({
+                ...prevData,
+                image: url, // Set the image URL in the formData
+            }));
         } else {
             setFormData((prevData) => ({
                 ...prevData,
@@ -38,27 +44,35 @@ const Register = () => {
 
     const handleSignUp = async (e) => {
         e.preventDefault();
-      
-        // Kiểm tra xem các trường tên, email và số điện thoại có được điền đầy đủ không
-        if (!formData.firstName || !formData.lastName || !formData.email || !formData.numberPhone) {
-          setErrorMessage('Please fill in all required fields.');
-          setSuccessMessage('');
-          return; // Dừng việc thực hiện khi có trường dữ liệu không hợp lệ
+    
+        // Kiểm tra xem các trường tên, email, số điện thoại và mật khẩu có được điền đầy đủ không
+        if (!formData.firstName || !formData.lastName || !formData.email || !formData.numberPhone || !formData.password) {
+            setErrorMessage('Please fill in all required fields.');
+            setSuccessMessage('');
+            return; // Dừng việc thực hiện khi có trường dữ liệu không hợp lệ
         }
-      
+    
+        // Kiểm tra xem mật khẩu có ít nhất 6 kí tự không
+        if (formData.password.length < 6) {
+            setErrorMessage('Password should be at least 6 characters long.');
+            setSuccessMessage('');
+            return; // Dừng việc thực hiện khi mật khẩu không đủ độ dài
+        }
+    
         try {
-          console.log("data: ", formData);
-          await register(formData);
-          setSuccessMessage('Registration successful!');
-          setErrorMessage('');
-          // Chuyển người dùng đến trang chủ sau khi đăng ký thành công
-          navigate('/');
+            console.log("data: ", formData);
+            await register(formData);
+            setSuccessMessage('Registration successful!');
+            setErrorMessage('');
+            // Chuyển người dùng đến trang chủ sau khi đăng ký thành công
+            navigate('/');
         } catch (error) {
-          setErrorMessage('Registration failed. Please try again.');
-          setSuccessMessage('');
-          console.error('Error registering:', error);
+            setErrorMessage('Registration failed. Please try again.');
+            setSuccessMessage('');
+            console.error('Error registering:', error);
         }
-      };
+    };
+    
       
 
     return (
@@ -92,9 +106,6 @@ const Register = () => {
                                     onChange={handleInputChange}
                                 />
                             </div>
-                            {/* Role selection */}
-
-
 
                             {/* Last Name */}
                             <div className="input-group mb-3">

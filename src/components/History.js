@@ -50,7 +50,7 @@ const OrderList = () => {
                   <p>{t('Number Phone')}: {product.infoFarmer.numberPhone}</p>
                   <p>{t('Email')}: {product.infoFarmer.email}</p>
                   <p>{t('Address')}: {product.infoFarmer.addressDetail}, {product.infoFarmer.street}, {product.infoFarmer.ward}, {product.infoFarmer.district}, {product.infoFarmer.city}, {product.infoFarmer.country}</p>
-                  <p className='text-danger'>{t('Order Price')}: {Math.round(parseFloat(product.totalPrice) / 100) * 100} VND</p>
+                  <p className='text-danger'>{t('Order Price')}: {(Math.round(parseFloat(product.totalPrice) / 100) * 100).toLocaleString('vi-VN')} VND</p>
                   <p>{t('Payment Method')}: {order.paymentMethod}</p>
                   <p>{t('Payment Status')}: {product.paymentStatus}</p>
                   <p>{t('Order Status')}: {product.orderStatus}</p>
@@ -94,8 +94,8 @@ const OrderList = () => {
                       <p className='m-1 col-2'>{item.productId.name}</p>
                       <p className='m-1 col-2'>{t('Quantity')}: {item.quantity}</p>
                       <p className='m-1 col-2'>{t('Unit')}: {item.productId.unit}</p>
-                      <p className='m-1 col-2'>{t('Unit Price')}: {Math.round(parseFloat(item.lastPrice) / 100) * 100}VND</p>
-                      <p className='m-1 col-2'>{t('Price')}: {parseFloat(item.quantity) * Math.round(parseFloat(item.lastPrice) / 100) * 100}VND</p>
+                      <p className='m-1 col-2'>{t('Unit Price')}: {(Math.round(parseFloat(item.lastPrice) / 100) * 100).toLocaleString('vi-VN')}VND</p>
+                      <p className='m-1 col-2'>{t('Price')}: {(parseFloat(item.quantity) * Math.round(parseFloat(item.lastPrice) / 100) * 100).toLocaleString('vi-VN')}VND</p>
                     </div>
                   ))}
                 </div>

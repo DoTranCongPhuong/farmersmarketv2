@@ -59,7 +59,7 @@ const ImageClassifier = ({ onPredict }) => {
     <div className='d-flex flex-column align-items-center'>
       <div className="d-flex justify-content-center">
         <img
-          src={imageURL || "./clasification.png"}
+          src={imageURL || "/clasification.png"}
           alt="Upload Preview"
           style={{ objectFit: 'cover', width: '200px', height: '200px' }}
         />

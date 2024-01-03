@@ -128,7 +128,7 @@ const ProductDiscount = () => {
                                         <div className="product__discount__item__text">
                                             <span>{t(product.category)}</span>
                                             <h5><Link to={`/product-detail/${product._id}`}>{product.name}</Link></h5>
-                                            <div className="product__item__price text-danger">{product.discountPrice}VND <span>{product.originalPrice}</span></div>
+                                            <div className="product__item__price text-danger">{product.discountPrice.toLocaleString('vi-VN')}VND <span>{product.originalPrice.toLocaleString('vi-VN')}</span></div>
                                         </div>
                                     </div>
                                 </div>

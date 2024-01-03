@@ -101,6 +101,15 @@ export const getProductList = async (page = 1, limit = 50, sortField = 'price', 
   }
 };
 
+export const getFarmerInfoById = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/farmer-info/${userId}`);
+    return response.data; // Trả về dữ liệu từ response
+  } catch (error) {
+    console.log(error)
+  }
+};
+
 export const getUserInfoById = async (userId) => {
   try {
     const response = await axiosInstance.get(`/user-info/${userId}`);

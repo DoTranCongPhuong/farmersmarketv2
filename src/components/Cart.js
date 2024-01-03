@@ -198,14 +198,14 @@ const ShoppingCart = () => {
                                                 {item.quantity >= item.limitedProduct ? (
                                                     <>
                                                         <span className="product__details__price text-decoration-line-through font-italic">
-                                                            {`${item.originalPrice}VND`}
+                                                            {`${item.originalPrice.toLocaleString('vi-VN')}VND`}
                                                         </span>
                                                         <span className="product__details__price text-danger">
-                                                            {` ${item.wholesalePrice}VND`}
+                                                            {` ${item.wholesalePrice.toLocaleString('vi-VN')}VND`}
                                                         </span>
                                                     </>
                                                 ) : (
-                                                    `${item.originalPrice}VND`
+                                                    `${item.originalPrice.toLocaleString('vi-VN')}VND`
                                                 )}
                                             </td>
                                             <td className="shoping__cart__price">
@@ -215,14 +215,14 @@ const ShoppingCart = () => {
                                                 {item.quantity >= item.limitedProduct ? (
                                                     <>
                                                         <span className="product__details__price text-decoration-line-through font-italic">
-                                                            {`${item.discountPrice}VND`}
+                                                            {`${item.discountPrice.toLocaleString('vi-VN')}VND`}
                                                         </span>
                                                         <span className="product__details__price text-danger">
-                                                            {` ${(item.wholesalePrice * (100 - item.discount) / 100)}VND`}
+                                                            {` ${(item.wholesalePrice * (100 - item.discount) / 100).toLocaleString('vi-VN')}VND`}
                                                         </span>
                                                     </>
                                                 ) : (
-                                                    `${item.discountPrice}VND`
+                                                    `${item.discountPrice.toLocaleString('vi-VN')}VND`
                                                 )}
                                             </td>
                                             <td className="shoping__cart__quantity">
@@ -256,14 +256,14 @@ const ShoppingCart = () => {
                                                 {item.quantity >= item.limitedProduct ? (
                                                     <>
                                                         <span className="product__details__price text-decoration-line-through font-italic">
-                                                            {`${(item.discountPrice * item.quantity)}VND`}
+                                                            {`${(item.discountPrice * item.quantity).toLocaleString('vi-VN')}VND`}
                                                         </span>
                                                         <span className="product__details__price text-danger">
-                                                            {` ${((item.wholesalePrice * (100 - item.discount) / 100) * item.quantity)}VND`}
+                                                            {` ${((item.wholesalePrice * (100 - item.discount) / 100) * item.quantity).toLocaleString('vi-VN')}VND`}
                                                         </span>
                                                     </>
                                                 ) : (
-                                                    `${(item.discountPrice * item.quantity)}VND`
+                                                    `${(item.discountPrice * item.quantity).toLocaleString('vi-VN')}VND`
                                                 )}
                                             </td>
 
@@ -394,10 +394,10 @@ const ShoppingCart = () => {
                                 <div className="shoping__checkout">
                                     <h5>{t('Cart Total')}</h5>
                                     <ul>
-                                        <li> {t('Subtotal')}<span>{calculateTotal()}VND</span></li>
+                                        <li> {t('Subtotal')}<span>{calculateTotal().toLocaleString('vi-VN')}VND</span></li>
                                         <li>{t('Discount')} <span>{(discount)}%</span></li>
                                         <li>
-                                            {t('Total')} <span>{(calculateTotal() * (100 - discount) / 100)}VND</span>
+                                            {t('Total')} <span>{(calculateTotal() * (100 - discount) / 100).toLocaleString('vi-VN')}VND</span>
                                         </li>
                                     </ul>
                                     <button type="button" className="site-btn" onClick={handlePlaceOrder}>

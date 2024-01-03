@@ -6,6 +6,7 @@ import { upLoadImgFirebase } from '../service/Firebase';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from 'react-i18next';
+import Address from './Address';
 
 
 const UserInfor = () => {
@@ -264,6 +265,7 @@ const UserInfor = () => {
 
                 </div>
             </div>
+            <Address/>
         </section >
     );
 };

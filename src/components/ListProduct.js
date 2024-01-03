@@ -126,7 +126,7 @@ const ListProduct = () => {
                                         <div className="product__discount__item__text">
                                             <h5><Link to={`/product-detail/${product._id}`}>{product.name}</Link></h5>
                                             <div className="product__item__price text-danger">
-                                                {product.discountPrice} VND <span>{product.discount === 0 ? '' : product.originalPrice}</span>
+                                                {product.discountPrice.toLocaleString('vi-VN')} VND <span>{product.discount === 0 ? '' : product.originalPrice.toLocaleString('vi-VN')}</span>
                                             </div>
                                         </div>
                                     </div>

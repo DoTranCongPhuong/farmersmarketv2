@@ -16,6 +16,8 @@ const ProductDetails = () => {
     name: "",
     rating: 0,
     price: 0,
+    originalPrice: 0,
+    wholesalePrice: 0,
     description: "",
     quantity: 1,
     weight: "",
@@ -229,10 +231,10 @@ const ProductDetails = () => {
                 <span>({reviewsData.length} reviews)</span>
               </div>
               <span className={showWholesalePrice ? 'product__details__price text-decoration-line-through font-italic' : 'product__details__price'}>
-                {product.originalPrice + 'VND'}
+                {product.originalPrice.toLocaleString('vi-VN') + 'VND'}
               </span>
               <span className={showWholesalePrice ? 'product__details__price' : 'd-none'}>
-                {'  ' + product.wholesalePrice + 'VND'}
+                {'  ' +product.wholesalePrice.toLocaleString('vi-VN') + 'VND'}
               </span>
               <p dangerouslySetInnerHTML={{
                 __html: product.description.replace(/\n/g, '<br/>')
@@ -252,7 +254,7 @@ const ProductDetails = () => {
                   <b>{t('Unit')}:</b> <span>{product.unit}</span>
                 </li>
                 <li>
-                  <b>{t('Whole sale Price')}: </b> <span>{product.wholesalePrice}VND</span>
+                  <b>{t('Whole sale Price')}: </b> <span>{product.wholesalePrice.toLocaleString('vi-VN')}VND</span>
                 </li>
                 <li>
                   <b>{t('Minimum wholesale quantity')}: </b> <span>{product.limitedProduct}</span>
